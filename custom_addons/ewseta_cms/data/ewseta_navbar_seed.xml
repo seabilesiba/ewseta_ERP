@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="ewseta.navbar.settings" name="seed_default_content"/>
+    <function model="website.menu" name="ewseta_restructure_nav_menus"/>
+    <function model="website.menu" name="ewseta_fix_menu_urls"/>
+</odoo>

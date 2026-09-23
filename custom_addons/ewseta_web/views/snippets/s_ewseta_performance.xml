@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_performance_metric" name="EWSETA Performance KPI">
+    <article t-attf-class="ewseta-kpi ewseta-kpi-#{color or 'orange'}">
+        <div class="ewseta-kpi-header">
+            <span class="ewseta-kpi-tag">KPI</span>
+            <span class="ewseta-kpi-icon" t-if="icon_class">
+                <i t-attf-class="fa #{icon_class}"/>
+            </span>
+        </div>
+        <div class="ewseta-kpi-gauge-wrap">
+            <div class="ewseta-kpi-gauge" t-attf-style="--kpi-progress: #{progress or 0};">
+                <svg class="ewseta-kpi-gauge-svg" viewBox="0 0 36 36" aria-hidden="true">
+                    <path class="ewseta-kpi-gauge-bg"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <t t-if="progress and progress &gt; 0">
+                        <t t-set="gauge_progress" t-value="min(max(progress, 0), 100)"/>
+                        <path class="ewseta-kpi-gauge-fill"
+                              t-attf-stroke-dasharray="#{gauge_progress}, 100"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </t>
+                </svg>
+                <span class="ewseta-kpi-gauge-label" t-if="progress and progress &gt; 0">
+                    <t t-esc="int(min(max(progress, 0), 100))"/>%
+                </span>
+                <span class="ewseta-kpi-gauge-icon" t-elif="icon_class">
+                    <i t-attf-class="fa #{icon_class}"/>
+                </span>
+            </div>
+        </div>
+        <p class="ewseta-kpi-number" t-out="value"/>
+        <h3 class="ewseta-kpi-title" t-out="label"/>
+        <p class="ewseta-kpi-note" t-if="description" t-out="description"/>
+        <div class="ewseta-kpi-footer" t-if="progress and progress &gt; 0">
+            <t t-set="track_width" t-value="min(max(progress, 0), 100)"/>
+            <div class="ewseta-kpi-track">
+                <span class="ewseta-kpi-track-fill" t-attf-style="width: #{track_width}%;"/>
+            </div>
+            <span class="ewseta-kpi-target" t-if="progress_label" t-out="progress_label"/>
+        </div>
+    </article>
+</template>
+
+<template id="s_ewseta_performance_body" name="EWSETA Performance Overview Body">
+    <div class="container">
+        <div class="ewseta-section-header text-center mx-auto mb-4 mb-lg-5">
+            <span class="ewseta-eyebrow">Our Impact</span>
+            <h2 class="ewseta-section-title">Key Performance Indicators</h2>
+            <p class="ewseta-section-lead">
+                Key outcomes from EWSETA's skills development programmes across the energy and water sectors.
+            </p>
+        </div>
+    </div>
+    <div class="ewseta-kpi-panel">
+        <div class="ewseta-kpi-panel-glow ewseta-kpi-panel-glow-orange"/>
+        <div class="ewseta-kpi-panel-glow ewseta-kpi-panel-glow-blue"/>
+        <div class="container">
+            <div class="ewseta-kpi-grid">
+                <t t-call="ewseta_web.s_ewseta_performance_metric">
+                    <t t-set="color" t-value="'orange'"/>
+                    <t t-set="icon_class" t-value="'fa-users'"/>
+                    <t t-set="value" t-value="'12,450'"/>
+                    <t t-set="label" t-value="'Learners Enrolled'"/>
+                    <t t-set="description" t-value="'Across accredited programmes nationwide'"/>
+                    <t t-set="progress" t-value="82"/>
+                    <t t-set="progress_label" t-value="'82% of annual target'"/>
+                </t>
+                <t t-call="ewseta_web.s_ewseta_performance_metric">
+                    <t t-set="color" t-value="'blue'"/>
+                    <t t-set="icon_class" t-value="'fa-building'"/>
+                    <t t-set="value" t-value="'850+'"/>
+                    <t t-set="label" t-value="'Employers Supported'"/>
+                    <t t-set="description" t-value="'Workplace skills plans and grant beneficiaries'"/>
+                    <t t-set="progress" t-value="76"/>
+                    <t t-set="progress_label" t-value="'76% of annual target'"/>
+                </t>
+                <t t-call="ewseta_web.s_ewseta_performance_metric">
+                    <t t-set="color" t-value="'green'"/>
+                    <t t-set="icon_class" t-value="'fa-money'"/>
+                    <t t-set="value" t-value="'R245M'"/>
+                    <t t-set="label" t-value="'Grants Disbursed'"/>
+                    <t t-set="description" t-value="'Mandatory and discretionary skills funding'"/>
+                    <t t-set="progress" t-value="68"/>
+                    <t t-set="progress_label" t-value="'68% of annual target'"/>
+                </t>
+                <t t-call="ewseta_web.s_ewseta_performance_metric">
+                    <t t-set="color" t-value="'dark'"/>
+                    <t t-set="icon_class" t-value="'fa-certificate'"/>
+                    <t t-set="value" t-value="'156'"/>
+                    <t t-set="label" t-value="'Qualifications Registered'"/>
+                    <t t-set="description" t-value="'Occupational and trade qualifications on scope'"/>
+                    <t t-set="progress" t-value="0"/>
+                    <t t-set="progress_label" t-value="False"/>
+                </t>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center ewseta-kpi-cta-wrap">
+        <a href="#" class="btn btn-ewseta-outline-light">
+            View Annual Performance Plan <i class="fa fa-arrow-right ms-2"/>
+        </a>
+    </div>
+</template>
+
+<template id="s_ewseta_performance" name="EWSETA Performance Overview">
+    <section class="s_ewseta_performance" data-snippet="s_ewseta_performance">
+        <t t-call="ewseta_web.s_ewseta_performance_body"/>
+    </section>
+</template>
+
+</odoo>

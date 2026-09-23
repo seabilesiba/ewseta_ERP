@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="it_asset_incident_report_view_list" model="ir.ui.view">
+        <field name="name">it.asset.incident.report.list</field>
+        <field name="model">it.asset.incident.report</field>
+        <field name="arch" type="xml">
+            <list string="Incident Reports">
+                <field name="name"/>
+                <field name="reporter_name"/>
+                <field name="department_id"/>
+                <field name="equipment_id"/>
+                <field name="asset_code"/>
+                <field name="discovered_datetime"/>
+                <field name="state" widget="badge"
+                    decoration-muted="state == 'draft'"
+                    decoration-info="state == 'submitted'"
+                    decoration-primary="state == 'manager_approved'"
+                    decoration-warning="state == 'it_approved'"
+                    decoration-success="state in ('resolved', 'closed')"
+                    decoration-danger="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="it_asset_incident_report_view_form" model="ir.ui.view">
+        <field name="name">it.asset.incident.report.form</field>
+        <field name="model">it.asset.incident.report</field>
+        <field name="arch" type="xml">
+            <form string="IT Incident Report">
+                <header>
+                    <button name="action_submit" string="Sign &amp; Submit to ICT" type="object"
+                        class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_manager_approve" string="Sign &amp; Approve (Line Manager)" type="object"
+                        class="btn-primary" invisible="state != 'submitted'"/>
+                    <button name="action_it_approve" string="Sign &amp; Approve (IT)" type="object"
+                        class="btn-primary" invisible="state != 'manager_approved'"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <button name="action_resolve" string="Mark Resolved" type="object"
+                        class="btn-secondary" invisible="state != 'it_approved'"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <button name="action_close" string="Close" type="object"
+                        class="btn-secondary" invisible="state not in ('resolved', 'it_approved')"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                        class="btn-secondary" invisible="state in ('closed', 'cancelled')"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                        class="btn-secondary" invisible="state == 'draft'"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,submitted,manager_approved,it_approved,resolved,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="discovered_datetime" readonly="state != 'draft'"/>
+                            <field name="is_resolved" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="location" readonly="state != 'draft'"/>
+                            <field name="asset_action" readonly="state not in ('draft', 'manager_approved')"
+                                invisible="not equipment_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contact" name="contact">
+                            <group>
+                                <group>
+                                    <field name="reporter_employee_id" readonly="state != 'draft'"/>
+                                    <field name="reporter_name" readonly="state != 'draft'"/>
+                                    <field name="department_id" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="work_phone" readonly="state != 'draft'"/>
+                                    <field name="mobile_phone" readonly="state != 'draft'"/>
+                                    <field name="email" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Asset" name="asset">
+                            <group>
+                                <group>
+                                    <field name="equipment_id" readonly="state != 'draft'"/>
+                                    <field name="asset_description"/>
+                                    <field name="serial_no"/>
+                                </group>
+                                <group>
+                                    <field name="asset_code"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Impact" name="impact">
+                            <group string="Impact Type">
+                                <group>
+                                    <field name="impact_data_loss" readonly="state != 'draft'"/>
+                                    <field name="impact_system_damage" readonly="state != 'draft'"/>
+                                    <field name="impact_downtime" readonly="state != 'draft'"/>
+                                    <field name="impact_financial" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="impact_other_orgs" readonly="state != 'draft'"/>
+                                    <field name="impact_critical_services" readonly="state != 'draft'"/>
+                                    <field name="impact_legislation" readonly="state != 'draft'"/>
+                                    <field name="impact_unknown" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="impact_description" readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                        <page string="Data Sensitivity" name="data">
+                            <group>
+                                <field name="data_sensitivity" readonly="state != 'draft'"/>
+                                <field name="compromised_data_description" readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                        <page string="Notifications" name="notifications">
+                            <group>
+                                <group>
+                                    <field name="notified_person" readonly="state != 'draft'"/>
+                                    <field name="notified_title" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="notification_notes" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Steps Taken" name="steps">
+                            <group string="Actions Taken">
+                                <group>
+                                    <field name="step_no_action" readonly="state != 'draft'"/>
+                                    <field name="step_disconnected" readonly="state != 'draft'"/>
+                                    <field name="step_virus_scan" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="step_backup_restored" readonly="state != 'draft'"/>
+                                    <field name="step_logs_examined" readonly="state != 'draft'"/>
+                                    <field name="step_other" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="steps_description" readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                        <page string="Details" name="details">
+                            <group>
+                                <field name="sites_systems_users_affected" readonly="state != 'draft'"/>
+                                <field name="additional_info" readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                        <page string="Signatures" name="signatures">
+                            <group>
+                                <group string="Incident Initiator">
+                                    <field name="initiator_name"/>
+                                    <field name="initiator_sign_date"/>
+                                    <field name="initiator_signature" widget="signature" readonly="1"/>
+                                </group>
+                                <group string="Line Manager">
+                                    <field name="line_manager_id" readonly="state != 'draft'"/>
+                                    <field name="line_manager_sign_name"/>
+                                    <field name="line_manager_sign_date"/>
+                                    <field name="line_manager_comment"/>
+                                    <field name="line_manager_signature" widget="signature" readonly="1"/>
+                                </group>
+                                <group string="IT Manager">
+                                    <field name="it_manager_id"/>
+                                    <field name="it_manager_sign_name"/>
+                                    <field name="it_manager_sign_date"/>
+                                    <field name="it_manager_comment"/>
+                                    <field name="it_manager_signature" widget="signature" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="it_asset_incident_report_view_search" model="ir.ui.view">
+        <field name="name">it.asset.incident.report.search</field>
+        <field name="model">it.asset.incident.report</field>
+        <field name="arch" type="xml">
+            <search string="Incident Reports">
+                <field name="name"/>
+                <field name="reporter_name"/>
+                <field name="equipment_id"/>
+                <field name="asset_code"/>
+                <field name="department_id"/>
+                <filter string="My Reports" name="my_reports" domain="[('create_uid', '=', uid)]"/>
+                <filter string="Pending My Approval" name="pending_approval"
+                    domain="[('state', '=', 'submitted'), ('line_manager_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Open" name="open" domain="[('state', 'not in', ('closed', 'cancelled'))]"/>
+                <group>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Department" name="group_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Asset" name="group_equipment" context="{'group_by': 'equipment_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="it_asset_incident_report_view_kanban" model="ir.ui.view">
+        <field name="name">it.asset.incident.report.kanban</field>
+        <field name="model">it.asset.incident.report</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="reporter_name"/>
+                <field name="asset_code"/>
+                <field name="discovered_datetime"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <strong><field name="name"/></strong>
+                            <div><field name="reporter_name"/></div>
+                            <div t-if="record.asset_code.raw_value" class="text-muted">
+                                <field name="asset_code"/>
+                            </div>
+                            <div class="text-muted">
+                                <field name="discovered_datetime"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="it_asset_incident_report_action" model="ir.actions.act_window">
+        <field name="name">Incident Reports</field>
+        <field name="res_model">it.asset.incident.report</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="it_asset_incident_report_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Report your first IT incident
+            </p>
+            <p>
+                Submit incident reports aligned with the EWSETA IT Incident Reporting Form.
+                Reports are emailed to ICT Support and follow line manager and IT approval.
+            </p>
+        </field>
+    </record>
+
+    <record id="it_asset_incident_report_action_equipment" model="ir.actions.act_window">
+        <field name="name">Incident Reports</field>
+        <field name="res_model">it.asset.incident.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('equipment_id', '=', active_id)]</field>
+        <field name="context">{'default_equipment_id': active_id}</field>
+        <field name="search_view_id" ref="it_asset_incident_report_view_search"/>
+    </record>
+
+    <record id="it_asset_incident_report_action_employee" model="ir.actions.act_window">
+        <field name="name">Incident Reports</field>
+        <field name="res_model">it.asset.incident.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reporter_employee_id', '=', active_id)]</field>
+        <field name="context">{'default_reporter_employee_id': active_id}</field>
+        <field name="search_view_id" ref="it_asset_incident_report_view_search"/>
+    </record>
+
+</odoo>

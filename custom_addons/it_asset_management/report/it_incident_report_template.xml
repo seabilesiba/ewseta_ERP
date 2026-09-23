@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_it_incident_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="it_asset_management.report_ewseta_layout">
+                    <div class="page ewseta-content">
+
+                        <div class="ewseta-title-block">
+                            <h2>IT Incident Reporting Form</h2>
+                            <p class="ewseta-subtitle">
+                                Submit to ICT Support:
+                                <strong>ictsupport@ewseta.org.za</strong>
+                            </p>
+                        </div>
+
+                        <div class="ewseta-ref">
+                            <strong>Reference:</strong> <span t-field="doc.name"/>
+                            &#160;&#160;|&#160;&#160;
+                            <strong>Status:</strong> <span t-field="doc.state"/>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Contact Information</h4>
+                            <table class="ewseta-table">
+                                <tr>
+                                    <td class="label">Name</td>
+                                    <td><span t-field="doc.reporter_name"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Department</td>
+                                    <td><span t-field="doc.department_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Work Phone</td>
+                                    <td><span t-field="doc.work_phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Mobile Phone</td>
+                                    <td><span t-field="doc.mobile_phone"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Email</td>
+                                    <td><span t-field="doc.email"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Incident Description</h4>
+                            <table class="ewseta-table">
+                                <tr>
+                                    <td class="label">Asset Description</td>
+                                    <td><span t-field="doc.asset_description"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Serial Number</td>
+                                    <td><span t-field="doc.serial_no"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">EWSETA Asset Tag</td>
+                                    <td><span t-field="doc.asset_code"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Impact</h4>
+                            <table class="ewseta-table ewseta-check-grid">
+                                <tr>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_data_loss else ''}">
+                                            <t t-if="doc.impact_data_loss">✓</t>
+                                        </span> Data Loss
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_system_damage else ''}">
+                                            <t t-if="doc.impact_system_damage">✓</t>
+                                        </span> System Damage
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_downtime else ''}">
+                                            <t t-if="doc.impact_downtime">✓</t>
+                                        </span> Downtime
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_financial else ''}">
+                                            <t t-if="doc.impact_financial">✓</t>
+                                        </span> Financial Loss
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_other_orgs else ''}">
+                                            <t t-if="doc.impact_other_orgs">✓</t>
+                                        </span> Other Organisations
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_critical_services else ''}">
+                                            <t t-if="doc.impact_critical_services">✓</t>
+                                        </span> Critical Services
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_legislation else ''}">
+                                            <t t-if="doc.impact_legislation">✓</t>
+                                        </span> Legislation Violation
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.impact_unknown else ''}">
+                                            <t t-if="doc.impact_unknown">✓</t>
+                                        </span> Unknown
+                                    </td>
+                                </tr>
+                            </table>
+                            <p t-if="doc.impact_description" class="ewseta-note">
+                                <strong>Description:</strong>
+                                <span t-field="doc.impact_description"/>
+                            </p>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Data Sensitivity</h4>
+                            <table class="ewseta-table">
+                                <tr>
+                                    <td class="label">Classification</td>
+                                    <td><span t-field="doc.data_sensitivity"/></td>
+                                </tr>
+                                <tr t-if="doc.compromised_data_description">
+                                    <td class="label">Compromised Data</td>
+                                    <td><span t-field="doc.compromised_data_description"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Notifications</h4>
+                            <table class="ewseta-table">
+                                <tr>
+                                    <td class="label">Person Notified</td>
+                                    <td><span t-field="doc.notified_person"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Title</td>
+                                    <td><span t-field="doc.notified_title"/></td>
+                                </tr>
+                                <tr t-if="doc.notification_notes">
+                                    <td class="label">Additional</td>
+                                    <td><span t-field="doc.notification_notes"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Steps Taken</h4>
+                            <table class="ewseta-table ewseta-check-grid">
+                                <tr>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.step_no_action else ''}">
+                                            <t t-if="doc.step_no_action">✓</t>
+                                        </span> No Action
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.step_disconnected else ''}">
+                                            <t t-if="doc.step_disconnected">✓</t>
+                                        </span> Disconnected
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.step_virus_scan else ''}">
+                                            <t t-if="doc.step_virus_scan">✓</t>
+                                        </span> Virus Scan
+                                    </td>
+                                    <td>&#160;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.step_backup_restored else ''}">
+                                            <t t-if="doc.step_backup_restored">✓</t>
+                                        </span> Backup Restored
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.step_logs_examined else ''}">
+                                            <t t-if="doc.step_logs_examined">✓</t>
+                                        </span> Logs Examined
+                                    </td>
+                                    <td>
+                                        <span t-attf-class="ewseta-check #{'checked' if doc.step_other else ''}">
+                                            <t t-if="doc.step_other">✓</t>
+                                        </span> Other
+                                    </td>
+                                    <td>&#160;</td>
+                                </tr>
+                            </table>
+                            <p t-if="doc.steps_description" class="ewseta-note">
+                                <strong>Description:</strong>
+                                <span t-field="doc.steps_description"/>
+                            </p>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Incident Details</h4>
+                            <table class="ewseta-table">
+                                <tr>
+                                    <td class="label">Date/Time Discovered</td>
+                                    <td><span t-field="doc.discovered_datetime"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Resolved</td>
+                                    <td><t t-if="doc.is_resolved">Yes</t><t t-else="">No</t></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Location</td>
+                                    <td><span t-field="doc.location"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="label">Sites / Systems / Users Affected</td>
+                                    <td><span t-field="doc.sites_systems_users_affected"/></td>
+                                </tr>
+                                <tr t-if="doc.additional_info">
+                                    <td class="label">Additional Info</td>
+                                    <td><span t-field="doc.additional_info"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ewseta-section">
+                            <h4 class="ewseta-section-title">Signatures &amp; Approvals</h4>
+                            <table class="ewseta-table ewseta-signatures">
+                                <tr>
+                                    <td>
+                                        <span class="role">Incident Initiator</span>
+                                        <span t-field="doc.initiator_name"/><br/>
+                                        <img t-if="doc.initiator_signature"
+                                            t-att-src="image_data_uri(doc.initiator_signature)"/>
+                                        <br/>
+                                        <span t-field="doc.initiator_sign_date"/>
+                                    </td>
+                                    <td>
+                                        <span class="role">Line Manager</span>
+                                        <span t-field="doc.line_manager_sign_name"/><br/>
+                                        <span t-if="not doc.line_manager_sign_name" t-field="doc.line_manager_id"/><br/>
+                                        <img t-if="doc.line_manager_signature"
+                                            t-att-src="image_data_uri(doc.line_manager_signature)"/>
+                                        <br/>
+                                        <span t-field="doc.line_manager_sign_date"/>
+                                        <div t-if="doc.line_manager_comment" class="comment">
+                                            <strong>Comment:</strong>
+                                            <span t-field="doc.line_manager_comment"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="role">IT Manager</span>
+                                        <span t-field="doc.it_manager_sign_name"/><br/>
+                                        <span t-if="not doc.it_manager_sign_name" t-field="doc.it_manager_id"/><br/>
+                                        <img t-if="doc.it_manager_signature"
+                                            t-att-src="image_data_uri(doc.it_manager_signature)"/>
+                                        <br/>
+                                        <span t-field="doc.it_manager_sign_date"/>
+                                        <div t-if="doc.it_manager_comment" class="comment">
+                                            <strong>Comment:</strong>
+                                            <span t-field="doc.it_manager_comment"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

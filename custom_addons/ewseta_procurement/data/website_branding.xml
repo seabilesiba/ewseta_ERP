@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="website.default_website" model="website">
+        <field name="favicon" type="base64" file="ewseta_procurement/static/src/img/favicon.ico"/>
+    </record>
+    <function model="website" name="ewseta_apply_favicon"/>
+</odoo>

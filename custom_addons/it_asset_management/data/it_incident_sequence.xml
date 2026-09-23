@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_it_asset_incident_report" model="ir.sequence">
+        <field name="name">IT Incident Report</field>
+        <field name="code">it.asset.incident.report</field>
+        <field name="prefix">INC/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="it_incident_support_email_param" model="ir.config_parameter">
+        <field name="key">it_asset_management.incident_support_email</field>
+        <field name="value">ictsupport@ewseta.org.za</field>
+    </record>
+
+</odoo>

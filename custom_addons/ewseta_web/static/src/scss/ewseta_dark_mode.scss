@@ -1,0 +1,1155 @@
+// EWSETA alternate themes: dark, blue, green, orange (light is default)
+// Cycle with navbar toggle: light -> dark -> blue -> green -> orange -> light
+
+// Theme toggle button
+.ewseta-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border-radius: 0.55rem;
+    color: $ewseta-dark;
+    background: rgba($ewseta-dark, 0.05);
+    border: 1px solid rgba($ewseta-dark, 0.14);
+    transition: 0.25s ease;
+
+    .ewseta-theme-icon {
+        display: none;
+        font-size: 1.05rem;
+        line-height: 1;
+    }
+
+    .ewseta-theme-icon-next-dark {
+        display: inline;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: $ewseta-orange;
+        border-color: rgba($ewseta-orange, 0.35);
+        background: rgba($ewseta-orange, 0.1);
+    }
+}
+
+html.ewseta-dark-mode,
+html.ewseta-blue-mode,
+html.ewseta-green-mode,
+html.ewseta-orange-mode,
+html.ewseta-custom-mode {
+    .ewseta-theme-toggle {
+        color: var(--ewseta-dm-text);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: var(--ewseta-dm-border);
+
+        .ewseta-theme-icon {
+            display: none;
+        }
+    }
+}
+
+html.ewseta-dark-mode .ewseta-theme-toggle .ewseta-theme-icon-next-blue {
+    display: inline;
+}
+
+html.ewseta-blue-mode .ewseta-theme-toggle .ewseta-theme-icon-next-green {
+    display: inline;
+}
+
+html.ewseta-green-mode .ewseta-theme-toggle .ewseta-theme-icon-next-orange {
+    display: inline;
+}
+
+html.ewseta-orange-mode .ewseta-theme-toggle .ewseta-theme-icon-next-light {
+    display: inline;
+}
+
+html.ewseta-dark-mode {
+    color-scheme: dark;
+    --ewseta-dm-bg: #121214;
+    --ewseta-dm-bg-elevated: #1a1a1e;
+    --ewseta-dm-bg-subtle: #222228;
+    --ewseta-dm-bg-deep: #0e0e10;
+    --ewseta-dm-text: #f2f2f4;
+    --ewseta-dm-text-muted: rgba(242, 242, 244, 0.68);
+    --ewseta-dm-border: rgba(255, 255, 255, 0.1);
+    --ewseta-dm-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    --ewseta-voice-gradient-start: #0f2430;
+    --ewseta-body-gradient: none;
+}
+
+html.ewseta-blue-mode {
+    color-scheme: dark;
+    --ewseta-dm-bg: #0a1e35;
+    --ewseta-dm-bg-elevated: #123052;
+    --ewseta-dm-bg-subtle: #1a4568;
+    --ewseta-dm-bg-deep: #071525;
+    --ewseta-dm-text: #f2f8fc;
+    --ewseta-dm-text-muted: rgba(242, 248, 252, 0.72);
+    --ewseta-dm-border: rgba(0, 174, 239, 0.18);
+    --ewseta-dm-shadow: 0 4px 24px rgba(0, 30, 60, 0.45);
+    --ewseta-voice-gradient-start: #005a7a;
+    --ewseta-body-gradient: linear-gradient(180deg, var(--ewseta-dm-bg-elevated) 0%, var(--ewseta-dm-bg) 45%, var(--ewseta-dm-bg-deep) 100%);
+}
+
+html.ewseta-green-mode {
+    color-scheme: dark;
+    --ewseta-dm-bg: #0f1f12;
+    --ewseta-dm-bg-elevated: #1a3320;
+    --ewseta-dm-bg-subtle: #234429;
+    --ewseta-dm-bg-deep: #0a1810;
+    --ewseta-dm-text: #f2faf4;
+    --ewseta-dm-text-muted: rgba(242, 250, 244, 0.72);
+    --ewseta-dm-border: rgba(118, 188, 67, 0.22);
+    --ewseta-dm-shadow: 0 4px 24px rgba(0, 40, 20, 0.45);
+    --ewseta-voice-gradient-start: #1a4d28;
+    --ewseta-body-gradient: linear-gradient(180deg, var(--ewseta-dm-bg-elevated) 0%, var(--ewseta-dm-bg) 45%, var(--ewseta-dm-bg-deep) 100%);
+}
+
+html.ewseta-orange-mode {
+    color-scheme: dark;
+    --ewseta-dm-bg: #1a1008;
+    --ewseta-dm-bg-elevated: #2a180c;
+    --ewseta-dm-bg-subtle: #3d2410;
+    --ewseta-dm-bg-deep: #120a04;
+    --ewseta-dm-text: #fff8f0;
+    --ewseta-dm-text-muted: rgba(255, 248, 240, 0.72);
+    --ewseta-dm-border: rgba(248, 153, 29, 0.28);
+    --ewseta-dm-shadow: 0 4px 24px rgba(40, 20, 0, 0.45);
+    --ewseta-voice-gradient-start: #5a3208;
+    --ewseta-body-gradient: linear-gradient(180deg, var(--ewseta-dm-bg-elevated) 0%, var(--ewseta-dm-bg) 45%, var(--ewseta-dm-bg-deep) 100%);
+}
+
+html.ewseta-custom-mode {
+    color-scheme: dark;
+}
+
+html.ewseta-dark-mode,
+html.ewseta-blue-mode,
+html.ewseta-green-mode,
+html.ewseta-orange-mode,
+html.ewseta-custom-mode {
+    body,
+    #wrapwrap {
+        background-color: var(--ewseta-dm-bg) !important;
+        background-image: var(--ewseta-body-gradient) !important;
+        color: var(--ewseta-dm-text) !important;
+    }
+
+    // ── Header & navigation ────────────────────────────────────
+
+    header#top.ewseta-header-nav,
+    header#top.ewseta-header-nav.o_header_affixed,
+    header#top.ewseta-header-nav.o_header_is_scrolled,
+    header#top.ewseta-header-nav nav.navbar,
+    header#top.ewseta-header-nav .o_main_nav,
+    header#top.ewseta-header-nav .navbar,
+    header#top.ewseta-header-nav .o_navbar_mobile {
+        background-color: var(--ewseta-dm-bg-elevated) !important;
+        border-color: var(--ewseta-dm-border) !important;
+        box-shadow: var(--ewseta-dm-shadow) !important;
+    }
+
+    // Top menu links — override light-mode black !important rules
+    header#top.ewseta-header-nav,
+    #top_menu_collapse_mobile,
+    .offcanvas.o_navbar_mobile {
+        .top_menu > .nav-item > .nav-link,
+        .top_menu > .nav-item > .dropdown-toggle,
+        .top_menu > .nav-item > .nav-link > *,
+        .top_menu > .nav-item > .nav-link::after,
+        .top_menu > .nav-item > .dropdown-toggle > *,
+        .top_menu > .nav-item > .dropdown-toggle::after,
+        .top_menu .accordion-button,
+        .top_menu .accordion-button > *,
+        .o_extra_menu_items > .nav-link,
+        .o_extra_menu_items > .nav-link > * {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .top_menu > .nav-item > .nav-link:hover,
+        .top_menu > .nav-item > .nav-link:focus,
+        .top_menu > .nav-item > .dropdown-toggle:hover,
+        .top_menu > .nav-item > .dropdown-toggle:focus,
+        .o_extra_menu_items > .nav-link:hover {
+            &,
+            & > *,
+            &::after {
+                color: $ewseta-orange !important;
+            }
+        }
+
+        .top_menu > .nav-item > .nav-link.active,
+        .top_menu > .nav-item > .dropdown-toggle.active,
+        .top_menu > .nav-item > .nav-link.show,
+        .top_menu > .nav-item > .dropdown-toggle.show {
+            &,
+            & > *,
+            &::after {
+                color: $ewseta-orange !important;
+            }
+        }
+
+        .js_language_selector span {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        // Phone, search, login — keep orange utility links
+        .o_header_text_element,
+        .o_header_text_element a,
+        .o_header_text_element .nav-link,
+        .o_header_text_element .fa,
+        .o_header_text_element span,
+        .o_nav-link_secondary,
+        .o_nav-link_secondary .fa,
+        .o_nav-link_secondary span,
+        .o_no_autohide_item > .nav-link,
+        .o_no_autohide_item > a,
+        .o_no_autohide_item > .dropdown-toggle,
+        .o_no_autohide_item > .dropdown-toggle span,
+        .o_no_autohide_item > .dropdown-toggle .fa {
+            color: $ewseta-orange !important;
+        }
+
+        .o_no_autohide_item > .dropdown-toggle::after {
+            color: $ewseta-orange !important;
+        }
+
+        .ewseta-mobile-menu-toggle,
+        button[data-bs-target="#top_menu_collapse_mobile"] {
+            color: var(--ewseta-dm-text) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: var(--ewseta-dm-border) !important;
+
+            .ewseta-mobile-menu-icon,
+            .fa-bars {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            &:hover,
+            &:focus {
+                color: $ewseta-orange !important;
+                border-color: rgba($ewseta-orange, 0.35) !important;
+                background: rgba($ewseta-orange, 0.1) !important;
+
+                .ewseta-mobile-menu-icon,
+                .fa-bars {
+                    color: $ewseta-orange !important;
+                }
+            }
+        }
+    }
+
+    // Mega menus & dropdowns — override forced white backgrounds
+    #wrapwrap header#top.ewseta-header-nav,
+    #wrapwrap .o_navbar_mobile,
+    #wrapwrap .offcanvas.o_navbar_mobile {
+        .top_menu .dropdown-menu,
+        .navbar-nav .dropdown-menu,
+        .dropdown-menu.o_mega_menu,
+        .o_extra_menu_items .dropdown-menu,
+        .js_usermenu {
+            background-color: var(--ewseta-dm-bg-elevated) !important;
+            --bs-dropdown-bg: var(--ewseta-dm-bg-elevated) !important;
+            --bs-body-bg: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+        }
+
+        .dropdown-menu.o_mega_menu,
+        .o_mega_menu {
+            border-top-color: $ewseta-orange !important;
+
+            section,
+            .s_mega_menu_odoo_menu,
+            .o_colored_level,
+            .container,
+            .container-fluid,
+            .row,
+            [class*="col-"] {
+                background-color: var(--ewseta-dm-bg-elevated) !important;
+            }
+
+            h6,
+            h6 *,
+            .ewseta-mega-section-title,
+            .text-o-color-1 {
+                color: $ewseta-orange !important;
+            }
+
+            .ewseta-mega-menu-cards {
+                .ewseta-mega-section-title {
+                    border-bottom-color: var(--ewseta-dm-border) !important;
+                }
+
+                .ewseta-nav-card {
+                    background: var(--ewseta-dm-bg-subtle) !important;
+                    border-color: var(--ewseta-dm-border) !important;
+                    box-shadow: var(--ewseta-dm-shadow) !important;
+
+                    &:hover,
+                    &:focus {
+                        background: rgba($ewseta-orange, 0.1) !important;
+                        border-color: rgba($ewseta-orange, 0.35) !important;
+                    }
+                }
+
+                .ewseta-nav-card-title {
+                    color: var(--ewseta-dm-text) !important;
+                }
+
+                .ewseta-nav-card-desc {
+                    color: var(--ewseta-dm-text-muted) !important;
+                }
+            }
+        }
+
+        .dropdown-item {
+            color: var(--ewseta-dm-text) !important;
+            background-color: transparent !important;
+
+            .fa,
+            .oi,
+            .text-primary-emphasis {
+                color: $ewseta-orange !important;
+            }
+
+            &:hover,
+            &:focus,
+            &.active {
+                background-color: rgba($ewseta-orange, 0.12) !important;
+                color: $ewseta-orange !important;
+            }
+        }
+
+        .dropdown-divider {
+            border-color: var(--ewseta-dm-border) !important;
+        }
+    }
+
+    .ewseta-topbar .dropdown-menu {
+        background-color: var(--ewseta-dm-bg-elevated) !important;
+        --bs-dropdown-bg: var(--ewseta-dm-bg-elevated) !important;
+        border-color: var(--ewseta-dm-border) !important;
+
+        .dropdown-header,
+        .dropdown-item-text,
+        .ewseta-hours-row,
+        .ewseta-hours-address,
+        .ewseta-hours-note {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .ewseta-hours-row .day,
+        .ewseta-hours-row .time {
+            color: var(--ewseta-dm-text) !important;
+        }
+    }
+
+    #top_menu_collapse_mobile.offcanvas.o_navbar_mobile {
+        background: var(--ewseta-dm-bg-elevated) !important;
+
+        .offcanvas-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        .offcanvas-body {
+            background: var(--ewseta-dm-bg-elevated) !important;
+        }
+    }
+
+    .offcanvas.o_navbar_mobile {
+        background: var(--ewseta-dm-bg-elevated) !important;
+        color: var(--ewseta-dm-text) !important;
+    }
+
+    // ── Shared typography & buttons ────────────────────────────
+
+    .ewseta-section-header .ewseta-section-lead,
+    .text-muted,
+    .o_footer_copyright_name {
+        color: var(--ewseta-dm-text-muted) !important;
+    }
+
+    .btn-ewseta-outline-dark {
+        border-color: var(--ewseta-dm-border) !important;
+        color: var(--ewseta-dm-text) !important;
+
+        &:hover {
+            border-color: $ewseta-orange !important;
+            color: $ewseta-orange !important;
+            background: rgba($ewseta-orange, 0.08) !important;
+        }
+    }
+
+    // ── Homepage sections ──────────────────────────────────────
+
+    .s_ewseta_hero_carousel {
+        background: var(--ewseta-dm-bg) !important;
+        border-bottom-color: var(--ewseta-dm-border) !important;
+
+        .ewseta-hero-welcome {
+            background: var(--ewseta-dm-bg) !important;
+        }
+
+        .ewseta-hero-text {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .ewseta-hero-banner-strip {
+            background: var(--ewseta-dm-bg) !important;
+            border-top-color: var(--ewseta-dm-border) !important;
+        }
+
+        .ewseta-hero-banner-link {
+            background: var(--ewseta-dm-bg-subtle) !important;
+        }
+
+        .ewseta-hero-banner-indicators [data-bs-target] {
+            background: rgba(255, 255, 255, 0.25) !important;
+
+            &.active {
+                background: $ewseta-orange !important;
+            }
+        }
+
+        .ewseta-hero-banner-control .ewseta-control-icon {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .ewseta-hero-banner-control:hover .ewseta-control-icon {
+            background: $ewseta-orange !important;
+            color: #fff !important;
+        }
+
+        .ewseta-control-icon {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: var(--ewseta-dm-text) !important;
+        }
+    }
+
+    .s_ewseta_welcome {
+        background: var(--ewseta-dm-bg) !important;
+
+        .ewseta-stat-card {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            .ewseta-stat-number,
+            .ewseta-stat-label {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            .ewseta-stat-desc {
+                color: var(--ewseta-dm-text-muted) !important;
+            }
+        }
+    }
+
+    .s_ewseta_performance {
+        background: linear-gradient(180deg, var(--ewseta-dm-bg) 0%, var(--ewseta-dm-bg-subtle) 55%, var(--ewseta-dm-bg) 100%) !important;
+    }
+
+    .s_ewseta_programmes {
+        background: var(--ewseta-dm-bg-subtle) !important;
+
+        .ewseta-programme-card {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            h3,
+            p {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            p {
+                color: var(--ewseta-dm-text-muted) !important;
+            }
+        }
+    }
+
+    .s_ewseta_sectors {
+        background: var(--ewseta-dm-bg) !important;
+
+        .ewseta-sector-card {
+            border-color: var(--ewseta-dm-border) !important;
+        }
+    }
+
+    .s_ewseta_news {
+        background: var(--ewseta-dm-bg) !important;
+
+        .ewseta-news-card {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            .ewseta-news-body h3,
+            .ewseta-news-body h4 {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            .ewseta-news-body p,
+            .ewseta-news-date {
+                color: var(--ewseta-dm-text-muted) !important;
+            }
+        }
+    }
+
+    .s_ewseta_voice {
+        background: linear-gradient(135deg, var(--ewseta-voice-gradient-start) 0%, var(--ewseta-dm-bg) 100%) !important;
+
+        .ewseta-voice-panel {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .ewseta-voice-icon {
+            background: rgba($ewseta-blue, 0.18) !important;
+            color: $ewseta-blue !important;
+        }
+
+        h2 {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .ewseta-voice-text {
+            color: var(--ewseta-dm-text-muted) !important;
+            opacity: 1 !important;
+        }
+
+        .btn-ewseta-light {
+            background: $ewseta-orange !important;
+            border-color: $ewseta-orange !important;
+            color: #fff !important;
+
+            &:hover {
+                background: darken($ewseta-orange, 8%) !important;
+                border-color: darken($ewseta-orange, 8%) !important;
+                color: #fff !important;
+            }
+        }
+
+        .btn-ewseta-outline-light {
+            border-color: rgba(255, 255, 255, 0.45) !important;
+            color: var(--ewseta-dm-text) !important;
+
+            &:hover {
+                background: rgba($ewseta-orange, 0.15) !important;
+                border-color: $ewseta-orange !important;
+                color: $ewseta-orange !important;
+            }
+        }
+    }
+
+    .s_ewseta_subscribe {
+        background: var(--ewseta-dm-bg) !important;
+
+        .ewseta-section-title {
+            color: $ewseta-green !important;
+        }
+
+        .ewseta-eyebrow-green {
+            color: $ewseta-green !important;
+        }
+
+        .text-muted,
+        .ewseta-subscribe-note {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .ewseta-subscribe-panel {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: rgba($ewseta-green, 0.28) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+        }
+
+        .ewseta-subscribe-input-wrap {
+            background: var(--ewseta-dm-bg-subtle) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            .ewseta-input-icon {
+                color: var(--ewseta-dm-text-muted) !important;
+            }
+
+            .form-control {
+                background: transparent !important;
+                color: var(--ewseta-dm-text) !important;
+                border: none !important;
+                box-shadow: none !important;
+
+                &::placeholder {
+                    color: rgba(242, 242, 244, 0.45) !important;
+                }
+
+                &:focus {
+                    background: transparent !important;
+                    box-shadow: none !important;
+                }
+            }
+        }
+    }
+
+    // ── Footer ─────────────────────────────────────────────────
+
+    #footer.ewseta-footer,
+    .o_footer_copyright {
+        background: var(--ewseta-dm-bg-subtle) !important;
+        border-color: var(--ewseta-dm-border) !important;
+        color: var(--ewseta-dm-text-muted) !important;
+
+        a:not(.s_social_media_facebook):not(.s_social_media_twitter):not(.s_social_media_instagram):not(.s_social_media_linkedin):not(.s_social_media_youtube) {
+            color: var(--ewseta-dm-text-muted) !important;
+
+            &:hover {
+                color: $ewseta-blue !important;
+            }
+        }
+
+        .s_social_media {
+            a {
+                text-decoration: none !important;
+
+                i.fa.rounded-circle {
+                    display: inline-flex !important;
+                    align-items: center;
+                    justify-content: center;
+                    width: 2.25rem;
+                    height: 2.25rem;
+                    background: rgba(255, 255, 255, 0.08) !important;
+                    border: 1px solid var(--ewseta-dm-border) !important;
+                    box-shadow: none !important;
+                    color: var(--ewseta-dm-text) !important;
+                    font-size: 1rem;
+                    transition: 0.25s ease;
+                }
+
+                &:hover i.fa.rounded-circle,
+                &:focus i.fa.rounded-circle {
+                    background: $ewseta-orange !important;
+                    border-color: $ewseta-orange !important;
+                    color: #fff !important;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba($ewseta-orange, 0.35) !important;
+                }
+            }
+
+            a.s_social_media_facebook i { color: #6cb6ff !important; }
+            a.s_social_media_twitter i { color: var(--ewseta-dm-text) !important; }
+            a.s_social_media_instagram i { color: #f77788 !important; }
+            a.s_social_media_linkedin i { color: #5eb0ff !important; }
+            a.s_social_media_youtube i { color: #ff6b6b !important; }
+
+            a.s_social_media_facebook:hover i,
+            a.s_social_media_twitter:hover i,
+            a.s_social_media_instagram:hover i,
+            a.s_social_media_linkedin:hover i,
+            a.s_social_media_youtube:hover i {
+                color: #fff !important;
+            }
+        }
+    }
+
+    // ── Generic Odoo / Bootstrap surfaces ──────────────────────
+
+    .card:not([class*="o_cc"]),
+    .modal-content,
+    .dropdown-menu,
+    .list-group-item {
+        background-color: var(--ewseta-dm-bg-elevated) !important;
+        color: var(--ewseta-dm-text) !important;
+        border-color: var(--ewseta-dm-border) !important;
+    }
+
+    #wrapwrap {
+        .form-control,
+        .form-select,
+        textarea.form-control {
+            background-color: var(--ewseta-dm-bg-subtle) !important;
+            color: var(--ewseta-dm-text) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            -webkit-text-fill-color: var(--ewseta-dm-text) !important;
+
+            &::placeholder {
+                color: rgba(242, 242, 244, 0.45) !important;
+            }
+
+            &:focus {
+                background-color: var(--ewseta-dm-bg-subtle) !important;
+                color: var(--ewseta-dm-text) !important;
+                border-color: $ewseta-orange !important;
+                box-shadow: 0 0 0 0.2rem rgba($ewseta-orange, 0.18) !important;
+            }
+
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus {
+                -webkit-box-shadow: 0 0 0 1000px var(--ewseta-dm-bg-subtle) inset !important;
+                -webkit-text-fill-color: var(--ewseta-dm-text) !important;
+                caret-color: var(--ewseta-dm-text) !important;
+            }
+        }
+
+        .s_website_form {
+            .col-form-label,
+            label,
+            .s_website_form_label {
+                color: var(--ewseta-dm-text) !important;
+            }
+        }
+    }
+
+    .table {
+        --bs-table-bg: var(--ewseta-dm-bg-elevated);
+        --bs-table-color: var(--ewseta-dm-text);
+        --bs-table-border-color: var(--ewseta-dm-border);
+    }
+
+    // Contact page
+    #wrapwrap .ewseta-contact-page {
+        background: var(--ewseta-dm-bg) !important;
+        color: var(--ewseta-dm-text) !important;
+
+        .ewseta-contact-banner {
+            background: linear-gradient(180deg, var(--ewseta-dm-bg-elevated) 0%, var(--ewseta-dm-bg) 100%) !important;
+            border-bottom-color: var(--ewseta-dm-border) !important;
+
+            .ewseta-contact-banner-icon {
+                background: rgba($ewseta-orange, 0.18) !important;
+                color: $ewseta-orange !important;
+            }
+
+            .ewseta-contact-banner-eyebrow {
+                color: $ewseta-orange !important;
+            }
+
+            .ewseta-contact-banner-title {
+                color: var(--ewseta-dm-text) !important;
+            }
+        }
+
+        .ewseta-contact-form-card,
+        .ewseta-contact-sidebar {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+        }
+
+        .ewseta-eyebrow.ewseta-eyebrow-green {
+            color: $ewseta-green !important;
+        }
+
+        .ewseta-contact-form-title,
+        .ewseta-contact-sidebar-title,
+        .ewseta-contact-map-title {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .ewseta-contact-form-lead,
+        .ewseta-contact-sidebar-text,
+        .ewseta-contact-map-lead {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .s_website_form_label {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .ewseta-contact-form-card .ewseta-contact-form {
+            input.form-control.s_website_form_input,
+            textarea.form-control.s_website_form_input {
+                background-color: var(--ewseta-dm-bg-subtle) !important;
+                background: var(--ewseta-dm-bg-subtle) !important;
+                border-color: var(--ewseta-dm-border) !important;
+                color: var(--ewseta-dm-text) !important;
+                -webkit-text-fill-color: var(--ewseta-dm-text) !important;
+
+                &::placeholder {
+                    color: rgba(242, 242, 244, 0.45) !important;
+                    -webkit-text-fill-color: rgba(242, 242, 244, 0.45) !important;
+                }
+
+                &:focus {
+                    background-color: var(--ewseta-dm-bg-subtle) !important;
+                    background: var(--ewseta-dm-bg-subtle) !important;
+                    border-color: $ewseta-orange !important;
+                    color: var(--ewseta-dm-text) !important;
+                    box-shadow: 0 0 0 0.2rem rgba($ewseta-orange, 0.18) !important;
+                }
+
+                &:-webkit-autofill,
+                &:-webkit-autofill:hover,
+                &:-webkit-autofill:focus {
+                    -webkit-box-shadow: 0 0 0 1000px var(--ewseta-dm-bg-subtle) inset !important;
+                    -webkit-text-fill-color: var(--ewseta-dm-text) !important;
+                    caret-color: var(--ewseta-dm-text) !important;
+                }
+            }
+        }
+
+        .ewseta-contact-sidebar-list li {
+            color: var(--ewseta-dm-text-muted) !important;
+
+            i {
+                color: $ewseta-orange !important;
+            }
+
+            a {
+                color: lighten($ewseta-blue, 15%) !important;
+
+                &:hover {
+                    color: $ewseta-orange !important;
+                }
+            }
+        }
+
+        .ewseta-contact-sidebar-note {
+            border-top-color: var(--ewseta-dm-border) !important;
+            color: var(--ewseta-dm-text-muted) !important;
+
+            a {
+                color: $ewseta-orange !important;
+            }
+        }
+
+        .ewseta-contact-map-frame {
+            background: var(--ewseta-dm-bg-subtle) !important;
+        }
+
+        .ewseta-contact-map-caption a {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            color: var(--ewseta-dm-text) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            &:hover {
+                color: $ewseta-orange !important;
+            }
+        }
+
+        &.ewseta-contact-thanks {
+            h1,
+            p {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            a:not(.btn) {
+                color: lighten($ewseta-blue, 15%) !important;
+            }
+
+            .fa-paper-plane {
+                background: rgba($ewseta-green, 0.2) !important;
+                color: $ewseta-green !important;
+            }
+        }
+    }
+
+    // Jobs / vacancies pages
+    #wrapwrap .ewseta-jobs-page {
+        background: var(--ewseta-dm-bg) !important;
+        color: var(--ewseta-dm-text) !important;
+
+        .ewseta-jobs-banner {
+            background: linear-gradient(180deg, var(--ewseta-dm-bg-elevated) 0%, var(--ewseta-dm-bg) 100%) !important;
+            border-bottom-color: var(--ewseta-dm-border) !important;
+
+            .ewseta-jobs-banner-icon {
+                background: rgba($ewseta-orange, 0.18) !important;
+                color: $ewseta-orange !important;
+            }
+
+            .ewseta-jobs-banner-eyebrow {
+                color: $ewseta-orange !important;
+            }
+
+            .ewseta-jobs-title {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            .ewseta-jobs-search .o_searchbar_form .input-group {
+                background: var(--ewseta-dm-bg-subtle) !important;
+                border-color: var(--ewseta-dm-border) !important;
+                box-shadow: var(--ewseta-dm-shadow) !important;
+
+                .form-control,
+                .oe_search_box {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                    color: var(--ewseta-dm-text) !important;
+                    -webkit-text-fill-color: var(--ewseta-dm-text) !important;
+
+                    &::placeholder {
+                        color: rgba(242, 242, 244, 0.45) !important;
+                    }
+                }
+
+                .oe_search_button,
+                .btn {
+                    border-left-color: var(--ewseta-dm-border) !important;
+                    background: transparent !important;
+                    color: $ewseta-orange !important;
+
+                    .oi,
+                    .fa {
+                        color: $ewseta-orange !important;
+                    }
+
+                    &:hover,
+                    &:focus {
+                        background: rgba($ewseta-orange, 0.12) !important;
+                    }
+                }
+            }
+        }
+
+        #jobs_grid .ewseta-job-card {
+            --card-bg: var(--ewseta-dm-bg-elevated) !important;
+            --card-color: var(--ewseta-dm-text) !important;
+            --body-color: var(--ewseta-dm-text) !important;
+            --bs-card-bg: var(--ewseta-dm-bg-elevated) !important;
+            --bs-card-color: var(--ewseta-dm-text) !important;
+            background: var(--ewseta-dm-bg-elevated) !important;
+            background-color: var(--ewseta-dm-bg-elevated) !important;
+            color: var(--ewseta-dm-text) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            &.bg-white,
+            &.text-dark {
+                background: var(--ewseta-dm-bg-elevated) !important;
+                background-color: var(--ewseta-dm-bg-elevated) !important;
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            &:hover {
+                border-color: rgba($ewseta-orange, 0.45) !important;
+                box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45) !important;
+            }
+
+            > a {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            .card-body {
+                background: var(--ewseta-dm-bg-elevated) !important;
+                background-color: var(--ewseta-dm-bg-elevated) !important;
+                color: var(--ewseta-dm-text) !important;
+                --body-color: var(--ewseta-dm-text) !important;
+                --card-bg: var(--ewseta-dm-bg-elevated) !important;
+                --card-color: var(--ewseta-dm-text) !important;
+            }
+
+            h3,
+            h3 * {
+                color: var(--ewseta-dm-text) !important;
+            }
+
+            h5,
+            h5 * {
+                color: lighten($ewseta-blue, 15%) !important;
+            }
+
+            .ewseta-job-description,
+            .oe_empty,
+            .text-muted {
+                color: var(--ewseta-dm-text-muted) !important;
+
+                p,
+                p * {
+                    color: var(--ewseta-dm-text-muted) !important;
+                }
+            }
+
+            .o_job_infos {
+                border-top-color: var(--ewseta-dm-border) !important;
+
+                > span,
+                > div {
+                    color: var(--ewseta-dm-text-muted) !important;
+                    background: rgba(255, 255, 255, 0.06) !important;
+
+                    * {
+                        color: var(--ewseta-dm-text-muted) !important;
+                    }
+                }
+
+                .fa {
+                    color: $ewseta-orange !important;
+                }
+            }
+
+            &.o_jobs_unpublished {
+                background: var(--ewseta-dm-bg-subtle) !important;
+                border-color: rgba(255, 255, 255, 0.18) !important;
+
+                .card-body {
+                    background: var(--ewseta-dm-bg-subtle) !important;
+                    background-color: var(--ewseta-dm-bg-subtle) !important;
+                }
+            }
+        }
+
+        .navbar.mb-3 .pagination {
+            .page-link {
+                background: var(--ewseta-dm-bg-elevated) !important;
+                color: var(--ewseta-dm-text) !important;
+                border-color: var(--ewseta-dm-border) !important;
+
+                &:hover {
+                    background: rgba($ewseta-orange, 0.12) !important;
+                    border-color: rgba($ewseta-orange, 0.35) !important;
+                    color: $ewseta-orange !important;
+                }
+            }
+
+            .page-item.active .page-link {
+                background: $ewseta-orange !important;
+                border-color: $ewseta-orange !important;
+                color: #fff !important;
+            }
+        }
+
+        .alert-info,
+        .alert-warning {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            color: var(--ewseta-dm-text) !important;
+            border-color: var(--ewseta-dm-border) !important;
+        }
+    }
+
+    #wrapwrap .ewseta-jobs-sidebar {
+        background: var(--ewseta-dm-bg-elevated) !important;
+        border-color: var(--ewseta-dm-border) !important;
+        box-shadow: var(--ewseta-dm-shadow) !important;
+
+        .ewseta-eyebrow.ewseta-eyebrow-green {
+            color: $ewseta-green !important;
+        }
+
+        .ewseta-jobs-sidebar-title {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .ewseta-jobs-sidebar-text {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .ewseta-jobs-sidebar-contacts li {
+            color: var(--ewseta-dm-text-muted) !important;
+
+            i {
+                color: $ewseta-orange !important;
+            }
+
+            a {
+                color: lighten($ewseta-blue, 15%) !important;
+
+                &:hover {
+                    color: $ewseta-orange !important;
+                }
+            }
+        }
+
+        .ewseta-jobs-sidebar-socials {
+            border-top-color: var(--ewseta-dm-border) !important;
+        }
+
+        .ewseta-jobs-sidebar-socials-label {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .ewseta-jobs-social-links a {
+            background: rgba($ewseta-orange, 0.15) !important;
+            color: $ewseta-orange !important;
+
+            &:hover {
+                background: $ewseta-orange !important;
+                color: #fff !important;
+            }
+        }
+    }
+
+    #wrapwrap .ewseta-jobs-detail-page,
+    #wrapwrap .ewseta-jobs-apply-page {
+        background: var(--ewseta-dm-bg) !important;
+        color: var(--ewseta-dm-text) !important;
+
+        .ewseta-jobs-detail-nav {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-bottom-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+
+            a {
+                color: lighten($ewseta-blue, 15%) !important;
+
+                &:hover {
+                    color: $ewseta-orange !important;
+                }
+
+                .fa {
+                    color: $ewseta-orange !important;
+                }
+            }
+        }
+
+        .container,
+        .card,
+        .s_website_form {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            color: var(--ewseta-dm-text) !important;
+            border-color: var(--ewseta-dm-border) !important;
+            box-shadow: var(--ewseta-dm-shadow) !important;
+        }
+
+        .col-form-label,
+        label,
+        .s_website_form_label {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .text-muted,
+        p,
+        h2,
+        h3,
+        h4 {
+            color: var(--ewseta-dm-text) !important;
+        }
+
+        .text-muted {
+            color: var(--ewseta-dm-text-muted) !important;
+        }
+
+        .btn-outline-primary {
+            border-color: rgba(255, 255, 255, 0.35) !important;
+            color: var(--ewseta-dm-text) !important;
+
+            &:hover {
+                background: rgba($ewseta-orange, 0.12) !important;
+                border-color: $ewseta-orange !important;
+                color: $ewseta-orange !important;
+            }
+        }
+    }
+
+    // Other listing / hero pages
+    .ewseta-page-hero,
+    .ewseta-listing-page {
+        background: var(--ewseta-dm-bg) !important;
+        color: var(--ewseta-dm-text) !important;
+
+        .card,
+        .ewseta-contact-card {
+            background: var(--ewseta-dm-bg-elevated) !important;
+            border-color: var(--ewseta-dm-border) !important;
+        }
+    }
+
+    .ewseta-search-modal-content {
+        background: var(--ewseta-dm-bg-elevated) !important;
+        color: var(--ewseta-dm-text) !important;
+    }
+}

@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="rfq_public_list" name="Public RFQ List">
+        <t t-call="website.layout">
+            <div class="container ew-proc-portal mt-4 mb-5">
+                <div class="ew-proc-portal__hero">
+                    <p class="mb-2">
+                        <a href="/" class="text-decoration-none small fw-semibold">
+                            ← Procurement overview
+                        </a>
+                    </p>
+                    <h1>Procurement opportunities</h1>
+                    <p class="ew-proc-portal__hero-lead">
+                        Browse open RFQs and RFPs, submit your application before the closing date,
+                        or review outcomes and submissions received on closed opportunities.
+                    </p>
+                </div>
+
+                <t t-if="not open_rfqs and not closed_rfqs">
+                    <div class="ew-proc-portal__empty">
+                        There are currently no RFQs/RFPs published on the portal.
+                    </div>
+                </t>
+
+                <t t-if="open_rfqs or closed_rfqs">
+                    <ul class="nav nav-tabs ew-proc-portal__tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active"
+                               id="tab-open-rfqs"
+                               data-bs-toggle="tab"
+                               href="#tab-pane-open-rfqs"
+                               role="tab">
+                                Open
+                                <span class="badge bg-success ms-1" t-esc="len(open_rfqs)"/>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link"
+                               id="tab-closed-rfqs"
+                               data-bs-toggle="tab"
+                               href="#tab-pane-closed-rfqs"
+                               role="tab">
+                                Closed
+                                <span class="badge bg-secondary ms-1" t-esc="len(closed_rfqs)"/>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="ew-proc-portal__view-toolbar d-flex justify-content-end align-items-center pt-3">
+                        <span class="ew-proc-portal__view-toolbar-label me-2">View</span>
+                        <div class="btn-group ew-proc-portal__view-toggle" role="group" aria-label="RFQ list layout">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary ew-proc-portal__view-btn active"
+                                    data-ew-portal-view="cards"
+                                    aria-pressed="true">
+                                <i class="fa fa-th-large me-1" aria-hidden="true"/> Cards
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary ew-proc-portal__view-btn"
+                                    data-ew-portal-view="list"
+                                    aria-pressed="false">
+                                <i class="fa fa-list me-1" aria-hidden="true"/> List
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tab-content pt-3">
+                        <div class="tab-pane fade show active" id="tab-pane-open-rfqs" role="tabpanel">
+                            <t t-if="not open_rfqs">
+                                <div class="ew-proc-portal__empty">No open RFQs/RFPs at the moment.</div>
+                            </t>
+                            <t t-if="open_rfqs">
+                                <div class="ew-proc-portal__rfq-tab" data-ew-rfq-tab="open">
+                                    <t t-set="ew_filter_uid" t-value="'open'"/>
+                                    <t t-call="ewseta_procurement.rfq_portal_filter_toolbar"/>
+                                    <div class="ew-proc-portal__filter-empty d-none">
+                                        No open RFQs match your search or filters.
+                                    </div>
+                                    <div class="ew-proc-portal__view-pane ew-proc-portal__view-pane--cards">
+                                        <div class="ew-proc-portal__rfq-grid">
+                                            <t t-foreach="open_rfqs" t-as="r">
+                                                <t t-call="ewseta_procurement.rfq_portal_card_open"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="ew-proc-portal__view-pane ew-proc-portal__view-pane--list d-none">
+                                        <div class="ew-proc-portal__datatable" data-ew-datatable="open">
+                                        <div class="ew-proc-portal__card mt-2">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle ew-proc-portal__table ew-proc-portal__datatable-table mb-0"
+                                                       data-ew-datatable-table="1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="title"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Title
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="reference"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Reference
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="type"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Type
+                                                            </th>
+                                                            <th scope="col">Status</th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="closing"
+                                                                data-ew-sort-type="number"
+                                                                scope="col">
+                                                                Closes
+                                                            </th>
+                                                            <th class="text-end" scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="open_rfqs" t-as="r">
+                                                            <tr t-att-data-ew-id="r.id"
+                                                                t-att-data-ew-type="r.type or 'rfq'"
+                                                                t-att-data-ew-search="('%s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'))).lower()"
+                                                                t-att-data-ew-title="(r.name or '').lower()"
+                                                                t-att-data-ew-reference="(r.reference or '').lower()"
+                                                                t-att-data-ew-type-sort="r.type or 'rfq'"
+                                                                t-att-data-ew-closing-ts="r.closing_at.timestamp() if r.closing_at else 0">
+                                                                <td data-label="Title" t-esc="r.name"/>
+                                                                <td data-label="Reference" t-esc="r.reference or '—'"/>
+                                                                <td data-label="Type">
+                                                                    <span t-attf-class="badge ew-proc-portal__badge ew-proc-portal__badge--#{r.type or 'rfq'}">
+                                                                        <t t-esc="(r.type or 'rfq').upper()"/>
+                                                                    </span>
+                                                                </td>
+                                                                <td data-label="Status">
+                                                                    <span class="badge ew-proc-portal__badge ew-proc-portal__badge--open">Open</span>
+                                                                </td>
+                                                                <td data-label="Closes">
+                                                                    <t t-if="r.closing_at">
+                                                                        <t t-esc="r.closing_at" t-options="{'widget': 'datetime'}"/>
+                                                                    </t>
+                                                                    <t t-else="">—</t>
+                                                                </td>
+                                                                <td class="text-end" data-label="Action">
+                                                                    <a t-attf-href="/application/rfqs/{{ r.id }}/apply"
+                                                                       class="btn btn-primary btn-sm">
+                                                                        Apply now
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="ew-proc-portal__filter-footer d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
+                                        <p class="ew-proc-portal__filter-info small text-muted mb-0"/>
+                                        <ul class="pagination pagination-sm ew-proc-portal__filter-pagination mb-0"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-pane-closed-rfqs" role="tabpanel">
+                            <t t-if="not closed_rfqs">
+                                <div class="ew-proc-portal__empty">No closed RFQs/RFPs yet.</div>
+                            </t>
+                            <t t-if="closed_rfqs">
+                                <div class="ew-proc-portal__rfq-tab" data-ew-rfq-tab="closed">
+                                    <t t-set="ew_filter_uid" t-value="'closed'"/>
+                                    <t t-call="ewseta_procurement.rfq_portal_filter_toolbar"/>
+                                    <div class="ew-proc-portal__filter-empty d-none">
+                                        No closed RFQs match your search or filters.
+                                    </div>
+                                    <div class="ew-proc-portal__view-pane ew-proc-portal__view-pane--cards">
+                                        <div class="ew-proc-portal__rfq-grid">
+                                            <t t-foreach="closed_rfqs" t-as="r">
+                                                <t t-call="ewseta_procurement.rfq_portal_card_closed"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="ew-proc-portal__view-pane ew-proc-portal__view-pane--list d-none">
+                                        <div class="ew-proc-portal__datatable" data-ew-datatable="closed">
+                                        <div class="ew-proc-portal__card mt-2">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle ew-proc-portal__table ew-proc-portal__datatable-table mb-0"
+                                                       data-ew-datatable-table="1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="title"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Title
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="reference"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Reference
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="type"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Type
+                                                            </th>
+                                                            <th scope="col">Status</th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="closing"
+                                                                data-ew-sort-type="number"
+                                                                scope="col">
+                                                                Closed on
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="submissions"
+                                                                data-ew-sort-type="number"
+                                                                scope="col">
+                                                                Submissions
+                                                            </th>
+                                                            <th class="text-end" scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="closed_rfqs" t-as="r">
+                                                            <tr t-att-data-ew-id="r.id"
+                                                                t-att-data-ew-type="r.type or 'rfq'"
+                                                                t-att-data-ew-search="('%s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'))).lower()"
+                                                                t-att-data-ew-title="(r.name or '').lower()"
+                                                                t-att-data-ew-reference="(r.reference or '').lower()"
+                                                                t-att-data-ew-type-sort="r.type or 'rfq'"
+                                                                t-att-data-ew-closing-ts="r.closing_at.timestamp() if r.closing_at else 0"
+                                                                t-att-data-ew-submissions="r.submission_count or 0">
+                                                                <td data-label="Title" t-esc="r.name"/>
+                                                                <td data-label="Reference" t-esc="r.reference or '—'"/>
+                                                                <td data-label="Type">
+                                                                    <span t-attf-class="badge ew-proc-portal__badge ew-proc-portal__badge--#{r.type or 'rfq'}">
+                                                                        <t t-esc="(r.type or 'rfq').upper()"/>
+                                                                    </span>
+                                                                </td>
+                                                                <td data-label="Status">
+                                                                    <span class="badge ew-proc-portal__badge ew-proc-portal__badge--closed">Closed</span>
+                                                                </td>
+                                                                <td data-label="Closed on">
+                                                                    <t t-if="r.closing_at">
+                                                                        <t t-esc="r.closing_at" t-options="{'widget': 'datetime'}"/>
+                                                                    </t>
+                                                                    <t t-else="">—</t>
+                                                                </td>
+                                                                <td data-label="Submissions">
+                                                                    <span class="ew-proc-portal__count-pill" t-esc="r.submission_count"/>
+                                                                </td>
+                                                                <td class="text-end" data-label="Action">
+                                                                    <a t-attf-href="/application/rfqs/{{ r.id }}/submissions"
+                                                                       class="btn btn-outline-primary btn-sm">
+                                                                        Submissions
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="ew-proc-portal__filter-footer d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
+                                        <p class="ew-proc-portal__filter-info small text-muted mb-0"/>
+                                        <ul class="pagination pagination-sm ew-proc-portal__filter-pagination mb-0"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_portal_filter_toolbar" name="Portal RFQ search and filters">
+        <div class="ew-proc-portal__card ew-proc-portal__filter-card mb-3">
+            <div class="ew-proc-portal__filter-card-body">
+                <div class="ew-proc-portal__filter-toolbar row g-2 g-md-3 align-items-center">
+                    <div class="col-lg-6 col-md-12">
+                        <label class="visually-hidden" t-attf-for="ew-filter-search-{{ ew_filter_uid }}">Search RFQs</label>
+                        <div class="input-group">
+                            <span class="input-group-text" aria-hidden="true">
+                                <i class="fa fa-search"/>
+                            </span>
+                            <input type="search"
+                                   t-attf-id="ew-filter-search-{{ ew_filter_uid }}"
+                                   class="form-control ew-proc-portal__filter-search"
+                                   placeholder="Search by title or reference..."
+                                   autocomplete="off"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="visually-hidden" t-attf-for="ew-filter-type-{{ ew_filter_uid }}">Filter by type</label>
+                        <select t-attf-id="ew-filter-type-{{ ew_filter_uid }}"
+                                class="form-select ew-proc-portal__filter-type">
+                            <option value="">All types</option>
+                            <option value="rfq">RFQ only</option>
+                            <option value="rfp">RFP only</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="visually-hidden" t-attf-for="ew-filter-pagesize-{{ ew_filter_uid }}">Items per page</label>
+                        <select t-attf-id="ew-filter-pagesize-{{ ew_filter_uid }}"
+                                class="form-select ew-proc-portal__filter-pagesize">
+                            <option value="10" selected="selected">10 per page</option>
+                            <option value="25">25 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="rfq_portal_card_open" name="Portal RFQ card (open)">
+        <article class="ew-proc-portal__rfq-card ew-proc-portal__rfq-card--published"
+                 t-att-data-ew-id="r.id"
+                 t-att-data-ew-type="r.type or 'rfq'"
+                 t-att-data-ew-search="('%s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'))).lower()"
+                 t-att-data-ew-title="(r.name or '').lower()"
+                 t-att-data-ew-reference="(r.reference or '').lower()"
+                 t-att-data-ew-type-sort="r.type or 'rfq'"
+                 t-att-data-ew-closing-ts="r.closing_at.timestamp() if r.closing_at else 0">
+            <div class="ew-proc-portal__rfq-card-top">
+                <h2 class="ew-proc-portal__rfq-card-title" t-esc="r.name"/>
+                <span t-attf-class="badge ew-proc-portal__badge ew-proc-portal__badge--#{r.type or 'rfq'}">
+                    <t t-esc="(r.type or 'rfq').upper()"/>
+                </span>
+            </div>
+            <p class="ew-proc-portal__rfq-card-ref">
+                Ref: <t t-esc="r.reference or '—'"/>
+            </p>
+            <span class="badge ew-proc-portal__badge ew-proc-portal__badge--open mb-2">Open</span>
+            <div class="ew-proc-portal__rfq-card-meta">
+                <div class="ew-proc-portal__rfq-card-meta-row">
+                    <span>Closes</span>
+                    <span>
+                        <t t-if="r.closing_at">
+                            <t t-esc="r.closing_at" t-options="{'widget': 'datetime'}"/>
+                        </t>
+                        <t t-else="">—</t>
+                    </span>
+                </div>
+            </div>
+            <footer class="ew-proc-portal__rfq-card-footer">
+                <a t-attf-href="/application/rfqs/{{ r.id }}/apply"
+                   class="btn btn-primary btn-sm">
+                    Apply now
+                </a>
+            </footer>
+        </article>
+    </template>
+
+    <template id="rfq_portal_card_closed" name="Portal RFQ card (closed)">
+        <article t-attf-class="ew-proc-portal__rfq-card ew-proc-portal__rfq-card--closed"
+                 t-att-data-ew-id="r.id"
+                 t-att-data-ew-type="r.type or 'rfq'"
+                 t-att-data-ew-search="('%s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'))).lower()"
+                 t-att-data-ew-title="(r.name or '').lower()"
+                 t-att-data-ew-reference="(r.reference or '').lower()"
+                 t-att-data-ew-type-sort="r.type or 'rfq'"
+                 t-att-data-ew-closing-ts="r.closing_at.timestamp() if r.closing_at else 0"
+                 t-att-data-ew-submissions="r.submission_count or 0">
+            <div class="ew-proc-portal__rfq-card-top">
+                <h2 class="ew-proc-portal__rfq-card-title" t-esc="r.name"/>
+                <span t-attf-class="badge ew-proc-portal__badge ew-proc-portal__badge--#{r.type or 'rfq'}">
+                    <t t-esc="(r.type or 'rfq').upper()"/>
+                </span>
+            </div>
+            <p class="ew-proc-portal__rfq-card-ref">
+                Ref: <t t-esc="r.reference or '—'"/>
+            </p>
+            <span class="badge ew-proc-portal__badge ew-proc-portal__badge--closed mb-2">Closed</span>
+            <div class="ew-proc-portal__rfq-card-meta">
+                <div class="ew-proc-portal__rfq-card-meta-row">
+                    <span>Closed on</span>
+                    <span>
+                        <t t-if="r.closing_at">
+                            <t t-esc="r.closing_at" t-options="{'widget': 'datetime'}"/>
+                        </t>
+                        <t t-else="">—</t>
+                    </span>
+                </div>
+            </div>
+            <footer class="ew-proc-portal__rfq-card-footer">
+                <a t-attf-href="/application/rfqs/{{ r.id }}/submissions"
+                   class="btn btn-outline-primary btn-sm">
+                    Submissions
+                </a>
+                <span class="ew-proc-portal__rfq-card-count">
+                    <span class="ew-proc-portal__count-pill" t-esc="r.submission_count"/>
+                    <span class="ew-proc-portal__rfq-card-count-label">received</span>
+                </span>
+            </footer>
+        </article>
+    </template>
+
+    <template id="rfq_public_detail" name="Closed RFQ — public submissions">
+        <t t-call="website.layout">
+            <div class="container ew-proc-portal mt-4 mb-5">
+                <div class="ew-proc-portal__hero">
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+                        <div>
+                            <h1 t-esc="rfq.name"/>
+                            <p class="ew-proc-portal__hero-lead mb-0">
+                                This RFQ/RFP is closed. Below is the register of submissions received.
+                            </p>
+                        </div>
+                        <span class="badge ew-proc-portal__badge ew-proc-portal__badge--closed">Closed</span>
+                    </div>
+                    <div class="ew-proc-portal__meta-grid">
+                        <div class="ew-proc-portal__meta-item">
+                            <span class="ew-proc-portal__meta-label">Reference</span>
+                            <span class="ew-proc-portal__meta-value" t-esc="rfq.reference or '—'"/>
+                        </div>
+                        <div class="ew-proc-portal__meta-item">
+                            <span class="ew-proc-portal__meta-label">Type</span>
+                            <span class="ew-proc-portal__meta-value" t-esc="(rfq.type or 'rfq').upper()"/>
+                        </div>
+                        <div class="ew-proc-portal__meta-item">
+                            <span class="ew-proc-portal__meta-label">Closing date</span>
+                            <span class="ew-proc-portal__meta-value">
+                                <t t-if="rfq.closing_at">
+                                    <t t-esc="rfq.closing_at" t-options="{'widget': 'datetime'}"/>
+                                </t>
+                                <t t-else="">—</t>
+                            </span>
+                        </div>
+                        <div class="ew-proc-portal__meta-item">
+                            <span class="ew-proc-portal__meta-label">Submissions received</span>
+                            <span class="ew-proc-portal__meta-value">
+                                <span class="ew-proc-portal__count-pill" t-esc="len(submissions)"/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="rfq.description">
+                    <div class="ew-proc-portal__detail-panel mb-4">
+                        <h2 class="h5 text-success mb-3">Description</h2>
+                        <div t-field="rfq.description"/>
+                    </div>
+                </t>
+
+                <div class="ew-proc-portal__card">
+                    <div class="ew-proc-portal__card-head">Submission register</div>
+                    <t t-if="not submissions">
+                        <div class="ew-proc-portal__empty m-3">
+                            No submissions were received for this RFQ/RFP.
+                        </div>
+                    </t>
+                    <t t-if="submissions">
+                        <div class="table-responsive">
+                            <table class="table ew-proc-portal__table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Submission ref</th>
+                                        <th>Company / supplier</th>
+                                        <th>Submitted on</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="submissions" t-as="s">
+                                        <td data-label="Submission ref">
+                                            <code t-esc="s.name"/>
+                                        </td>
+                                        <td data-label="Company">
+                                            <strong t-esc="s.company_name or s.partner_id.name"/>
+                                        </td>
+                                        <td data-label="Submitted on">
+                                            <t t-if="s.submitted_at">
+                                                <t t-esc="s.submitted_at" t-options="{'widget': 'datetime'}"/>
+                                            </t>
+                                            <t t-else="">—</t>
+                                        </td>
+                                        <td data-label="Status">
+                                            <span t-if="s.state == 'submitted'"
+                                                  class="badge ew-proc-portal__badge ew-proc-portal__badge--open">
+                                                Submitted
+                                            </span>
+                                            <span t-else=""
+                                                  class="badge ew-proc-portal__badge ew-proc-portal__badge--closed">
+                                                Closed
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="mt-4">
+                    <a class="btn btn-outline-secondary" href="/application/rfqs">
+                        ← Back to all RFQs/RFPs
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_closed_or_missing" name="RFQ Closed/Missing">
+        <t t-call="website.layout">
+            <div class="container ew-proc-portal mt-4 mb-5">
+                <div class="alert alert-warning">
+                    This RFQ is not available for submission (it may be closed or invalid).
+                </div>
+                <a class="btn btn-secondary" href="/application/rfqs">Back to RFQs</a>
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_apply_form" name="Apply to RFQ">
+        <t t-call="website.layout">
+            <div class="container ew-proc-portal mt-4 mb-5">
+                <div class="ew-proc-portal__apply-panel">
+                    <header class="ew-proc-portal__apply-header">
+                        <div class="ew-proc-portal__apply-header-main">
+                            <p class="ew-proc-portal__apply-kicker mb-1">Submit your application</p>
+                            <h1 class="ew-proc-portal__apply-title" t-esc="rfq.name"/>
+                            <p class="ew-proc-portal__apply-meta mb-0">
+                                <span class="ew-proc-portal__apply-meta-item">
+                                    <span class="ew-proc-portal__apply-meta-label">Reference</span>
+                                    <span t-esc="rfq.reference or '-'"/>
+                                </span>
+                                <t t-if="rfq.closing_at">
+                                    <span class="ew-proc-portal__apply-meta-item">
+                                        <span class="ew-proc-portal__apply-meta-label">Closes</span>
+                                        <span t-esc="rfq.closing_at" t-options="{'widget': 'datetime'}"/>
+                                    </span>
+                                </t>
+                            </p>
+                        </div>
+                        <span class="badge ew-proc-portal__badge ew-proc-portal__badge--open">Open</span>
+                    </header>
+
+                    <t t-if="errors">
+                        <div class="alert alert-danger ew-proc-portal__apply-alert" role="alert">
+                            <ul class="mb-0">
+                                <li t-foreach="errors.values()" t-as="err"><t t-esc="err"/></li>
+                            </ul>
+                        </div>
+                    </t>
+
+                    <form class="ew-proc-portal__apply-form"
+                          t-attf-action="/application/rfqs/{{ rfq.id }}/apply/submit"
+                          method="post"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <section class="ew-proc-portal__apply-section">
+                            <h2 class="ew-proc-portal__section-title ew-proc-portal__section-title--first">Your details</h2>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label ew-proc-portal__form-label">Company name <span class="text-danger">*</span></label>
+                                    <input type="text" name="company_name" required="required"
+                                           class="form-control ew-proc-portal__input"
+                                           t-att-value="values.get('company_name', '')"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label ew-proc-portal__form-label">Contact name</label>
+                                    <input type="text" name="contact_name" class="form-control ew-proc-portal__input"
+                                           t-att-value="values.get('contact_name', '')"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label ew-proc-portal__form-label">Contact email <span class="text-danger">*</span></label>
+                                    <input type="email" name="contact_email" required="required"
+                                           class="form-control ew-proc-portal__input"
+                                           t-att-value="values.get('contact_email', '')"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label ew-proc-portal__form-label">Contact phone <span class="text-danger">*</span></label>
+                                    <input type="text" name="contact_phone" required="required"
+                                           class="form-control ew-proc-portal__input"
+                                           t-att-value="values.get('contact_phone', '')"/>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="ew-proc-portal__apply-section">
+                            <h2 class="ew-proc-portal__section-title">Mandatory documents</h2>
+                            <p class="ew-proc-portal__apply-hint">Upload each required document in PDF or image format.</p>
+                            <div class="row g-3">
+                                <div class="col-md-6" t-foreach="req_mand" t-as="req">
+                                    <label class="form-label ew-proc-portal__form-label">
+                                        <t t-esc="req.name"/> <span class="text-danger">*</span>
+                                    </label>
+                                    <input t-attf-name="file_req_{{ req.id }}"
+                                           type="file"
+                                           class="form-control ew-proc-portal__file-control"
+                                           required="required"/>
+                                </div>
+                            </div>
+                        </section>
+
+                        <t t-if="req_opt">
+                            <section class="ew-proc-portal__apply-section">
+                                <h2 class="ew-proc-portal__section-title">Optional documents</h2>
+                                <div class="row g-3">
+                                    <div class="col-md-6" t-foreach="req_opt" t-as="req">
+                                        <label class="form-label ew-proc-portal__form-label"><t t-esc="req.name"/></label>
+                                        <input t-attf-name="file_req_{{ req.id }}"
+                                               type="file"
+                                               class="form-control ew-proc-portal__file-control"/>
+                                    </div>
+                                </div>
+                            </section>
+                        </t>
+
+                        <div class="ew-proc-portal__apply-actions">
+                            <button type="submit" class="btn btn-primary ew-proc-portal__apply-submit">Submit application</button>
+                            <a href="/application/rfqs" class="btn btn-outline-secondary">Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_apply_thanks" name="Application Submitted">
+        <t t-call="website.layout">
+            <div class="container ew-proc-portal mt-4 mb-5">
+                <div class="ew-proc-portal__apply-panel ew-proc-portal__apply-panel--thanks text-center">
+                    <div class="alert alert-success ew-proc-portal__apply-alert d-inline-block text-start">
+                        <strong>Thank you!</strong> Your application has been submitted successfully.
+                    </div>
+                    <t t-if="submission">
+                        <p class="mb-0 mt-3 ew-proc-portal__apply-ref">
+                            Your submission reference:
+                            <code class="ew-proc-portal__apply-ref-code" t-esc="submission.name"/>
+                        </p>
+                    </t>
+                    <div class="mt-4">
+                        <a class="btn btn-primary" href="/application/rfqs">Back to RFQs/RFPs</a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

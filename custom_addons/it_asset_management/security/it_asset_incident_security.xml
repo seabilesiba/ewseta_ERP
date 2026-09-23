@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="it_asset_incident_report_rule_company" model="ir.rule">
+        <field name="name">IT Incident Report: multi-company</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="it_asset_incident_report_rule_manager" model="ir.rule">
+        <field name="name">IT Incident Report: IT managers see all</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_it_asset_manager'))]"/>
+    </record>
+
+    <record id="it_asset_incident_report_rule_user_read" model="ir.rule">
+        <field name="name">IT Incident Report: users read all</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_it_asset_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="it_asset_incident_report_rule_user_create" model="ir.rule">
+        <field name="name">IT Incident Report: users can create</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_it_asset_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="it_asset_incident_report_rule_user_write" model="ir.rule">
+        <field name="name">IT Incident Report: users write own drafts</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="domain_force">[('create_uid', '=', user.id), ('state', 'in', ('draft', 'submitted'))]</field>
+        <field name="groups" eval="[(4, ref('group_it_asset_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="it_asset_incident_report_rule_line_manager_write" model="ir.rule">
+        <field name="name">IT Incident Report: line manager approve submitted</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="domain_force">[('line_manager_id.user_id', '=', user.id), ('state', '=', 'submitted')]</field>
+        <field name="groups" eval="[(4, ref('group_it_asset_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

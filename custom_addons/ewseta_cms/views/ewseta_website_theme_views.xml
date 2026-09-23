@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ewseta_website_theme_view_list" model="ir.ui.view">
+        <field name="name">ewseta.website.theme.list</field>
+        <field name="model">ewseta.website.theme</field>
+        <field name="arch" type="xml">
+            <list string="Custom Themes" editable="bottom">
+                <field name="settings_id" column_invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="key" readonly="1" force_save="1" optional="hide"/>
+                <field name="color_bg" widget="color"/>
+                <field name="color_accent" widget="color"/>
+                <field name="is_published" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ewseta_website_theme_view_form" model="ir.ui.view">
+        <field name="name">ewseta.website.theme.form</field>
+        <field name="model">ewseta.website.theme</field>
+        <field name="arch" type="xml">
+            <form string="Custom Theme">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="key"/>
+                            <field name="settings_id" readonly="1"/>
+                            <field name="website_id" readonly="1" groups="website.group_multi_website"/>
+                            <field name="sequence"/>
+                            <field name="is_published"/>
+                        </group>
+                        <group>
+                            <field name="preset_template"/>
+                            <field name="toggle_icon"/>
+                            <field name="use_gradient"/>
+                        </group>
+                    </group>
+                    <group string="Theme Colors">
+                        <group>
+                            <field name="color_bg" widget="color"/>
+                            <field name="color_bg_elevated" widget="color"/>
+                            <field name="color_bg_subtle" widget="color"/>
+                            <field name="color_bg_deep" widget="color"/>
+                        </group>
+                        <group>
+                            <field name="color_text" widget="color"/>
+                            <field name="color_text_muted"/>
+                            <field name="color_border"/>
+                            <field name="color_accent" widget="color"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_website_theme_server_action" model="ir.actions.server">
+        <field name="name">Custom Themes</field>
+        <field name="model_id" ref="model_ewseta_website_theme"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_custom_themes()</field>
+    </record>
+
+</odoo>

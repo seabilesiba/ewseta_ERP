@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Logo, favicon and header CTA are driven by proc_cms -->
+    <template id="ewseta_header_call_to_action" inherit_id="website.header_call_to_action" name="EWSETA Navbar CTA class" priority="40">
+        <xpath expr="//a[hasclass('btn_cta')]" position="attributes">
+            <attribute name="class" add="ewseta-nav-cta" separator=" "/>
+        </xpath>
+    </template>
+</odoo>

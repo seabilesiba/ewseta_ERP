@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ewseta_theme_settings_view_list" model="ir.ui.view">
+        <field name="name">ewseta.theme.settings.list</field>
+        <field name="model">ewseta.theme.settings</field>
+        <field name="arch" type="xml">
+            <list string="Theme Settings" create="false" delete="false">
+                <field name="name"/>
+                <field name="default_theme_mode"/>
+                <field name="default_preset_theme"/>
+                <field name="custom_theme_count"/>
+                <field name="theme_toggle_enabled" widget="boolean_toggle"/>
+                <field name="is_active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ewseta_theme_settings_view_form" model="ir.ui.view">
+        <field name="name">ewseta.theme.settings.form</field>
+        <field name="model">ewseta.theme.settings</field>
+        <field name="arch" type="xml">
+            <form string="Theme Settings" create="false" duplicate="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_custom_themes"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-paint-brush">
+                            <field name="custom_theme_count" widget="statinfo" string="Custom Themes"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Active" bg_color="text-bg-success" invisible="not is_active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="is_active"/>
+                            <field name="website_id" groups="website.group_multi_website" readonly="1"/>
+                        </group>
+                        <group string="Visitor Experience">
+                            <field name="theme_toggle_enabled"/>
+                            <field name="remember_user_choice"/>
+                            <field name="default_theme_mode"/>
+                            <field name="default_preset_theme" invisible="default_theme_mode != 'preset'"/>
+                            <field name="default_custom_theme_id" invisible="default_theme_mode != 'custom'"/>
+                        </group>
+                    </group>
+                    <group string="Enabled EWSETA Brand Themes">
+                        <group>
+                            <field name="enable_dark_theme"/>
+                            <field name="enable_blue_theme"/>
+                            <field name="enable_green_theme"/>
+                            <field name="enable_orange_theme"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info mb-0" role="alert">
+                                White (light) is always available. Built-in themes cycle with the header button.
+                                Add your own themes below. They join the same visitor cycle when published.
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Custom Themes" name="custom_themes">
+                            <field name="custom_theme_ids" context="{'default_settings_id': id}">
+                                <list editable="bottom">
+                                    <field name="settings_id" column_invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="key" readonly="1" force_save="1" optional="hide"/>
+                                    <field name="preset_template"/>
+                                    <field name="color_bg" widget="color"/>
+                                    <field name="color_accent" widget="color"/>
+                                    <field name="toggle_icon"/>
+                                    <field name="is_published" widget="boolean_toggle"/>
+                                </list>
+                                <form string="Custom Theme">
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="key"/>
+                                            <field name="sequence"/>
+                                            <field name="is_published"/>
+                                            <field name="preset_template"/>
+                                            <field name="toggle_icon"/>
+                                            <field name="use_gradient"/>
+                                        </group>
+                                        <group string="Theme Colors">
+                                            <field name="color_bg" widget="color"/>
+                                            <field name="color_bg_elevated" widget="color"/>
+                                            <field name="color_bg_subtle" widget="color"/>
+                                            <field name="color_bg_deep" widget="color"/>
+                                            <field name="color_text" widget="color"/>
+                                            <field name="color_text_muted"/>
+                                            <field name="color_border"/>
+                                            <field name="color_accent" widget="color"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_theme_settings_server_action" model="ir.actions.server">
+        <field name="name">Theme Settings</field>
+        <field name="model_id" ref="model_ewseta_theme_settings"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_theme_settings()</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,218 @@
+/* EWSETA Procurement — /contactus */
+
+.ew-contact {
+    --ew-orange: #f29100;
+    --ew-blue: #00aeef;
+    --ew-green: #8cc63f;
+    --ew-ink: #111111;
+    --ew-muted: #5c6b63;
+    --ew-border: #d8e3dc;
+    --ew-shadow: 0 8px 28px rgba(0, 174, 239, 0.1);
+}
+
+.ew-contact__hero {
+    position: relative;
+    color: #fff;
+    background: linear-gradient(125deg, var(--ew-ink) 0%, #1a4d5c 45%, var(--ew-blue) 100%);
+    padding: clamp(2.5rem, 6vw, 4rem) 0;
+}
+
+.ew-contact__hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(242, 145, 0, 0.15), transparent 55%);
+    pointer-events: none;
+}
+
+.ew-contact__hero-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.ew-contact__hero-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+}
+
+.ew-contact__hero-lead {
+    max-width: 36rem;
+    margin: 0;
+    opacity: 0.92;
+    line-height: 1.55;
+}
+
+.ew-contact__main {
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0 4rem;
+    background: #f7fafc;
+}
+
+.ew-contact__form-card,
+.ew-contact__company-card {
+    background: #fff;
+    border: 1px solid var(--ew-border);
+    border-radius: 16px;
+    padding: 1.75rem 1.65rem;
+    box-shadow: var(--ew-shadow);
+    height: 100%;
+}
+
+.ew-contact__company-card {
+    border-left: 4px solid var(--ew-green);
+}
+
+.ew-contact__form-title,
+.ew-contact__company-name {
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0.35rem 0 0.75rem;
+    color: var(--ew-ink);
+}
+
+.ew-contact__form-lead {
+    margin-bottom: 1.25rem;
+}
+
+.ew-contact__form .form-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--ew-muted);
+}
+
+.ew-contact__form .form-control {
+    border-radius: 8px;
+    border-color: var(--ew-border);
+}
+
+.ew-contact__form .form-control:focus {
+    border-color: var(--ew-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.15);
+}
+
+.ew-contact__submit {
+    padding-top: 0.5rem;
+}
+
+.ew-contact__detail-list {
+    margin-top: 0.5rem;
+}
+
+.ew-contact__detail-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed var(--ew-border);
+}
+
+.ew-contact__detail-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.ew-contact__detail-icon {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    color: #fff;
+}
+
+.ew-contact__detail-icon--address { background: var(--ew-green); }
+.ew-contact__detail-icon--phone { background: var(--ew-blue); }
+.ew-contact__detail-icon--mobile { background: #1a8fb8; }
+.ew-contact__detail-icon--email { background: var(--ew-orange); }
+.ew-contact__detail-icon--web { background: #5c6b63; }
+.ew-contact__detail-icon--reg { background: #2d3748; }
+.ew-contact__detail-icon--vat { background: #718096; }
+
+.ew-contact__detail-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.ew-contact__detail-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ew-blue);
+    margin-bottom: 0.2rem;
+}
+
+.ew-contact__detail-value {
+    display: block;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--ew-ink);
+    font-weight: 500;
+}
+
+.ew-contact__detail-link {
+    color: var(--ew-blue);
+    text-decoration: none;
+    word-break: break-word;
+}
+
+.ew-contact__detail-link:hover {
+    color: var(--ew-orange);
+    text-decoration: underline;
+}
+
+.ew-contact__quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.ew-contact__quick-btn {
+    flex: 1 1 calc(50% - 0.35rem);
+    min-width: 10rem;
+    padding: 0.7rem 1.35rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 999px;
+    text-align: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ew-contact__quick-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.ew-contact__quick-btn--home {
+    border: 2px solid var(--ew-orange);
+    color: var(--ew-orange);
+    background: #fff;
+}
+
+.ew-contact__quick-btn--home:hover {
+    background: var(--ew-orange);
+    color: #fff;
+    border-color: var(--ew-orange);
+}
+
+.ew-contact__quick-btn--rfq {
+    border: 2px solid var(--ew-orange);
+    background: var(--ew-orange);
+    color: #fff;
+}
+
+.ew-contact__quick-btn--rfq:hover {
+    background: #e08300;
+    border-color: #e08300;
+    color: #fff;
+}
+
+@media (max-width: 991px) {
+    .ew-contact__company-card {
+        margin-top: 0.5rem;
+    }
+}

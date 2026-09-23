@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ewseta_hero_slide_view_list" model="ir.ui.view">
+        <field name="name">ewseta.hero.slide.list</field>
+        <field name="model">ewseta.hero.slide</field>
+        <field name="arch" type="xml">
+            <list string="Hero Slides" default_order="sequence">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="slide_type"/>
+                <field name="is_published" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ewseta_hero_slide_view_form" model="ir.ui.view">
+        <field name="name">ewseta.hero.slide.form</field>
+        <field name="model">ewseta.hero.slide</field>
+        <field name="arch" type="xml">
+            <form string="Hero Slide">
+                <sheet>
+                    <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Internal name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Settings">
+                            <field name="sequence"/>
+                            <field name="slide_type"/>
+                            <field name="is_published"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
+                        </group>
+                        <group string="Image">
+                            <field name="image" widget="image" options="{'size': [0, 0]}"/>
+                            <field name="image_url" placeholder="Optional fallback URL if not uploading above"/>
+                            <field name="cta_primary_url" string="Link URL"/>
+                        </group>
+                        <group string="Video (legacy carousel only)" invisible="slide_type not in ('image', 'video', 'dual_video')">
+                            <field name="video_url" placeholder="Optional MP4 URL for banner video"/>
+                            <field name="video_file" filename="video_filename"/>
+                            <field name="video_filename" invisible="1"/>
+                            <field name="video_poster" widget="image"/>
+                            <field name="video_poster_url"/>
+                        </group>
+                    </group>
+                    <group string="Banner Text (optional, not shown on site)" invisible="slide_type != 'banner'">
+                        <field name="title"/>
+                        <field name="cta_primary_label"/>
+                    </group>
+                    <notebook invisible="slide_type != 'banner'">
+                        <page string="Notes">
+                            <field name="body" placeholder="Internal notes only — banner strip shows image and link"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_hero_slide_action" model="ir.actions.act_window">
+        <field name="name">Hero Slides</field>
+        <field name="res_model">ewseta.hero.slide</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create hero content for the homepage.</p>
+            <p><strong>Portrait</strong> slides appear beside the centre circle and swap the image on hover.</p>
+            <p><strong>Banner</strong> slides appear in the thin carousel strip below the welcome block.</p>
+        </field>
+    </record>
+
+    <function model="ewseta.hero.slide" name="run_chieta_layout_migration"/>
+    <function model="ewseta.home.welcome" name="migrate_welcome_title_revert"/>
+
+</odoo>

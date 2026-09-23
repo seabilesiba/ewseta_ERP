@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Replaces default empty homepage (/) with EWSETA procurement landing -->
+    <template id="homepage_procurement" inherit_id="website.homepage" name="EWSETA procurement homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure ew-landing">
+                <t t-set="landing_counts" t-value="website.ewseta_procurement_landing_counts()"/>
+                <t t-set="open_count" t-value="landing_counts.get('open_count', 0)"/>
+                <t t-set="closed_count" t-value="landing_counts.get('closed_count', 0)"/>
+                <t t-call="ewseta_procurement.rfq_procurement_landing_content"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="rfq_procurement_landing_content" name="Procurement landing body">
+        <t t-set="blk_hero" t-value="website.proc_cms_block('home_hero')"/>
+        <t t-set="blk_how" t-value="website.proc_cms_block('home_how_intro')"/>
+        <t t-set="blk_opp" t-value="website.proc_cms_block('home_opportunities')"/>
+        <t t-set="blk_sectors" t-value="website.proc_cms_block('home_sectors')"/>
+        <t t-set="blk_cta" t-value="website.proc_cms_block('home_cta')"/>
+        <t t-set="btn_hero_primary" t-value="website.proc_cms_button('home_hero_primary')"/>
+        <t t-set="btn_hero_secondary" t-value="website.proc_cms_button('home_hero_secondary')"/>
+        <t t-set="btn_view_rfqs" t-value="website.proc_cms_button('home_view_rfqs')"/>
+        <t t-set="btn_cta_portal" t-value="website.proc_cms_button('home_cta_portal')"/>
+        <t t-set="cms_steps" t-value="website.proc_cms_cards('home_how_steps')"/>
+        <t t-set="cms_gallery" t-value="website.proc_cms_cards('home_gallery')"/>
+        <t t-set="hero_bg" t-value="website.proc_cms_hero_background_style(blk_hero, '/ewseta_procurement/static/src/img/landing_hero.jpg')"/>
+
+        <section class="ew-landing__fullbleed ew-landing__hero" t-att-style="hero_bg">
+            <div class="ew-landing__hero-overlay"/>
+            <div class="ew-landing__hero-wave"/>
+            <div class="container ew-landing__hero-inner">
+                <div class="row">
+                    <div class="col-12 col-lg-7 col-xl-6 ew-landing__hero-copy">
+                        <h1 class="ew-landing__hero-title ew-landing-reveal">
+                            <t t-if="blk_hero and blk_hero.title" t-esc="blk_hero.title"/>
+                            <t t-else="">Procurement opportunities for energy &amp; water</t>
+                        </h1>
+                        <div class="ew-landing__hero-lead ew-landing-reveal" data-delay="1">
+                            <t t-if="blk_hero and blk_hero.lead" t-out="blk_hero.lead"/>
+                            <t t-else="">Discover open RFQs and RFPs, submit compliant applications online, and review transparent outcomes when opportunities close.</t>
+                        </div>
+                        <div class="ew-landing__hero-actions ew-landing-reveal" data-delay="2">
+                            <t t-if="btn_hero_primary">
+                                <a t-att-href="btn_hero_primary.url" t-att-class="btn_hero_primary.css_classes()" t-esc="btn_hero_primary.label"/>
+                            </t>
+                            <t t-if="btn_hero_secondary">
+                                <a t-att-href="btn_hero_secondary.url" t-att-class="btn_hero_secondary.css_classes()" t-esc="btn_hero_secondary.label"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="#how-it-works" class="ew-landing__scroll-hint text-decoration-none">
+                Scroll to explore
+                <i class="fa fa-chevron-down" aria-hidden="true"/>
+            </a>
+        </section>
+
+        <section id="how-it-works" class="ew-landing__section">
+            <div class="container">
+                <div class="ew-landing__section-head ew-landing-reveal">
+                    <span class="ew-landing__eyebrow">
+                        <t t-if="blk_how and blk_how.eyebrow" t-esc="blk_how.eyebrow"/>
+                        <t t-else="">Process</t>
+                    </span>
+                    <h2 class="ew-landing__section-title">
+                        <t t-if="blk_how and blk_how.title" t-esc="blk_how.title"/>
+                        <t t-else="">How RFQ &amp; RFP procurement works</t>
+                    </h2>
+                    <p class="ew-landing__section-lead">
+                        <t t-if="blk_how and blk_how.lead" t-out="blk_how.lead"/>
+                        <t t-else="">A clear, fair path from published opportunity to submitted proposal — built for service providers in the energy and water sectors.</t>
+                    </p>
+                </div>
+                <div class="ew-landing__steps">
+                    <t t-if="cms_steps">
+                        <article t-foreach="cms_steps" t-as="step" class="ew-landing__step ew-landing-reveal" t-att-data-delay="step_index + 1">
+                            <div t-attf-class="ew-landing__step-num ew-landing__step-num--#{step_index + 1}" t-esc="step_index + 1"/>
+                            <h3 t-esc="step.title"/>
+                            <div t-if="step.body" t-out="step.body"/>
+                        </article>
+                    </t>
+                    <t t-else="">
+                        <article class="ew-landing__step ew-landing-reveal" data-delay="1">
+                            <div class="ew-landing__step-num ew-landing__step-num--1">1</div>
+                            <h3>Find an opportunity</h3>
+                            <p>Browse published RFQs and RFPs with closing dates, references, and requirements listed upfront.</p>
+                        </article>
+                    </t>
+                </div>
+            </div>
+        </section>
+
+        <section id="opportunities" class="ew-landing__section ew-landing__section--alt">
+            <div class="container">
+                <div class="ew-landing__split">
+                    <div class="ew-landing__media ew-landing-reveal">
+                        <t t-set="opp_img" t-value="website.proc_cms_block_image_url(blk_opp, '/ewseta_procurement/static/src/img/landing_apply.jpg')"/>
+                        <img t-if="opp_img"
+                             t-att-src="opp_img"
+                             t-att-alt="(blk_opp and blk_opp.image_alt) or 'Business professionals reviewing procurement documents'"
+                             loading="lazy"/>
+                    </div>
+                    <div class="ew-landing-reveal" data-delay="1">
+                        <span class="ew-landing__eyebrow">
+                            <t t-if="blk_opp and blk_opp.eyebrow" t-esc="blk_opp.eyebrow"/>
+                            <t t-else="">For service providers</t>
+                        </span>
+                        <h2 class="ew-landing__section-title text-start">
+                            <t t-if="blk_opp and blk_opp.title" t-esc="blk_opp.title"/>
+                            <t t-else="">Built for transparent, accessible bidding</t>
+                        </h2>
+                        <p class="ew-landing__section-lead text-start">
+                            <t t-if="blk_opp and blk_opp.lead" t-out="blk_opp.lead"/>
+                            <t t-else="">EWSETA publishes procurement opportunities so qualified suppliers can compete on merit — with equal access to information and deadlines.</t>
+                        </p>
+                        <t t-if="blk_opp and blk_opp.body" t-out="blk_opp.body"/>
+                        <ul t-else="" class="ew-landing__checklist">
+                            <li>Search and filter open and closed opportunities</li>
+                            <li>Card or list views with mobile-friendly layouts</li>
+                            <li>Secure document upload with clear requirements</li>
+                            <li>Public register of submissions on closed RFQs/RFPs</li>
+                        </ul>
+                        <div class="ew-landing__stats-block">
+                            <div class="ew-landing__stats">
+                                <div class="ew-landing__stat">
+                                    <div class="ew-landing__stat-value" t-esc="open_count"/>
+                                    <div class="ew-landing__stat-label">Open opportunities now</div>
+                                </div>
+                                <div class="ew-landing__stat ew-landing__stat--closed">
+                                    <div class="ew-landing__stat-value" t-esc="closed_count"/>
+                                    <div class="ew-landing__stat-label">Closed (view register)</div>
+                                </div>
+                            </div>
+                            <div t-if="btn_view_rfqs" class="ew-landing__stats-cta">
+                                <a t-att-href="btn_view_rfqs.url"
+                                   t-att-class="btn_view_rfqs.css_classes()"
+                                   t-esc="btn_view_rfqs.label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sectors" class="ew-landing__section">
+            <div class="container">
+                <div class="ew-landing__split">
+                    <div class="ew-landing-reveal">
+                        <span class="ew-landing__eyebrow">
+                            <t t-if="blk_sectors and blk_sectors.eyebrow" t-esc="blk_sectors.eyebrow"/>
+                            <t t-else="">Energy &amp; water</t>
+                        </span>
+                        <h2 class="ew-landing__section-title text-start">
+                            <t t-if="blk_sectors and blk_sectors.title" t-esc="blk_sectors.title"/>
+                            <t t-else="">Skills, infrastructure &amp; sector delivery</t>
+                        </h2>
+                        <p class="ew-landing__section-lead text-start">
+                            <t t-if="blk_sectors and blk_sectors.lead" t-out="blk_sectors.lead"/>
+                            <t t-else="">Procurement supports EWSETA’s mandate in the energy and water education and training space — from learning programmes to essential goods and services.</t>
+                        </p>
+                        <t t-if="blk_sectors and blk_sectors.body" t-out="blk_sectors.body"/>
+                    </div>
+                    <div class="ew-landing__media ew-landing-reveal" data-delay="1">
+                        <t t-set="sectors_img" t-value="website.proc_cms_block_image_url(blk_sectors, '/ewseta_procurement/static/src/img/landing_energy.jpg')"/>
+                        <img t-if="sectors_img"
+                             t-att-src="sectors_img"
+                             t-att-alt="(blk_sectors and blk_sectors.image_alt) or 'Energy infrastructure and power lines at sunset'"
+                             loading="lazy"/>
+                    </div>
+                </div>
+                <div class="ew-landing__gallery ew-landing-reveal">
+                    <t t-if="cms_gallery">
+                        <div t-foreach="cms_gallery" t-as="gitem" class="ew-landing__gallery-item">
+                            <t t-set="gimg" t-value="website.proc_cms_card_image_url(gitem)"/>
+                            <img t-if="gimg"
+                                 t-att-src="gimg"
+                                 t-att-alt="gitem.image_alt or gitem.title"
+                                 loading="lazy"/>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="ew-landing__gallery-item">
+                            <img src="/ewseta_procurement/static/src/img/landing_team.jpg" alt="Collaborative team planning procurement" loading="lazy"/>
+                        </div>
+                        <div class="ew-landing__gallery-item">
+                            <img src="/ewseta_procurement/static/src/img/landing_apply.jpg" alt="Professional meeting" loading="lazy"/>
+                        </div>
+                        <div class="ew-landing__gallery-item">
+                            <img src="/ewseta_procurement/static/src/img/landing_energy.jpg" alt="Energy sector" loading="lazy"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+
+        <section id="get-started" class="ew-landing__section ew-landing__section--alt pb-5">
+            <div class="container">
+                <div class="ew-landing__cta ew-landing-reveal">
+                    <h2>
+                        <t t-if="blk_cta and blk_cta.title" t-esc="blk_cta.title"/>
+                        <t t-else="">Ready to submit your proposal?</t>
+                    </h2>
+                    <p>
+                        <t t-if="blk_cta and blk_cta.lead" t-out="blk_cta.lead"/>
+                        <t t-else="">Open the opportunities portal to apply before closing dates or review closed procurement registers.</t>
+                    </p>
+                    <t t-if="btn_cta_portal">
+                        <a t-att-href="btn_cta_portal.url" t-att-class="btn_cta_portal.css_classes()" t-esc="btn_cta_portal.label"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="it_equipment_category_laptops" model="maintenance.equipment.category">
+        <field name="name">Laptops</field>
+    </record>
+    <record id="it_equipment_category_desktops" model="maintenance.equipment.category">
+        <field name="name">Desktops</field>
+    </record>
+    <record id="it_equipment_category_monitors" model="maintenance.equipment.category">
+        <field name="name">Monitors</field>
+    </record>
+    <record id="it_equipment_category_phones" model="maintenance.equipment.category">
+        <field name="name">Mobile Phones</field>
+    </record>
+    <record id="it_equipment_category_tablets" model="maintenance.equipment.category">
+        <field name="name">Tablets</field>
+    </record>
+    <record id="it_equipment_category_network" model="maintenance.equipment.category">
+        <field name="name">Network Equipment</field>
+    </record>
+    <record id="it_equipment_category_peripherals" model="maintenance.equipment.category">
+        <field name="name">Peripherals</field>
+    </record>
+    <record id="it_equipment_category_software" model="maintenance.equipment.category">
+        <field name="name">Software Licenses</field>
+    </record>
+
+</odoo>

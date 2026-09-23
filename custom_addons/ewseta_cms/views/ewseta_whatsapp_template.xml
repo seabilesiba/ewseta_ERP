@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="ewseta_whatsapp_float" inherit_id="website.layout" name="EWSETA WhatsApp Float" priority="30">
+    <xpath expr="//div[@id='wrapwrap']/footer" position="after">
+        <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+        <t t-set="ewseta_navbar_settings" t-value="request.env['ewseta.navbar.settings'].sudo().get_for_website(website.id)"/>
+        <a t-if="ewseta_navbar_settings and 'whatsapp_enabled' in ewseta_navbar_settings._fields and ewseta_navbar_settings.whatsapp_enabled and 'whatsapp_phone' in ewseta_navbar_settings._fields and ewseta_navbar_settings.whatsapp_phone"
+           t-att-href="ewseta_navbar_settings.whatsapp_url()"
+           class="ewseta-whatsapp-float"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Chat on WhatsApp">
+            <i class="fa fa-whatsapp" aria-hidden="true"/>
+        </a>
+    </xpath>
+</template>
+
+</odoo>

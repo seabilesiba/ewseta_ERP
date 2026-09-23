@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ewseta_proc_footer" inherit_id="website.layout" name="EWSETA Procurement Footer" priority="99">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo ew-proc-footer o_footer_force_style" t-if="not no_footer" t-ignore="true">
+                <t t-set="cms_site" t-value="website.proc_cms_site()"/>
+                <t t-set="cms_logo" t-value="website.proc_cms_logo_url()"/>
+                <t t-set="footer_explore" t-value="website.proc_cms_footer_links('explore')"/>
+                <t t-set="cp" t-value="res_company.partner_id"/>
+                <t t-set="ew_phone" t-value="(cp.phone if cp else False) or res_company.phone"/>
+                <t t-set="ew_email" t-value="(cp.email if cp else False) or res_company.email"/>
+                <t t-set="ew_web" t-value="(cp.website if cp else False) or res_company.website"/>
+                <section class="ew-proc-footer__main">
+                    <div class="container">
+                        <div class="row g-4 g-lg-5">
+                            <div class="col-lg-4">
+                                <a href="/" class="ew-proc-footer__brand d-inline-block mb-3">
+                                    <img t-if="cms_logo"
+                                         t-att-src="cms_logo"
+                                         alt="EW SETA"
+                                         class="ew-proc-footer__logo"
+                                         loading="lazy"/>
+                                    <img t-else=""
+                                         src="/ewseta_procurement/static/src/img/ewseta_logo.jpg"
+                                         alt="EW SETA"
+                                         class="ew-proc-footer__logo"
+                                         loading="lazy"/>
+                                </a>
+                                <p class="ew-proc-footer__tagline mb-0">
+                                    <t t-if="cms_site and cms_site.footer_tagline" t-esc="cms_site.footer_tagline"/>
+                                    <t t-else="">Public procurement for RFQs and RFPs — Energy &amp; Water Sector Education and Training Authority.</t>
+                                </p>
+                            </div>
+                            <div class="col-6 col-lg-2">
+                                <h6 class="ew-proc-footer__heading">
+                                    <t t-esc="website.proc_cms_footer_column_title('explore', 'Explore')"/>
+                                </h6>
+                                <ul class="ew-proc-footer__links list-unstyled mb-0">
+                                    <t t-if="footer_explore">
+                                        <li t-foreach="footer_explore" t-as="flink">
+                                            <a t-att-href="flink.url"
+                                               t-att-target="'_blank' if flink.new_window else None"
+                                               t-esc="flink.label"/>
+                                        </li>
+                                    </t>
+                                    <t t-else="">
+                                        <li><a href="/">Home</a></li>
+                                        <li><a href="/application/rfqs">Procurements</a></li>
+                                        <li><a href="/contactus">Contact us</a></li>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-lg-3">
+                                <h6 class="ew-proc-footer__heading">Contact</h6>
+                                <ul class="ew-proc-footer__contact list-unstyled mb-0">
+                                    <li t-if="cp and (cp.street or cp.city) or res_company.street or res_company.city">
+                                        <i class="fa fa-map-marker fa-fw" aria-hidden="true"/>
+                                        <span>
+                                            <t t-if="cp and cp.street" t-esc="cp.street"/>
+                                            <t t-elif="res_company.street" t-esc="res_company.street"/>
+                                            <t t-if="(cp and cp.city) or res_company.city">
+                                                <br/>
+                                                <t t-if="cp and cp.city" t-esc="cp.city"/>
+                                                <t t-else="" t-esc="res_company.city"/>
+                                            </t>
+                                        </span>
+                                    </li>
+                                    <li t-if="ew_phone">
+                                        <i class="fa fa-phone fa-fw" aria-hidden="true"/>
+                                        <a class="o_force_ltr" t-attf-href="tel:{{ ew_phone }}" t-esc="ew_phone"/>
+                                    </li>
+                                    <li t-if="ew_email">
+                                        <i class="fa fa-envelope fa-fw" aria-hidden="true"/>
+                                        <a t-attf-href="mailto:{{ ew_email }}" t-esc="ew_email"/>
+                                    </li>
+                                    <li t-if="ew_web">
+                                        <i class="fa fa-globe fa-fw" aria-hidden="true"/>
+                                        <a t-att-href="ew_web if ew_web.startswith('http') else 'https://' + ew_web" t-esc="ew_web"/>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3">
+                                <h6 class="ew-proc-footer__heading">Follow us</h6>
+                                <div class="ew-proc-footer__social">
+                                    <a t-if="res_company.social_facebook"
+                                       t-att-href="res_company.social_facebook if res_company.social_facebook.startswith('http') else 'https://' + res_company.social_facebook"
+                                       class="ew-proc-footer__social-link ew-proc-footer__social-link--facebook"
+                                       target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                                        <i class="fa fa-facebook"/>
+                                    </a>
+                                    <a t-if="res_company.social_twitter"
+                                       t-att-href="res_company.social_twitter if res_company.social_twitter.startswith('http') else 'https://' + res_company.social_twitter"
+                                       class="ew-proc-footer__social-link ew-proc-footer__social-link--twitter"
+                                       target="_blank" rel="noopener noreferrer" aria-label="X">
+                                        <i class="fa fa-twitter"/>
+                                    </a>
+                                    <a t-if="res_company.social_instagram"
+                                       t-att-href="res_company.social_instagram if res_company.social_instagram.startswith('http') else 'https://' + res_company.social_instagram"
+                                       class="ew-proc-footer__social-link ew-proc-footer__social-link--instagram"
+                                       target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                        <i class="fa fa-instagram"/>
+                                    </a>
+                                    <a t-if="res_company.social_linkedin"
+                                       t-att-href="res_company.social_linkedin if res_company.social_linkedin.startswith('http') else 'https://' + res_company.social_linkedin"
+                                       class="ew-proc-footer__social-link ew-proc-footer__social-link--linkedin"
+                                       target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                        <i class="fa fa-linkedin"/>
+                                    </a>
+                                    <a t-if="res_company.social_youtube"
+                                       t-att-href="res_company.social_youtube if res_company.social_youtube.startswith('http') else 'https://' + res_company.social_youtube"
+                                       class="ew-proc-footer__social-link ew-proc-footer__social-link--youtube"
+                                       target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                                        <i class="fa fa-youtube-play"/>
+                                    </a>
+                                    <a t-if="res_company.social_tiktok"
+                                       t-att-href="res_company.social_tiktok if res_company.social_tiktok.startswith('http') else 'https://' + res_company.social_tiktok"
+                                       class="ew-proc-footer__social-link ew-proc-footer__social-link--tiktok"
+                                       target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                                        <i class="fa fa-external-link"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="ew-proc-footer__accent" aria-hidden="true"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="ewseta_proc_footer_copyright" inherit_id="website.layout" name="EWSETA Procurement Footer Copyright" priority="99">
+        <xpath expr="//div[hasclass('o_footer_copyright')]" position="before">
+            <t t-set="cms_site" t-value="website.proc_cms_site()"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_copyright')]//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="o_footer_copyright_name">
+                Copyright ©
+                <t t-esc="res_company.name"/>
+                <t t-if="cms_site and cms_site.copyright_suffix" t-esc="' ' + cms_site.copyright_suffix"/>
+                <t t-else=""> | All rights reserved</t>
+            </span>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
+            <attribute name="class" add="ew-proc-footer__copyright" separator=" "/>
+        </xpath>
+    </template>
+
+</odoo>

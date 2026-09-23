@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_block_tree" model="ir.ui.view">
+        <field name="name">proc.cms.block.tree</field>
+        <field name="model">proc.cms.block</field>
+        <field name="arch" type="xml">
+            <list class="proc-cms-block-list" decoration-muted="active == False">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="page_key" widget="badge"
+                       decoration-info="page_key == 'home'"
+                       decoration-success="page_key == 'contact'"
+                       decoration-muted="page_key == 'global'"/>
+                <field name="title"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_block_form" model="ir.ui.view">
+        <field name="name">proc.cms.block.form</field>
+        <field name="model">proc.cms.block</field>
+        <field name="arch" type="xml">
+            <form string="Content block" class="proc-cms-form proc-cms-block-form">
+                <header>
+                    <button name="action_open_website_content" type="object"
+                            string="All website content"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="title" placeholder="Headline on the website"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">
+                            <field name="name" readonly="1" class="oe_inline"/>
+                            ·
+                            <field name="code" readonly="1" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div>
+                            <span class="proc-cms-form-hero__label">Page</span>
+                            <div class="mt-1">
+                                <field name="page_key" widget="badge"
+                                       decoration-info="page_key == 'home'"
+                                       decoration-success="page_key == 'contact'"
+                                       decoration-muted="page_key == 'global'"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Visible on site</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                        <div class="proc-cms-block-preview">
+                            <span class="proc-cms-form-hero__label">Eyebrow preview</span>
+                            <div class="mt-1">
+                                <span class="proc-cms-block-preview__eyebrow">
+                                    <field name="eyebrow" readonly="1" nolabel="1" class="oe_inline"
+                                           placeholder="—"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="proc-cms-form-hint">
+                        Text and images for a fixed section on the public site. The
+                        <strong>code</strong> (e.g. <code>contact_form</code>, <code>home_hero</code>)
+                        is wired in templates — edit copy and media here, do not duplicate rows.
+                    </p>
+
+                    <div class="proc-cms-form-card proc-cms-block-form__copy">
+                        <div class="proc-cms-form-card__head">Copy</div>
+                        <group>
+                            <field name="eyebrow" placeholder="Small label above the title"/>
+                            <field name="title" placeholder="Section headline"/>
+                            <field name="lead" widget="html" options="{'style-inline': true}"/>
+                            <field name="body" widget="html" options="{'style-inline': true}"/>
+                        </group>
+                    </div>
+
+                    <div class="proc-cms-form-grid proc-cms-block-form__media-grid">
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Hero / background</div>
+                            <group>
+                                <field name="background_image" widget="image" class="oe_avatar"/>
+                                <field name="background_image_filename" invisible="1"/>
+                                <field name="static_background_url"
+                                       placeholder="/ewseta_procurement/static/src/img/landing_hero.jpg"/>
+                            </group>
+                        </div>
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Side image</div>
+                            <group>
+                                <field name="image" widget="image" class="oe_avatar"/>
+                                <field name="image_filename" invisible="1"/>
+                                <field name="image_alt" placeholder="Describe the image for accessibility"/>
+                                <field name="static_image_url"
+                                       placeholder="/ewseta_procurement/static/src/img/…"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="proc-cms-form-card">
+                        <div class="proc-cms-form-card__head">Internal reference</div>
+                        <group>
+                            <field name="name"/>
+                            <field name="code" readonly="1"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_block" model="ir.actions.act_window">
+        <field name="name">Content blocks</field>
+        <field name="res_model">proc.cms.block</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

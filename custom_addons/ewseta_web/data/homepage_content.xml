@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="homepage" inherit_id="website.homepage" name="EWSETA Homepage" priority="20">
+    <xpath expr="//div[@id='wrap']" position="replace">
+        <div id="wrap" class="oe_structure">
+            <t t-call="ewseta_web.s_ewseta_hero_carousel"/>
+            <t t-call="ewseta_web.s_ewseta_welcome"/>
+            <t t-call="ewseta_web.s_ewseta_performance"/>
+            <t t-call="ewseta_web.s_ewseta_programmes"/>
+            <t t-call="ewseta_web.s_ewseta_sectors"/>
+            <t t-call="ewseta_web.s_ewseta_news"/>
+            <t t-call="ewseta_web.s_ewseta_voice"/>
+            <t t-call="ewseta_web.s_ewseta_subscribe"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="proc_cms_site_default" model="proc.cms.site">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="footer_tagline">Public procurement for RFQs and RFPs — Energy &amp; Water Sector Education and Training Authority.</field>
+        <field name="copyright_suffix">| All rights reserved</field>
+    </record>
+
+    <record id="proc_cms_nav_procurements" model="proc.cms.nav.item">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="name">Procurements</field>
+        <field name="url">/application/rfqs</field>
+        <field name="sequence">80</field>
+    </record>
+
+    <record id="proc_cms_nav_cta" model="proc.cms.nav.item">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="name">Contact Us</field>
+        <field name="url">/contactus</field>
+        <field name="sequence">5</field>
+        <field name="is_cta" eval="True"/>
+    </record>
+
+    <record id="proc_cms_btn_hero_primary" model="proc.cms.button">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="key">home_hero_primary</field>
+        <field name="name">Home hero — primary</field>
+        <field name="label">Browse open opportunities</field>
+        <field name="url">/application/rfqs</field>
+        <field name="style">primary</field>
+        <field name="css_class">btn-lg</field>
+    </record>
+
+    <record id="proc_cms_btn_hero_ghost" model="proc.cms.button">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="key">home_hero_secondary</field>
+        <field name="name">Home hero — secondary</field>
+        <field name="label">How it works</field>
+        <field name="url">#how-it-works</field>
+        <field name="style">ghost</field>
+        <field name="css_class">btn-lg</field>
+    </record>
+
+    <record id="proc_cms_btn_view_rfqs" model="proc.cms.button">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="key">home_view_rfqs</field>
+        <field name="name">Home — view RFQs</field>
+        <field name="label">View all RFQs / RFPs</field>
+        <field name="url">/application/rfqs</field>
+        <field name="style">primary</field>
+    </record>
+
+    <record id="proc_cms_btn_cta_bottom" model="proc.cms.button">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="key">home_cta_portal</field>
+        <field name="name">Home bottom CTA</field>
+        <field name="label">Go to opportunities portal</field>
+        <field name="url">/application/rfqs</field>
+        <field name="style">green</field>
+        <field name="css_class">btn-lg</field>
+    </record>
+
+    <record id="proc_cms_block_hero" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">home_hero</field>
+        <field name="name">Home hero</field>
+        <field name="page_key">home</field>
+        <field name="title">Procurement opportunities for energy &amp; water</field>
+        <field name="lead">Discover open RFQs and RFPs, submit compliant applications online, and review transparent outcomes when opportunities close.</field>
+    </record>
+
+    <record id="proc_cms_block_how_intro" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">home_how_intro</field>
+        <field name="name">How it works intro</field>
+        <field name="page_key">home</field>
+        <field name="eyebrow">Process</field>
+        <field name="title">How RFQ &amp; RFP procurement works</field>
+        <field name="lead">A clear, fair path from published opportunity to submitted proposal — built for service providers in the energy and water sectors.</field>
+    </record>
+
+    <record id="proc_cms_block_opportunities" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">home_opportunities</field>
+        <field name="name">Opportunities section</field>
+        <field name="page_key">home</field>
+        <field name="eyebrow">For service providers</field>
+        <field name="title">Built for transparent, accessible bidding</field>
+        <field name="lead">EWSETA publishes procurement opportunities so qualified suppliers can compete on merit — with equal access to information and deadlines.</field>
+        <field name="body">&lt;ul class="ew-landing__checklist"&gt;&lt;li&gt;Search and filter open and closed opportunities&lt;/li&gt;&lt;li&gt;Card or list views with mobile-friendly layouts&lt;/li&gt;&lt;li&gt;Secure document upload with clear requirements&lt;/li&gt;&lt;li&gt;Public register of submissions on closed RFQs/RFPs&lt;/li&gt;&lt;/ul&gt;</field>
+    </record>
+
+    <record id="proc_cms_block_sectors" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">home_sectors</field>
+        <field name="name">Sectors section</field>
+        <field name="page_key">home</field>
+        <field name="eyebrow">Energy &amp; water</field>
+        <field name="title">Skills, infrastructure &amp; sector delivery</field>
+        <field name="lead">Procurement supports EWSETA’s mandate in the energy and water education and training space — from learning programmes to essential goods and services.</field>
+        <field name="body">&lt;p class="text-muted mb-0"&gt;Whether you supply training, technology, facilities, or professional services, register interest by applying to relevant published RFQs and RFPs.&lt;/p&gt;</field>
+    </record>
+
+    <record id="proc_cms_block_cta" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">home_cta</field>
+        <field name="name">Home bottom CTA text</field>
+        <field name="page_key">home</field>
+        <field name="title">Ready to submit your proposal?</field>
+        <field name="lead">Open the opportunities portal to apply before closing dates or review closed procurement registers.</field>
+    </record>
+
+    <record id="proc_cms_card_step_1" model="proc.cms.card">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="section_key">home_how_steps</field>
+        <field name="card_type">step</field>
+        <field name="title">Find an opportunity</field>
+        <field name="body">&lt;p&gt;Browse published RFQs and RFPs with closing dates, references, and requirements listed upfront.&lt;/p&gt;</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="proc_cms_card_step_2" model="proc.cms.card">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="section_key">home_how_steps</field>
+        <field name="card_type">step</field>
+        <field name="title">Prepare &amp; apply</field>
+        <field name="body">&lt;p&gt;Upload mandatory and optional documents through the online application form before the closing date and time.&lt;/p&gt;</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="proc_cms_card_step_3" model="proc.cms.card">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="section_key">home_how_steps</field>
+        <field name="card_type">step</field>
+        <field name="title">Track outcomes</field>
+        <field name="body">&lt;p&gt;After closing, view the public submission register and outcomes for completed procurements.&lt;/p&gt;</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="proc_cms_footer_home" model="proc.cms.footer.link">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="column_key">explore</field>
+        <field name="column_title">Explore</field>
+        <field name="label">Home</field>
+        <field name="url">/</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="proc_cms_footer_proc" model="proc.cms.footer.link">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="label">Procurements</field>
+        <field name="url">/application/rfqs</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="proc_cms_footer_contact" model="proc.cms.footer.link">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="label">Contact us</field>
+        <field name="url">/contactus</field>
+        <field name="sequence">3</field>
+    </record>
+
+</odoo>

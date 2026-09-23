@@ -1,0 +1,22 @@
+$ewseta-orange: #F8991D;
+$ewseta-blue: #00AEEF;
+$ewseta-green: #76BC43;
+$ewseta-dark: #231F20;
+
+$body-color: $ewseta-dark;
+$headings-color: $ewseta-dark;
+$link-color: $ewseta-blue;
+$link-hover-color: darken($ewseta-blue, 10%);
+
+$font-family-sans-serif: Arial, Helvetica, sans-serif;
+
+$dropdown-bg: #fff;
+$dropdown-link-color: $ewseta-dark;
+$dropdown-link-hover-bg: rgba($ewseta-orange, 0.08);
+$dropdown-link-hover-color: $ewseta-dark;
+
+$modal-content-bg: #fff;
+$popover-bg: #fff;
+$popover-header-bg: #fff;
+$card-bg: #fff;
+$offcanvas-bg-color: #fff;

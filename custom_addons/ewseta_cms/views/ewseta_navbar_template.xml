@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="ewseta_navbar_menus" inherit_id="website.layout" name="EWSETA Navbar Menu Source" priority="25">
+    <xpath expr="//header" position="before">
+        <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+        <t t-set="ewseta_navbar_settings" t-value="request.env['ewseta.navbar.settings'].sudo().get_for_website(website.id)"/>
+        <t t-set="ewseta_nav_menus" t-value="website.sudo().ewseta_nav_menu_ids()"/>
+    </xpath>
+</template>
+
+<template id="ewseta_header_default_menus" inherit_id="website.template_header_default" name="EWSETA Header Default Menus" priority="25">
+    <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="attributes">
+        <attribute name="t-foreach">ewseta_nav_menus</attribute>
+    </xpath>
+</template>
+
+<template id="ewseta_header_mobile_menus" inherit_id="website.template_header_mobile" name="EWSETA Header Mobile Menus" priority="25">
+    <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="attributes">
+        <attribute name="t-foreach">ewseta_nav_menus</attribute>
+    </xpath>
+</template>
+
+<template id="ewseta_header_brand_cms" inherit_id="ewseta_web.ewseta_header_brand" name="EWSETA Header Brand CMS" priority="30">
+    <xpath expr="//img[@src='/ewseta_web/static/img/ewseta_logo.png']" position="replace">
+        <img t-att-src="ewseta_navbar_settings._logo_web_url() if ewseta_navbar_settings else '/ewseta_web/static/img/ewseta_logo.png'"
+             t-att-alt="ewseta_navbar_settings.logo_alt if ewseta_navbar_settings else 'Energy &amp; Water SETA'"
+             t-att-width="ewseta_navbar_settings.logo_width if ewseta_navbar_settings else 220"
+             t-att-height="ewseta_navbar_settings.logo_height if ewseta_navbar_settings else 55"/>
+    </xpath>
+</template>
+
+<template id="ewseta_header_search_cms" inherit_id="website.header_search_box" name="EWSETA Header Search CMS" priority="30">
+    <xpath expr="//li" position="attributes">
+        <attribute name="t-if">not ewseta_navbar_settings or 'search_enabled' not in ewseta_navbar_settings._fields or ewseta_navbar_settings.search_enabled</attribute>
+    </xpath>
+</template>
+
+<template id="ewseta_header_text_element_cms" inherit_id="website.header_text_element" name="EWSETA Header Phone CMS" priority="30">
+    <xpath expr="//li" position="replace">
+        <li t-if="ewseta_navbar_settings and 'header_phone_enabled' in ewseta_navbar_settings._fields and ewseta_navbar_settings.header_phone_enabled" t-attf-class="#{_item_class}">
+            <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                <a t-att-href="'tel:%s' % ewseta_navbar_settings.header_phone_link" class="nav-link o_nav-link_secondary p-2">
+                    <i class="fa fa-1x fa-fw fa-phone me-1"/>
+                    <span class="o_force_ltr"><small t-out="ewseta_navbar_settings.header_phone"/></span>
+                </a>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<template id="ewseta_header_cta_cms" inherit_id="ewseta_web.ewseta_header_cta" name="EWSETA Header CTA CMS" priority="30">
+    <xpath expr="//a[hasclass('btn_cta')]" position="replace">
+        <a t-if="ewseta_navbar_settings and ewseta_navbar_settings.cta_enabled"
+           t-att-href="ewseta_navbar_settings.cta_url"
+           class="oe_unremovable btn btn-primary btn_cta btn-ewseta-primary"
+           t-out="ewseta_navbar_settings.cta_label"/>
+        <a t-elif="not ewseta_navbar_settings"
+           href="/contactus"
+           class="oe_unremovable btn btn-primary btn_cta btn-ewseta-primary">Contact Us</a>
+    </xpath>
+</template>
+
+</odoo>

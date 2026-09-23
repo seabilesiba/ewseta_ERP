@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_helpdesk_category_user,helpdesk.category user,model_helpdesk_category,group_helpdesk_user,1,0,0,0
+access_helpdesk_category_technician,helpdesk.category technician,model_helpdesk_category,group_helpdesk_technician,1,0,0,0
+access_helpdesk_category_manager,helpdesk.category manager,model_helpdesk_category,group_helpdesk_manager,1,1,1,1
+access_helpdesk_ticket_user,helpdesk.ticket user,model_helpdesk_ticket,group_helpdesk_user,1,1,1,0
+access_helpdesk_ticket_technician,helpdesk.ticket technician,model_helpdesk_ticket,group_helpdesk_technician,1,1,1,0
+access_helpdesk_ticket_manager,helpdesk.ticket manager,model_helpdesk_ticket,group_helpdesk_manager,1,1,1,1

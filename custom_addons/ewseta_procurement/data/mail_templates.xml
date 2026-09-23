@@ -1,0 +1,73 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Styled Onboarding Welcome Email Template -->
+        <record id="mail_tmpl_submission_receipt" model="mail.template">
+            <field name="name">RFQ Receiver Receipt</field>
+            <field name="model_id" ref="ewseta_procurement.model_ew_submission"/>
+            <field name="subject">Receipt: RFQ {{object.rfq_id.name}}</field>
+            <field name="email_from">{{user.email}}</field>
+            <field name="email_to">{{object.contact_email}}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                    <div style="max-width: 600px; margin: 0 auto; background: #ffffff;
+                                border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+
+                        <!-- Header -->
+                        <div style="background-color: #ffffff; padding: 20px;text-align: center;">
+                            <table style="border-collapse: collapse;">
+                                <tr>
+                                    <!-- Logo Left -->
+
+                                    <td valign="middle" align="right"
+                                        t-if="not object.company_id.uses_default_logo">
+                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                             t-att-alt="object.company_id.name"/>
+
+                                    </td>
+                                    <!-- Title Right -->
+                                    <td style="text-align: right; vertical-align: middle;">
+                                        <h1 style="color: #ffffff; margin: 0;">Welcome to EWSETA</h1>
+                                    </td>
+
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <!-- Body -->
+                          <!-- Body -->
+                    <div style="padding: 20px; color: #333333; line-height: 1.6;">
+                        <p>Dear <t t-out="object.partner_id.name"></t>,
+                        </p>
+
+                        <p>We are pleased to inform you that your quotation for the supply of
+                          <t t-out="object.rfq_id.name"></t>
+                          to EWSETA has been accepted. Our SCM team will contact you to finalize the process.
+                        </p>
+
+                        <p style="margin-top: 20px;">
+                            Kind regards,
+                            <br/>
+                            <b>EWSETA SCM Team</b>
+                        </p>
+                    </div>
+
+
+                        <!-- Footer -->
+                        <div style="background-color: #ffffff; color: #c1c1c1; text-align: center; padding: 10px; font-size: 12px;">
+
+                            <p class="mb-0">©
+                                <span t-esc="time.strftime('%Y-%m-%d')"/>
+                                EWSETA. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

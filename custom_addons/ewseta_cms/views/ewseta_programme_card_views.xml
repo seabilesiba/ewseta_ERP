@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ewseta_programme_card_view_list" model="ir.ui.view">
+        <field name="name">ewseta.programme.card.list</field>
+        <field name="model">ewseta.programme.card</field>
+        <field name="arch" type="xml">
+            <list string="Programme Cards" default_order="sequence">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="icon"/>
+                <field name="is_published" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ewseta_programme_card_view_form" model="ir.ui.view">
+        <field name="name">ewseta.programme.card.form</field>
+        <field name="model">ewseta.programme.card</field>
+        <field name="arch" type="xml">
+            <form string="Programme Card">
+                <sheet>
+                    <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="title"/>
+                            <field name="sequence"/>
+                            <field name="is_published"/>
+                        </group>
+                        <group>
+                            <field name="icon"/>
+                            <field name="icon_color"/>
+                            <field name="link_label"/>
+                            <field name="link_url"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
+                        </group>
+                    </group>
+                    <field name="description"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_programme_card_action" model="ir.actions.act_window">
+        <field name="name">Programme Cards</field>
+        <field name="res_model">ewseta.programme.card</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

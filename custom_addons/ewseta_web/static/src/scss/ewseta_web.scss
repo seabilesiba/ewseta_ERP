@@ -1,0 +1,4302 @@
+// EWSETA brand colors from official logo
+$ewseta-orange: #F8991D;
+$ewseta-blue: #00AEEF;
+$ewseta-green: #76BC43;
+$ewseta-dark: #231F20;
+$ewseta-light: #F8F9FA;
+$ewseta-radius: 1rem;
+$ewseta-radius-lg: 1.25rem;
+$ewseta-shadow: 0 4px 24px rgba($ewseta-dark, 0.08);
+$ewseta-shadow-lg: 0 12px 40px rgba($ewseta-dark, 0.12);
+$ewseta-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$ewseta-section-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ── Shared components ──────────────────────────────────────────
+
+.ewseta-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $ewseta-orange;
+    margin-bottom: 0.75rem;
+
+    &.ewseta-eyebrow-green { color: $ewseta-green; }
+}
+
+.ewseta-section-header {
+    max-width: 640px;
+
+    .ewseta-section-title {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        font-weight: 800;
+        color: $ewseta-orange;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+    .ewseta-section-lead {
+        font-size: 1.05rem;
+        color: rgba($ewseta-dark, 0.65);
+        line-height: 1.7;
+        margin-bottom: 0;
+    }
+}
+
+.btn-ewseta-primary {
+    background: $ewseta-orange;
+    border: 2px solid $ewseta-orange;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    transition: $ewseta-transition;
+
+    &:hover {
+        background: darken($ewseta-orange, 8%);
+        border-color: darken($ewseta-orange, 8%);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($ewseta-orange, 0.35);
+    }
+}
+
+.btn-ewseta-ghost {
+    background: transparent;
+    border: 2px solid rgba(#fff, 0.7);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    transition: $ewseta-transition;
+
+    &:hover {
+        background: #fff;
+        border-color: #fff;
+        color: $ewseta-dark;
+    }
+}
+
+.btn-ewseta-outline-dark {
+    background: transparent;
+    border: 2px solid rgba($ewseta-dark, 0.15);
+    color: $ewseta-dark;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    transition: $ewseta-transition;
+
+    &:hover {
+        border-color: $ewseta-orange;
+        color: $ewseta-orange;
+    }
+}
+
+.btn-ewseta-light {
+    background: #fff;
+    border: 2px solid #fff;
+    color: $ewseta-blue;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    transition: $ewseta-transition;
+
+    &:hover {
+        background: rgba(#fff, 0.9);
+        color: darken($ewseta-blue, 10%);
+        transform: translateY(-2px);
+    }
+}
+
+.btn-ewseta-outline-light {
+    background: transparent;
+    border: 2px solid rgba(#fff, 0.6);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    transition: $ewseta-transition;
+
+    &:hover {
+        background: rgba(#fff, 0.15);
+        border-color: #fff;
+        color: #fff;
+    }
+}
+
+.ewseta-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: $ewseta-blue;
+    text-decoration: none;
+    transition: $ewseta-transition;
+
+    i { transition: transform $ewseta-transition; }
+
+    &:hover {
+        color: darken($ewseta-blue, 12%);
+
+        i { transform: translateX(4px); }
+    }
+}
+
+// ── Top bar & header ───────────────────────────────────────────
+
+:root {
+    --ewseta-topbar-height: 42px;
+    --ewseta-mobile-header-height: 58px;
+}
+
+.ewseta-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1041;
+    overflow: visible;
+    background: linear-gradient(90deg, darken($ewseta-dark, 4%) 0%, $ewseta-dark 50%, lighten($ewseta-dark, 3%) 100%);
+    color: rgba(#fff, 0.88);
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+    border-bottom: 2px solid $ewseta-orange;
+    box-shadow: 0 1px 0 rgba($ewseta-orange, 0.25);
+
+    .ewseta-topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: var(--ewseta-topbar-height);
+        padding: 0.35rem 0;
+    }
+
+    .ewseta-topbar-left {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem 1.1rem;
+        min-width: 0;
+    }
+
+    .ewseta-topbar-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+    }
+
+    .ewseta-topbar-link {
+        color: rgba(#fff, 0.88);
+        text-decoration: none;
+        padding: 0.2rem 0.45rem;
+        border-radius: 999px;
+        transition: $ewseta-transition;
+
+        &:hover {
+            color: #fff;
+            background: rgba(#fff, 0.08);
+            transform: translateY(-1px);
+
+            .ewseta-topbar-icon {
+                background: rgba($ewseta-orange, 0.25);
+                color: $ewseta-orange;
+            }
+        }
+    }
+
+    .ewseta-topbar-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.35rem;
+        height: 1.35rem;
+        border-radius: 50%;
+        background: rgba(#fff, 0.08);
+        color: $ewseta-orange;
+        font-size: 0.65rem;
+        flex-shrink: 0;
+        transition: $ewseta-transition;
+    }
+
+    .ewseta-topbar-hotline {
+        padding-right: 0.85rem;
+        margin-right: 0.15rem;
+        border-right: 1px solid rgba(#fff, 0.12);
+    }
+
+    .ewseta-topbar-label {
+        font-weight: 600;
+        color: rgba(#fff, 0.72);
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        letter-spacing: 0.06em;
+    }
+
+    .ewseta-topbar-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        background: rgba($ewseta-orange, 0.18);
+        border: 1px solid rgba($ewseta-orange, 0.45);
+        color: lighten($ewseta-orange, 12%);
+        font-weight: 700;
+        text-decoration: none;
+        transition: $ewseta-transition;
+
+        &:hover {
+            background: $ewseta-orange;
+            border-color: $ewseta-orange;
+            color: #fff;
+            box-shadow: 0 4px 14px rgba($ewseta-orange, 0.35);
+        }
+    }
+
+    .ewseta-topbar-meta {
+        font-size: 0.68rem;
+        color: rgba(#fff, 0.5);
+        font-style: italic;
+    }
+
+    .ewseta-topbar-hours {
+        position: relative;
+
+        .dropdown-toggle {
+            cursor: pointer;
+
+            &::after {
+                margin-left: 0.3rem;
+                vertical-align: 0.15em;
+                border-top-color: rgba(#fff, 0.55);
+                transition: $ewseta-transition;
+            }
+
+            &.show::after {
+                transform: rotate(180deg);
+            }
+        }
+
+        .ewseta-topbar-hours-menu {
+            margin-top: 0.45rem;
+            padding: 0.5rem 0 0.65rem;
+            min-width: 260px;
+            background-color: #fff !important;
+            --bs-dropdown-bg: #fff;
+            border: 1px solid rgba($ewseta-dark, 0.08);
+            border-radius: 0.75rem;
+            box-shadow: $ewseta-shadow-lg;
+            border-top: 3px solid $ewseta-orange;
+            z-index: 1050;
+
+            .dropdown-header {
+                padding: 0.35rem 1rem 0.15rem;
+                font-size: 0.68rem;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: $ewseta-orange;
+            }
+
+            .dropdown-item-text {
+                padding: 0.15rem 1rem;
+                font-size: 0.78rem;
+                color: rgba($ewseta-dark, 0.75);
+                white-space: normal;
+            }
+
+            .dropdown-divider {
+                margin: 0.45rem 0;
+                opacity: 0.12;
+            }
+        }
+
+        .ewseta-hours-address {
+            line-height: 1.45;
+            margin-bottom: 0;
+        }
+
+        .ewseta-hours-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+
+            .day {
+                font-weight: 600;
+                color: $ewseta-dark;
+            }
+
+            .time {
+                color: rgba($ewseta-dark, 0.65);
+                white-space: nowrap;
+            }
+
+            .ewseta-hours-closed {
+                color: rgba($ewseta-dark, 0.4);
+                font-style: italic;
+            }
+        }
+
+        .ewseta-hours-note {
+            margin-bottom: 0;
+            font-size: 0.72rem;
+            font-style: italic;
+            color: rgba($ewseta-dark, 0.5) !important;
+        }
+    }
+
+    .ewseta-topbar-socials {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex-shrink: 0;
+    }
+
+    .ewseta-topbar-socials-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(#fff, 0.45);
+        margin-right: 0.25rem;
+    }
+
+    .ewseta-social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.65rem;
+        height: 1.65rem;
+        border-radius: 50%;
+        background: rgba(#fff, 0.06);
+        border: 1px solid rgba(#fff, 0.1);
+        color: rgba(#fff, 0.85);
+        text-decoration: none;
+        transition: $ewseta-transition;
+
+        &:hover {
+            background: $ewseta-orange;
+            border-color: $ewseta-orange;
+            color: #fff;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 12px rgba($ewseta-orange, 0.4);
+        }
+    }
+}
+
+// Sticky navbar — clean white bar with brand accent
+header#top.ewseta-header-nav {
+    position: sticky !important;
+    top: var(--ewseta-topbar-height);
+    z-index: 1040;
+    background-color: #fff !important;
+    border-bottom: 1px solid rgba($ewseta-dark, 0.08);
+    box-shadow: 0 4px 18px rgba($ewseta-dark, 0.06);
+
+    &.o_header_affixed,
+    &.o_header_is_scrolled,
+    &.o_transitioning.o_header_affixed {
+        position: sticky !important;
+        top: var(--ewseta-topbar-height) !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        background-color: #fff !important;
+    }
+
+    nav.navbar,
+    .o_main_nav,
+    .navbar,
+    .o_navbar_mobile {
+        background-color: #fff !important;
+    }
+
+    @include media-breakpoint-up(lg) {
+        nav.navbar.d-none.d-lg-block #o_main_nav {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            column-gap: 1.25rem;
+            align-items: center;
+            width: 100%;
+
+            > .navbar-brand,
+            > a.navbar-brand {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: start;
+                margin-right: 0 !important;
+                flex-shrink: 0;
+            }
+
+            > ul.top_menu {
+                grid-column: 2;
+                grid-row: 1;
+                justify-self: center;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                min-width: 0;
+                max-width: 100%;
+                width: 100%;
+                justify-content: center;
+                column-gap: 0.15rem;
+            }
+
+            > ul.navbar-nav.align-items-center {
+                grid-column: 3;
+                grid-row: 1;
+                justify-self: end;
+                flex-shrink: 0;
+                padding-left: 0 !important;
+                margin-left: 0 !important;
+                gap: 0.5rem;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    @include media-breakpoint-between(lg, xxl) {
+        nav.navbar.d-none.d-lg-block #o_main_nav {
+            column-gap: 0.75rem;
+
+            > ul.top_menu {
+                column-gap: 0;
+            }
+
+            .top_menu > .nav-item > .nav-link,
+            .top_menu > .nav-item > .dropdown-toggle {
+                padding-left: 0.45rem;
+                padding-right: 0.45rem;
+                font-size: 0.82rem;
+            }
+
+            > ul.navbar-nav.align-items-center {
+                gap: 0.35rem;
+
+                .o_header_text_element span.o_force_ltr small {
+                    display: none;
+                }
+
+                .o_no_autohide_item > .dropdown-toggle span:not(.fa):not(.oi) {
+                    max-width: 5.5rem;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+
+    .o_header_mobile {
+        .o_main_nav {
+            flex-wrap: nowrap !important;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .o_main_nav > .d-flex.flex-grow-1 {
+            flex: 1 1 auto;
+            min-width: 0;
+            align-items: center;
+        }
+
+        .ewseta-mobile-menu-toggle,
+        button[data-bs-target="#top_menu_collapse_mobile"] {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            width: 2.65rem;
+            height: 2.65rem;
+            margin: 0;
+            padding: 0 !important;
+            color: $ewseta-dark !important;
+            background: rgba($ewseta-dark, 0.05) !important;
+            border: 1px solid rgba($ewseta-dark, 0.14) !important;
+            border-radius: 0.55rem;
+            opacity: 1 !important;
+            visibility: visible !important;
+            box-shadow: none;
+
+            .ewseta-mobile-menu-icon,
+            .fa-bars {
+                color: $ewseta-dark !important;
+                font-size: 1.15rem;
+                line-height: 1;
+            }
+
+            .navbar-toggler-icon {
+                background-color: $ewseta-dark !important;
+                opacity: 1 !important;
+            }
+
+            &:hover,
+            &:focus {
+                color: $ewseta-orange !important;
+                border-color: rgba($ewseta-orange, 0.35) !important;
+                background: rgba($ewseta-orange, 0.1) !important;
+
+                .ewseta-mobile-menu-icon,
+                .fa-bars {
+                    color: $ewseta-orange !important;
+                }
+
+                .navbar-toggler-icon {
+                    background-color: $ewseta-orange !important;
+                }
+            }
+        }
+    }
+
+    .top_menu .nav-link,
+    .top_menu .dropdown-toggle {
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.01em;
+        padding-top: 0.65rem;
+        padding-bottom: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .ewseta-theme-toggle-item {
+        flex-shrink: 0;
+        margin-left: 0.15rem;
+    }
+
+    nav.navbar #o_main_nav > ul.navbar-nav.align-items-center > .nav-item {
+        flex-shrink: 0;
+    }
+}
+
+.navbar-brand.logo img {
+    max-height: 55px;
+    width: auto;
+}
+
+// Navbar — black bold top menu only; orange utility links & dropdown headings
+header#top.ewseta-header-nav,
+#top_menu_collapse_mobile,
+.offcanvas.o_navbar_mobile {
+    .top_menu > .nav-item > .nav-link,
+    .top_menu > .nav-item > .dropdown-toggle,
+    .top_menu > .nav-item > .nav-link > *,
+    .top_menu > .nav-item > .nav-link::after,
+    .top_menu > .nav-item > .dropdown-toggle > *,
+    .top_menu > .nav-item > .dropdown-toggle::after,
+    .top_menu .accordion-button,
+    .top_menu .accordion-button > *,
+    .o_extra_menu_items > .nav-link,
+    .o_extra_menu_items > .nav-link > * {
+        color: $ewseta-dark !important;
+        font-weight: 700 !important;
+    }
+
+    .top_menu > .nav-item > .nav-link:hover,
+    .top_menu > .nav-item > .nav-link:focus,
+    .top_menu > .nav-item > .dropdown-toggle:hover,
+    .o_extra_menu_items > .nav-link:hover {
+        &,
+        & > *,
+        &::after {
+            color: $ewseta-dark !important;
+            font-weight: 700 !important;
+        }
+    }
+
+    .top_menu > .nav-item > .nav-link.active,
+    .top_menu > .nav-item > .dropdown-toggle.active,
+    .top_menu > .nav-item > .nav-link.show,
+    .top_menu > .nav-item > .dropdown-toggle.show {
+        &,
+        & > *,
+        &::after {
+            color: $ewseta-dark !important;
+            font-weight: 700 !important;
+        }
+
+        box-shadow: none !important;
+    }
+
+    .js_language_selector span {
+        color: $ewseta-dark !important;
+    }
+
+    // Phone, search, login — original orange (not part of main menu list)
+    .o_header_text_element,
+    .o_header_text_element a,
+    .o_header_text_element .nav-link,
+    .o_header_text_element .fa,
+    .o_header_text_element span,
+    .o_nav-link_secondary,
+    .o_nav-link_secondary .fa,
+    .o_nav-link_secondary span,
+    .o_no_autohide_item > .nav-link,
+    .o_no_autohide_item > a,
+    .o_no_autohide_item > .dropdown-toggle,
+    .o_no_autohide_item > .dropdown-toggle span,
+    .o_no_autohide_item > .dropdown-toggle .fa {
+        color: $ewseta-orange !important;
+        font-weight: 400 !important;
+    }
+
+    .o_no_autohide_item > .dropdown-toggle::after {
+        color: $ewseta-orange !important;
+    }
+
+    .navbar-toggler {
+        border-color: rgba($ewseta-dark, 0.2);
+    }
+}
+
+// Header CTA & icon buttons — visible orange
+header#top.ewseta-header-nav {
+    .btn_cta,
+    .header_call_to_action .btn,
+    a.btn.btn-primary.btn_cta {
+        background-color: $ewseta-orange !important;
+        border-color: $ewseta-orange !important;
+        color: #fff !important;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0.45rem 1.25rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+
+        &:hover,
+        &:focus {
+            background-color: darken($ewseta-orange, 8%) !important;
+            border-color: darken($ewseta-orange, 8%) !important;
+            color: #fff !important;
+        }
+    }
+
+    .o_navlink_background.btn,
+    .btn.rounded-circle.o_navlink_background {
+        background-color: rgba($ewseta-orange, 0.12) !important;
+        border-color: transparent !important;
+        color: $ewseta-orange !important;
+
+        .fa,
+        .oi {
+            color: $ewseta-orange !important;
+        }
+
+        &:hover {
+            background-color: $ewseta-orange !important;
+            color: #fff !important;
+
+            .fa,
+            .oi {
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+// ── Form inputs & search ─────────────────────────────────────
+
+@mixin ewseta-input-base {
+    background-color: #fff !important;
+    color: $ewseta-dark !important;
+    border: 1px solid rgba($ewseta-dark, 0.14) !important;
+    font-size: 0.95rem;
+    transition: $ewseta-transition;
+
+    &::placeholder {
+        color: rgba($ewseta-dark, 0.42);
+        opacity: 1;
+    }
+
+    &:focus {
+        background-color: #fff !important;
+        color: $ewseta-dark !important;
+        border-color: $ewseta-orange !important;
+        box-shadow: 0 0 0 0.2rem rgba($ewseta-orange, 0.18) !important;
+        outline: none;
+    }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+        -webkit-text-fill-color: $ewseta-dark !important;
+        caret-color: $ewseta-dark;
+    }
+}
+
+@mixin ewseta-search-input-group {
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba($ewseta-dark, 0.12);
+    background: #fff;
+    box-shadow: $ewseta-shadow;
+
+    .form-control,
+    .oe_search_box {
+        @include ewseta-input-base;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background-color: #fff !important;
+
+        &:focus {
+            box-shadow: none !important;
+        }
+    }
+
+    .oe_search_button,
+    .btn {
+        background: rgba($ewseta-orange, 0.12) !important;
+        border: none !important;
+        color: $ewseta-orange !important;
+        border-radius: 0 !important;
+
+        .oi,
+        .fa {
+            color: $ewseta-orange !important;
+        }
+
+        &:hover,
+        &:focus {
+            background: $ewseta-orange !important;
+            color: #fff !important;
+
+            .oi,
+            .fa {
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+#wrapwrap {
+    .form-control,
+    .form-select,
+    textarea.form-control {
+        @include ewseta-input-base;
+        border-radius: 0.625rem;
+        padding: 0.65rem 1rem;
+    }
+
+    .form-select {
+        padding-right: 2.5rem;
+    }
+
+    .form-check-input {
+        border-color: rgba($ewseta-dark, 0.25);
+
+        &:focus {
+            border-color: $ewseta-orange;
+            box-shadow: 0 0 0 0.2rem rgba($ewseta-orange, 0.18);
+        }
+
+        &:checked {
+            background-color: $ewseta-orange;
+            border-color: $ewseta-orange;
+        }
+    }
+
+    .s_website_form {
+        .form-control,
+        .form-select {
+            @include ewseta-input-base;
+            border-radius: 0.625rem;
+        }
+
+        .col-form-label,
+        label {
+            font-weight: 600;
+            color: $ewseta-dark;
+        }
+    }
+
+    .o_searchbar_form .input-group {
+        @include ewseta-search-input-group;
+    }
+}
+
+// Search autocomplete dropdown — always white
+.o_searchbar_form,
+.s_searchbar_input {
+    position: relative;
+
+    .o_dropdown_menu {
+        background-color: #fff !important;
+        --bs-dropdown-bg: #fff !important;
+        --bs-body-bg: #fff !important;
+        border: 1px solid rgba($ewseta-dark, 0.1) !important;
+        border-radius: $ewseta-radius;
+        box-shadow: $ewseta-shadow-lg;
+        overflow: hidden;
+        z-index: 1050;
+        margin-top: 0.35rem;
+
+        .dropdown-item {
+            color: $ewseta-dark !important;
+            background-color: #fff !important;
+
+            &:hover,
+            &:focus,
+            &.active {
+                background-color: rgba($ewseta-orange, 0.08) !important;
+                color: $ewseta-dark !important;
+            }
+
+            .h6,
+            p,
+            b,
+            span:not(.text-muted) {
+                color: $ewseta-dark;
+            }
+
+            .text-muted {
+                color: rgba($ewseta-dark, 0.55) !important;
+            }
+
+            .text-primary-emphasis {
+                color: $ewseta-blue !important;
+            }
+        }
+
+        .dropdown-item-text {
+            background-color: #fff !important;
+            color: rgba($ewseta-dark, 0.65) !important;
+
+            .text-muted {
+                color: rgba($ewseta-dark, 0.55) !important;
+            }
+
+            a {
+                color: $ewseta-blue !important;
+            }
+        }
+
+        button.dropdown-item.text-primary-emphasis {
+            color: $ewseta-orange !important;
+            font-weight: 700;
+            background-color: #fff !important;
+
+            &:hover,
+            &:focus {
+                background-color: rgba($ewseta-orange, 0.08) !important;
+            }
+        }
+
+        .o_search_result_item_detail {
+            color: $ewseta-dark;
+        }
+    }
+}
+
+#o_search_modal,
+.ewseta-search-modal {
+    .modal-dialog {
+        max-width: 640px;
+    }
+
+    .modal-content,
+    .ewseta-search-modal-content {
+        background: #fff !important;
+        border: none;
+        border-radius: $ewseta-radius-lg;
+        box-shadow: $ewseta-shadow-lg;
+        padding: 0.35rem;
+        overflow: hidden;
+    }
+
+    .o_searchbar_form .input-group,
+    .input-group {
+        @include ewseta-search-input-group;
+
+        .form-control,
+        .oe_search_box {
+            padding: 1rem 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        .oe_search_button,
+        .btn {
+            padding: 0 1.35rem;
+
+            .oi,
+            .fa {
+                font-size: 1.1rem;
+            }
+        }
+    }
+}
+
+// ── Site-wide surfaces — white backgrounds ────────────────────
+// Odoo color palettes can leave dropdowns, modals, notifications
+// and cards transparent or dark on the public site.
+
+#wrapwrap {
+    --bs-body-bg: #fff;
+    --bs-dropdown-bg: #fff;
+    --bs-modal-bg: #fff;
+    --bs-popover-bg: #fff;
+    --bs-offcanvas-bg: #fff;
+    --card-bg: #fff;
+    --card-color: #{$ewseta-dark};
+    --bs-card-bg: #fff;
+    --bs-card-color: #{$ewseta-dark};
+
+    .card:not(.bg-dark):not(.text-bg-dark):not(.bg-black):not(.text-bg-black):not([class*="o_cc"]) {
+        --card-bg: #fff !important;
+        --card-color: #{$ewseta-dark} !important;
+        --bs-card-bg: #fff !important;
+        --bs-card-color: #{$ewseta-dark} !important;
+        background-color: #fff !important;
+        color: $ewseta-dark !important;
+        border-color: rgba($ewseta-dark, 0.08) !important;
+
+        .card-body,
+        .card-header,
+        .card-footer {
+            background-color: #fff !important;
+            color: $ewseta-dark !important;
+            border-color: rgba($ewseta-dark, 0.08) !important;
+        }
+    }
+
+    .dropdown-menu,
+    .o_dropdown_menu,
+    .ui-autocomplete,
+    .custom-ui-autocomplete {
+        background-color: #fff !important;
+        --bs-dropdown-bg: #fff !important;
+        --bs-body-bg: #fff !important;
+        --bs-body-color: #{$ewseta-dark};
+        --bs-primary-text-emphasis: #{$ewseta-orange};
+        background-image: none !important;
+        border: 1px solid rgba($ewseta-dark, 0.1) !important;
+        box-shadow: $ewseta-shadow-lg !important;
+        color: $ewseta-dark !important;
+
+        .dropdown-header {
+            color: rgba($ewseta-dark, 0.55) !important;
+            background-color: #fff !important;
+        }
+
+        .dropdown-item,
+        .dropdown-item-text {
+            color: $ewseta-dark !important;
+            background-color: #fff !important;
+        }
+
+        .dropdown-item {
+            .fa,
+            .oi,
+            .text-primary-emphasis {
+                color: $ewseta-orange !important;
+            }
+
+            &:hover,
+            &:focus,
+            &.active,
+            &:active {
+                background-color: rgba($ewseta-orange, 0.08) !important;
+                color: $ewseta-dark !important;
+
+                .fa,
+                .oi,
+                .text-primary-emphasis {
+                    color: darken($ewseta-orange, 8%) !important;
+                }
+            }
+        }
+
+        .dropdown-divider {
+            border-color: rgba($ewseta-dark, 0.08) !important;
+        }
+    }
+
+    .modal-content,
+    .s_popup .modal-content {
+        background-color: #fff !important;
+        --bs-modal-bg: #fff !important;
+        color: $ewseta-dark !important;
+        border: 1px solid rgba($ewseta-dark, 0.08) !important;
+        box-shadow: $ewseta-shadow-lg !important;
+    }
+
+    .popover {
+        --bs-popover-bg: #fff !important;
+        background-color: #fff !important;
+        border-color: rgba($ewseta-dark, 0.1) !important;
+        box-shadow: $ewseta-shadow-lg !important;
+
+        .popover-header,
+        .popover-body {
+            background-color: #fff !important;
+            color: $ewseta-dark !important;
+        }
+    }
+
+    .offcanvas,
+    .offcanvas-body {
+        --bs-offcanvas-bg: #fff !important;
+        background-color: #fff !important;
+        color: $ewseta-dark !important;
+    }
+
+    .alert {
+        border: none;
+        border-radius: $ewseta-radius;
+        box-shadow: $ewseta-shadow;
+        color: $ewseta-dark !important;
+    }
+
+    .alert-info {
+        background-color: rgba($ewseta-blue, 0.12) !important;
+    }
+
+    .alert-warning {
+        background-color: rgba($ewseta-orange, 0.12) !important;
+    }
+
+    .alert-success {
+        background-color: rgba($ewseta-green, 0.12) !important;
+    }
+
+    .table {
+        --bs-table-bg: #fff;
+        --bs-table-color: #{$ewseta-dark};
+        color: $ewseta-dark;
+    }
+
+    .table-hover > tbody > tr:hover > * {
+        --bs-table-bg-state: rgba($ewseta-orange, 0.06);
+        color: $ewseta-dark;
+    }
+}
+
+// Modals and notifications are often portaled on <body>
+.modal .modal-content {
+    background-color: #fff !important;
+    --bs-modal-bg: #fff !important;
+    color: $ewseta-dark !important;
+}
+
+.o_notification_manager .o_notification {
+    --Notification__background-color: #fff !important;
+    background-color: #fff !important;
+    color: $ewseta-dark !important;
+    border: 1px solid rgba($ewseta-dark, 0.08) !important;
+    box-shadow: $ewseta-shadow-lg !important;
+}
+
+header#top.ewseta-header-nav,
+.o_navbar_mobile,
+.offcanvas.o_navbar_mobile {
+    .o_searchbar_form .input-group {
+        @include ewseta-search-input-group;
+        box-shadow: 0 2px 8px rgba($ewseta-dark, 0.06);
+    }
+}
+
+// ── Jobs / vacancies pages ────────────────────────────────────
+
+.ewseta-jobs-page {
+    background: $ewseta-light;
+
+    .oe_website_jobs {
+        padding-top: 1.75rem;
+        padding-bottom: clamp(3rem, 6vw, 5rem);
+    }
+
+    .ewseta-jobs-banner {
+        position: relative;
+        background: linear-gradient(180deg, #fff 0%, rgba($ewseta-light, 0.65) 100%);
+        border-bottom: 1px solid rgba($ewseta-dark, 0.07);
+        margin-bottom: 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, $ewseta-orange 0%, $ewseta-blue 100%);
+        }
+
+        .container {
+            padding-top: 1.1rem;
+            padding-bottom: 1.15rem;
+        }
+
+        .ewseta-jobs-banner-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.85rem 1.5rem;
+            min-height: 2.75rem;
+            padding-left: 1.35rem;
+            padding-right: 0.25rem;
+        }
+
+        .ewseta-jobs-banner-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+        .ewseta-jobs-banner-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.35rem;
+            height: 2.35rem;
+            border-radius: 0.65rem;
+            background: rgba($ewseta-orange, 0.12);
+            color: $ewseta-orange;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .ewseta-jobs-banner-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.12rem;
+            min-width: 0;
+        }
+
+        .ewseta-jobs-banner-eyebrow {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: $ewseta-orange;
+            line-height: 1;
+        }
+
+        .ewseta-jobs-title {
+            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0;
+            color: $ewseta-dark;
+        }
+
+        .ewseta-jobs-search {
+            flex: 0 1 280px;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+
+            .o_jobs_topbar_search_bar {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .o_searchbar_form {
+                margin: 0;
+            }
+
+            .o_searchbar_form .input-group {
+                display: flex;
+                align-items: stretch;
+                height: 2.35rem;
+                border-radius: 0.5rem;
+                overflow: hidden;
+                border: 1px solid rgba($ewseta-dark, 0.12);
+                background: #fff;
+                box-shadow: 0 1px 4px rgba($ewseta-dark, 0.05);
+
+                .form-control,
+                .oe_search_box {
+                    flex: 1 1 auto;
+                    height: 100%;
+                    min-height: 0;
+                    border: none !important;
+                    border-radius: 0 !important;
+                    box-shadow: none !important;
+                    background: #fff !important;
+                    color: $ewseta-dark !important;
+                    padding: 0 0.85rem;
+                    font-size: 0.84rem;
+
+                    &::placeholder {
+                        color: rgba($ewseta-dark, 0.4);
+                    }
+
+                    &:focus {
+                        box-shadow: none !important;
+                    }
+                }
+
+                .oe_search_button,
+                .btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex: 0 0 2.35rem;
+                    width: 2.35rem;
+                    height: 100%;
+                    min-height: 0;
+                    margin: 0;
+                    padding: 0;
+                    border: none !important;
+                    border-left: 1px solid rgba($ewseta-dark, 0.08) !important;
+                    border-radius: 0 !important;
+                    background: transparent !important;
+                    color: $ewseta-orange !important;
+
+                    .oi,
+                    .fa {
+                        color: $ewseta-orange !important;
+                        font-size: 0.95rem;
+                    }
+
+                    &:hover,
+                    &:focus {
+                        background: rgba($ewseta-orange, 0.08) !important;
+                        color: $ewseta-orange !important;
+                    }
+                }
+            }
+        }
+    }
+
+    #jobs_grid {
+        padding-top: 0.75rem;
+
+        .col-lg.mb32 {
+            margin-bottom: 1.25rem !important;
+        }
+
+        .ewseta-job-card {
+            --card-bg: #fff !important;
+            --card-color: #{$ewseta-dark} !important;
+            --body-color: #{$ewseta-dark} !important;
+            background: #fff !important;
+            background-color: #fff !important;
+            color: $ewseta-dark !important;
+            border: 1px solid rgba($ewseta-dark, 0.08) !important;
+            border-radius: $ewseta-radius-lg !important;
+            box-shadow: $ewseta-shadow;
+            overflow: hidden;
+            height: 100%;
+            transition: $ewseta-transition;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: $ewseta-shadow-lg !important;
+                border-color: rgba($ewseta-orange, 0.35) !important;
+            }
+
+            > a {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                color: $ewseta-dark !important;
+            }
+
+            .card-body {
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 auto;
+                padding: 1.65rem 1.85rem !important;
+                background: #fff !important;
+                background-color: #fff !important;
+                color: $ewseta-dark !important;
+                --body-color: #{$ewseta-dark} !important;
+                --card-bg: #fff !important;
+                --card-color: #{$ewseta-dark} !important;
+            }
+
+            h3,
+            h3 * {
+                font-size: 1.2rem;
+                font-weight: 800;
+                color: $ewseta-dark !important;
+                margin-bottom: 0.35rem;
+                line-height: 1.35;
+            }
+
+            h5,
+            h5 * {
+                font-size: 0.82rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                color: $ewseta-blue !important;
+                margin-bottom: 0.85rem;
+            }
+
+            .ewseta-job-description,
+            .oe_empty,
+            .text-muted {
+                color: rgba($ewseta-dark, 0.68) !important;
+                font-size: 0.92rem;
+                line-height: 1.65;
+                margin-bottom: 1rem !important;
+
+                p,
+                p * {
+                    color: rgba($ewseta-dark, 0.68) !important;
+                }
+
+                p:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .o_job_infos {
+                flex-direction: row !important;
+                flex-wrap: wrap;
+                gap: 0.45rem;
+                padding-top: 1rem;
+                margin-top: auto;
+                border-top: 1px solid rgba($ewseta-dark, 0.08);
+
+                > span,
+                > div {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: rgba($ewseta-dark, 0.72) !important;
+                    background: rgba($ewseta-dark, 0.04);
+                    padding: 0.35rem 0.75rem;
+                    border-radius: 999px;
+
+                    * {
+                        color: rgba($ewseta-dark, 0.72) !important;
+                    }
+                }
+
+                .fa {
+                    color: $ewseta-orange !important;
+                    margin-right: 0 !important;
+                    width: auto;
+                }
+            }
+
+            &.o_jobs_unpublished {
+                opacity: 1 !important;
+                background: #f3f4f6 !important;
+                border-style: dashed !important;
+                border-color: rgba($ewseta-dark, 0.18) !important;
+
+                .card-body {
+                    background: #f3f4f6 !important;
+                    background-color: #f3f4f6 !important;
+                }
+
+                .badge {
+                    font-size: 0.68rem;
+                    letter-spacing: 0.04em;
+                    text-transform: uppercase;
+                }
+            }
+        }
+    }
+
+    .navbar.mb-3 {
+        margin-top: 1rem;
+
+        .pagination {
+            .page-link {
+                border-radius: 999px;
+                margin: 0 0.15rem;
+                color: $ewseta-dark;
+                border-color: rgba($ewseta-dark, 0.12);
+
+                &:hover {
+                    background: rgba($ewseta-orange, 0.1);
+                    border-color: rgba($ewseta-orange, 0.25);
+                    color: $ewseta-orange;
+                }
+            }
+
+            .page-item.active .page-link {
+                background: $ewseta-orange;
+                border-color: $ewseta-orange;
+            }
+        }
+    }
+
+    .alert-info,
+    .alert-warning {
+        border: none;
+        border-radius: $ewseta-radius;
+        box-shadow: $ewseta-shadow;
+    }
+}
+
+.ewseta-jobs-sidebar {
+    position: sticky;
+    top: calc(var(--ewseta-topbar-height) + 88px);
+    background: #fff;
+    border-radius: $ewseta-radius-lg;
+    box-shadow: $ewseta-shadow-lg;
+    overflow: hidden;
+    border: 1px solid rgba($ewseta-dark, 0.06);
+
+    .ewseta-jobs-sidebar-image {
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba($ewseta-dark, 0.45), transparent 55%);
+        }
+    }
+
+    .ewseta-jobs-sidebar-body {
+        padding: 1.5rem 1.75rem 1.75rem;
+    }
+
+    .ewseta-jobs-sidebar-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        line-height: 1.3;
+        color: $ewseta-dark;
+        margin-bottom: 0.75rem;
+    }
+
+    .ewseta-jobs-sidebar-text {
+        font-size: 0.92rem;
+        line-height: 1.65;
+        color: rgba($ewseta-dark, 0.68);
+        margin-bottom: 1.25rem;
+    }
+
+    .ewseta-jobs-sidebar-contacts {
+        li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            padding: 0.45rem 0;
+            font-size: 0.88rem;
+            color: rgba($ewseta-dark, 0.78);
+
+            i {
+                color: $ewseta-orange;
+                margin-top: 0.15rem;
+                flex-shrink: 0;
+            }
+
+            a {
+                color: $ewseta-blue;
+                text-decoration: none;
+
+                &:hover {
+                    color: darken($ewseta-blue, 10%);
+                }
+            }
+        }
+    }
+
+    .ewseta-jobs-sidebar-socials {
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba($ewseta-dark, 0.08);
+    }
+
+    .ewseta-jobs-sidebar-socials-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba($ewseta-dark, 0.45);
+        margin-bottom: 0.65rem;
+    }
+
+    .ewseta-jobs-social-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 50%;
+            background: rgba($ewseta-orange, 0.1);
+            color: $ewseta-orange;
+            text-decoration: none;
+            transition: $ewseta-transition;
+
+            &:hover {
+                background: $ewseta-orange;
+                color: #fff;
+                transform: translateY(-2px);
+            }
+        }
+    }
+}
+
+.ewseta-jobs-detail-page,
+.ewseta-jobs-apply-page {
+    background: $ewseta-light;
+
+    .ewseta-jobs-detail-nav {
+        background: #fff !important;
+        border-bottom: 1px solid rgba($ewseta-dark, 0.08) !important;
+        box-shadow: 0 4px 18px rgba($ewseta-dark, 0.05);
+
+        a {
+            color: $ewseta-blue !important;
+            font-weight: 600;
+            text-decoration: none;
+
+            &:hover {
+                color: $ewseta-orange !important;
+            }
+
+            .fa {
+                color: $ewseta-orange !important;
+            }
+        }
+    }
+
+    section.pb32 {
+        background: linear-gradient(135deg, darken($ewseta-dark, 4%) 0%, $ewseta-dark 100%);
+        color: #fff;
+        padding-top: 2rem !important;
+        padding-bottom: 2.5rem !important;
+        margin-bottom: 2rem;
+        border-bottom: 3px solid $ewseta-orange;
+
+        h1 {
+            color: #fff;
+            font-weight: 800;
+        }
+
+        h5 {
+            color: rgba(#fff, 0.78) !important;
+        }
+    }
+
+    .btn-ewseta-primary,
+    .btn-primary.btn-lg,
+    a.btn-primary {
+        background: $ewseta-orange !important;
+        border-color: $ewseta-orange !important;
+        color: #fff !important;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0.75rem 1.75rem;
+
+        &:hover,
+        &:focus {
+            background: darken($ewseta-orange, 8%) !important;
+            border-color: darken($ewseta-orange, 8%) !important;
+            color: #fff !important;
+        }
+    }
+
+    .s_website_form {
+        background: #fff;
+        border-radius: $ewseta-radius-lg;
+        box-shadow: $ewseta-shadow;
+        padding: 2rem;
+        border: 1px solid rgba($ewseta-dark, 0.06);
+    }
+}
+
+// ── Contact page ──────────────────────────────────────────────
+
+.ewseta-contact-page {
+    background: $ewseta-light;
+
+    .ewseta-contact-banner {
+        position: relative;
+        background: linear-gradient(180deg, #fff 0%, rgba($ewseta-light, 0.65) 100%);
+        border-bottom: 1px solid rgba($ewseta-dark, 0.07);
+        margin-bottom: 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, $ewseta-orange 0%, $ewseta-blue 100%);
+        }
+
+        .container {
+            padding-top: 1.1rem;
+            padding-bottom: 1.1rem;
+        }
+
+        .ewseta-contact-banner-inner {
+            padding-left: 1.35rem;
+        }
+
+        .ewseta-contact-banner-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .ewseta-contact-banner-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.65rem;
+            background: rgba($ewseta-orange, 0.12);
+            color: $ewseta-orange;
+            font-size: 1rem;
+        }
+
+        .ewseta-contact-banner-eyebrow {
+            display: block;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: $ewseta-orange;
+            line-height: 1;
+            margin-bottom: 0.2rem;
+        }
+
+        .ewseta-contact-banner-title {
+            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0;
+            color: $ewseta-dark;
+        }
+    }
+
+    .ewseta-contact-main {
+        padding: clamp(2rem, 4vw, 3rem) 0 clamp(2rem, 4vw, 2.5rem);
+    }
+
+    .ewseta-contact-map {
+        padding-bottom: 0;
+
+        .ewseta-contact-map-header {
+            text-align: center;
+            max-width: 640px;
+            margin-bottom: 1.5rem;
+        }
+
+        .ewseta-contact-map-title {
+            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+            font-weight: 800;
+            color: $ewseta-dark;
+            margin-bottom: 0.35rem;
+        }
+
+        .ewseta-contact-map-lead {
+            margin: 0;
+            color: rgba($ewseta-dark, 0.62);
+            font-size: 0.95rem;
+        }
+
+        .ewseta-contact-map-frame {
+            position: relative;
+            width: 100%;
+            height: clamp(280px, 42vw, 420px);
+            border-top: 3px solid $ewseta-orange;
+            background: rgba($ewseta-dark, 0.04);
+        }
+
+        .ewseta-contact-map-embed {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .ewseta-contact-map-caption {
+            position: absolute;
+            right: 1rem;
+            bottom: 1rem;
+            z-index: 2;
+
+            a {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.45rem;
+                padding: 0.55rem 1rem;
+                border-radius: 50px;
+                background: #fff;
+                color: $ewseta-dark;
+                font-size: 0.88rem;
+                font-weight: 700;
+                text-decoration: none;
+                box-shadow: $ewseta-shadow;
+                border: 1px solid rgba($ewseta-dark, 0.08);
+
+                i {
+                    color: $ewseta-orange;
+                }
+
+                &:hover {
+                    color: $ewseta-orange;
+                }
+            }
+        }
+    }
+
+    .ewseta-contact-form-card {
+        background: #fff;
+        border: 1px solid rgba($ewseta-dark, 0.08);
+        border-radius: $ewseta-radius-lg;
+        box-shadow: $ewseta-shadow;
+        padding: clamp(1.5rem, 3vw, 2rem);
+
+        .ewseta-contact-form-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: $ewseta-dark;
+            margin-bottom: 0.65rem;
+        }
+
+        .ewseta-contact-form-lead {
+            color: rgba($ewseta-dark, 0.62);
+            line-height: 1.65;
+            margin-bottom: 1.5rem;
+        }
+
+        .ewseta-contact-form {
+            padding: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .s_website_form_label {
+            width: auto !important;
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: $ewseta-dark;
+        }
+
+        .s_website_form_mark {
+            color: $ewseta-orange;
+        }
+
+        .s_website_form_field {
+            margin-bottom: 1rem !important;
+        }
+
+        .form-control,
+        textarea.form-control {
+            background: #fff !important;
+            border: 1px solid rgba($ewseta-dark, 0.14) !important;
+            border-radius: 0.625rem;
+            color: $ewseta-dark !important;
+            padding: 0.65rem 1rem;
+
+            &:focus {
+                border-color: $ewseta-orange !important;
+                box-shadow: 0 0 0 0.2rem rgba($ewseta-orange, 0.18) !important;
+            }
+        }
+
+        .ewseta-contact-submit {
+            padding-top: 0.5rem;
+            text-align: left !important;
+
+            .btn-ewseta-primary {
+                min-width: 180px;
+                padding: 0.75rem 1.75rem;
+            }
+        }
+    }
+
+    .ewseta-contact-sidebar {
+        position: sticky;
+        top: calc(var(--ewseta-topbar-height) + 88px);
+        background: #fff;
+        border: 1px solid rgba($ewseta-dark, 0.08);
+        border-radius: $ewseta-radius-lg;
+        box-shadow: $ewseta-shadow-lg;
+        padding: 1.75rem;
+
+        .ewseta-contact-sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: $ewseta-dark;
+            margin-bottom: 0.75rem;
+        }
+
+        .ewseta-contact-sidebar-text {
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: rgba($ewseta-dark, 0.68);
+            margin-bottom: 1.25rem;
+        }
+
+        .ewseta-contact-sidebar-list {
+            li {
+                display: flex;
+                align-items: flex-start;
+                gap: 0.65rem;
+                padding: 0.5rem 0;
+                font-size: 0.9rem;
+                color: rgba($ewseta-dark, 0.78);
+
+                i {
+                    color: $ewseta-orange;
+                    margin-top: 0.15rem;
+                    flex-shrink: 0;
+                }
+
+                a {
+                    color: $ewseta-blue;
+                    text-decoration: none;
+
+                    &:hover {
+                        color: darken($ewseta-blue, 10%);
+                    }
+                }
+            }
+        }
+
+        .ewseta-contact-sidebar-note {
+            margin-top: 1.25rem;
+            padding-top: 1.15rem;
+            border-top: 1px solid rgba($ewseta-dark, 0.08);
+            font-size: 0.85rem;
+            color: rgba($ewseta-dark, 0.72);
+
+            a {
+                color: $ewseta-orange;
+                font-weight: 700;
+                text-decoration: none;
+            }
+        }
+    }
+
+    &.ewseta-contact-thanks {
+        .s_text_block {
+            padding-top: 4rem !important;
+            padding-bottom: 4rem !important;
+        }
+
+        .fa-paper-plane {
+            background: rgba($ewseta-green, 0.15) !important;
+            color: $ewseta-green !important;
+            width: 4rem;
+            height: 4rem;
+            line-height: 4rem;
+            border-radius: 50%;
+        }
+
+        h1, p, a {
+            color: $ewseta-dark;
+        }
+
+        a {
+            color: $ewseta-blue;
+            font-weight: 600;
+        }
+    }
+}
+
+@media (max-width: 991.98px) {
+    .ewseta-contact-page {
+        .ewseta-contact-sidebar {
+            position: static;
+            margin-top: 0.5rem;
+        }
+
+        .ewseta-contact-form-card .ewseta-contact-submit .btn-ewseta-primary {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 991.98px) {
+    .ewseta-jobs-page {
+        .ewseta-jobs-banner {
+            .container {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .ewseta-jobs-banner-inner {
+                padding-left: 1.15rem;
+                padding-right: 0;
+            }
+
+            .ewseta-jobs-search {
+                flex: 1 1 100%;
+                max-width: none;
+                margin-left: 0;
+            }
+        }
+
+        #jobs_grid_right {
+            margin-top: 1.5rem;
+        }
+    }
+
+    .ewseta-jobs-sidebar {
+        position: static;
+    }
+}
+
+#wrapwrap:not(.o_header_overlay) header.ewseta-header-nav,
+header.ewseta-header-nav.o_header_is_scrolled,
+header.ewseta-header-nav .o_navbar_mobile {
+    .top_menu > .nav-item > .nav-link,
+    .top_menu > .nav-item > .nav-link > *,
+    .top_menu > .nav-item > .nav-link::after,
+    .top_menu > .nav-item > .dropdown-toggle,
+    .top_menu > .nav-item > .dropdown-toggle > *,
+    .top_menu > .nav-item > .dropdown-toggle::after,
+    .o_extra_menu_items > .nav-link {
+        color: $ewseta-dark !important;
+        font-weight: 700 !important;
+    }
+
+    .top_menu > .nav-item > .nav-link:hover,
+    .top_menu > .nav-item > .nav-link:focus,
+    .top_menu > .nav-item > .dropdown-toggle:hover {
+        &,
+        & > *,
+        &::after {
+            color: $ewseta-dark !important;
+            font-weight: 700 !important;
+        }
+    }
+
+    .top_menu > .nav-item > .nav-link.active,
+    .top_menu > .nav-item > .nav-link.show,
+    .top_menu > .nav-item > .dropdown-toggle.active,
+    .top_menu > .nav-item > .dropdown-toggle.show {
+        &,
+        & > *,
+        &::after {
+            color: $ewseta-dark !important;
+            font-weight: 700 !important;
+        }
+
+        box-shadow: none !important;
+    }
+
+    .o_header_text_element,
+    .o_header_text_element a,
+    .o_header_text_element .nav-link,
+    .o_header_text_element .fa,
+    .o_header_text_element span,
+    .o_nav-link_secondary,
+    .o_nav-link_secondary .fa,
+    .o_nav-link_secondary span,
+    .o_no_autohide_item > .nav-link,
+    .o_no_autohide_item > a,
+    .o_no_autohide_item > .dropdown-toggle,
+    .o_no_autohide_item > .dropdown-toggle span,
+    .o_no_autohide_item > .dropdown-toggle .fa,
+    .o_no_autohide_item > .dropdown-toggle::after {
+        color: $ewseta-orange !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    :root {
+        --ewseta-topbar-height: 90px;
+        --ewseta-mobile-header-height: 56px;
+    }
+
+    .ewseta-topbar {
+        font-size: 0.72rem;
+
+        .container {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+
+        .ewseta-topbar-inner {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.35rem;
+            padding: 0.4rem 0;
+            min-height: var(--ewseta-topbar-height);
+        }
+
+        .ewseta-topbar-left {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0.45rem;
+            padding-bottom: 0.1rem;
+            mask-image: linear-gradient(to right, #000 92%, transparent);
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        .ewseta-topbar-hotline {
+            border-right: none;
+            padding-right: 0;
+            margin-right: 0;
+            flex-shrink: 0;
+        }
+
+        .ewseta-topbar-label,
+        .ewseta-topbar-meta,
+        .ewseta-topbar-socials-label {
+            display: none;
+        }
+
+        .ewseta-topbar-link,
+        .ewseta-topbar-item {
+            flex-shrink: 0;
+        }
+
+        .ewseta-topbar-socials {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding-top: 0.2rem;
+            border-top: 1px solid rgba(#fff, 0.1);
+        }
+
+        .ewseta-topbar-hours-menu {
+            max-width: calc(100vw - 1.5rem);
+        }
+    }
+
+    .navbar-brand.logo img {
+        max-height: 42px;
+    }
+
+    // Mobile menu must sit below the two-row topbar + header bar.
+    // Topbar z-index (1041) sits outside header's stacking context (1040),
+    // so the offcanvas was rendering underneath the utility bar.
+    header#top.ewseta-header-nav .o_header_mobile {
+        min-height: var(--ewseta-mobile-header-height);
+    }
+
+    #top_menu_collapse_mobile.offcanvas.o_navbar_mobile {
+        top: calc(var(--ewseta-topbar-height) + var(--ewseta-mobile-header-height)) !important;
+        height: calc(100dvh - var(--ewseta-topbar-height) - var(--ewseta-mobile-header-height)) !important;
+        max-height: calc(100dvh - var(--ewseta-topbar-height) - var(--ewseta-mobile-header-height)) !important;
+    }
+
+    body:has(#top_menu_collapse_mobile.show) {
+        header#top.ewseta-header-nav {
+            z-index: 1055 !important;
+        }
+
+        .ewseta-topbar {
+            z-index: 1035;
+        }
+
+        .offcanvas-backdrop.show {
+            top: calc(var(--ewseta-topbar-height) + var(--ewseta-mobile-header-height));
+        }
+    }
+}
+
+// Main menu dropdowns — solid white (overrides Odoo transparent mega menus)
+#wrapwrap header#top.ewseta-header-nav,
+#wrapwrap .o_navbar_mobile,
+#wrapwrap .offcanvas.o_navbar_mobile {
+    .top_menu .dropdown-menu,
+    .navbar-nav .dropdown-menu,
+    .dropdown-menu.o_mega_menu,
+    .o_extra_menu_items .dropdown-menu,
+    .js_usermenu {
+        background-color: #fff !important;
+        --bs-dropdown-bg: #fff !important;
+        --bs-body-bg: #fff !important;
+        --bs-primary-text-emphasis: #{$ewseta-orange};
+        background-image: none !important;
+        border-color: rgba($ewseta-dark, 0.08) !important;
+        box-shadow: $ewseta-shadow-lg;
+    }
+
+    .dropdown-menu.o_mega_menu,
+    .o_mega_menu {
+        border-top: 3px solid $ewseta-orange !important;
+
+        section,
+        .s_mega_menu_odoo_menu,
+        .o_colored_level,
+        .container,
+        .container-fluid,
+        .row,
+        [class*="col-"] {
+            background-color: #fff !important;
+            background-image: none !important;
+        }
+
+        h6,
+        h6 *,
+        .ewseta-mega-section-title {
+            color: $ewseta-orange !important;
+            font-weight: 700 !important;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+        }
+
+        .text-o-color-1 {
+            color: $ewseta-orange !important;
+        }
+
+        .ewseta-mega-menu-cards {
+            .ewseta-mega-section-title {
+                margin: 0 0 0.85rem;
+                padding-bottom: 0.35rem;
+                border-bottom: 1px solid rgba($ewseta-dark, 0.08);
+                text-transform: uppercase;
+                font-size: 0.68rem !important;
+                letter-spacing: 0.1em !important;
+            }
+
+            .ewseta-mega-section-divider {
+                height: 0.5rem;
+            }
+
+            .ewseta-nav-card {
+                display: flex;
+                align-items: flex-start;
+                gap: 0.85rem;
+                height: 100%;
+                padding: 0.95rem 1rem;
+                background: #fff;
+                border: 1px solid rgba($ewseta-dark, 0.08);
+                border-radius: $ewseta-radius;
+                box-shadow: $ewseta-shadow;
+                transition: $ewseta-transition;
+
+                &:hover,
+                &:focus {
+                    transform: translateY(-2px);
+                    box-shadow: $ewseta-shadow-lg;
+                    border-color: rgba($ewseta-dark, 0.14);
+                    background: #fff;
+                }
+            }
+
+            .ewseta-nav-card-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 2.75rem;
+                width: 2.75rem;
+                height: 2.75rem;
+                border-radius: 0.75rem;
+                font-size: 1.05rem;
+
+                &.ewseta-icon-orange {
+                    background: rgba($ewseta-orange, 0.12);
+                    color: $ewseta-orange !important;
+                }
+
+                &.ewseta-icon-blue {
+                    background: rgba($ewseta-blue, 0.12);
+                    color: $ewseta-blue !important;
+                }
+
+                &.ewseta-icon-green {
+                    background: rgba($ewseta-green, 0.12);
+                    color: $ewseta-green !important;
+                }
+
+                .fa {
+                    color: inherit !important;
+                }
+            }
+
+            .ewseta-nav-card-body {
+                display: flex;
+                flex-direction: column;
+                gap: 0.2rem;
+                min-width: 0;
+            }
+
+            .ewseta-nav-card-title {
+                display: block;
+                font-size: 0.88rem;
+                font-weight: 800 !important;
+                line-height: 1.35;
+                color: $ewseta-dark !important;
+            }
+
+            .ewseta-nav-card-desc {
+                display: block;
+                font-size: 0.78rem;
+                font-weight: 500 !important;
+                line-height: 1.45;
+                color: rgba($ewseta-dark, 0.62) !important;
+            }
+        }
+    }
+
+    .dropdown-menu.o_mega_menu:has(.ewseta-mega-menu-cards) {
+        min-width: #{"min(960px, calc(100vw - 2rem))"};
+        max-width: calc(100vw - 2rem);
+        padding: 0.35rem 0;
+    }
+
+    @media (max-width: 991.98px) {
+        .dropdown-menu.o_mega_menu:has(.ewseta-mega-menu-cards) {
+            min-width: 100%;
+            max-width: 100%;
+            position: static !important;
+            transform: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            border-top: none !important;
+        }
+
+        .ewseta-mega-menu-cards {
+            .container {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .ewseta-nav-card {
+                min-height: 3.25rem;
+            }
+        }
+    }
+
+    .dropdown-item {
+        color: $ewseta-dark !important;
+        font-weight: 600 !important;
+        background-color: transparent;
+
+        .fa,
+        .oi,
+        .text-primary-emphasis {
+            color: $ewseta-orange !important;
+        }
+
+        &:hover,
+        &:focus,
+        &.active {
+            background-color: rgba($ewseta-orange, 0.08) !important;
+            color: $ewseta-orange !important;
+
+            .fa,
+            .oi,
+            .text-primary-emphasis {
+                color: darken($ewseta-orange, 8%) !important;
+            }
+        }
+    }
+
+    .dropdown-divider {
+        border-color: rgba($ewseta-dark, 0.08);
+    }
+}
+
+.ewseta-topbar .dropdown-menu {
+    background-color: #fff !important;
+    --bs-dropdown-bg: #fff !important;
+    border-color: rgba($ewseta-dark, 0.08) !important;
+}
+
+header#top.ewseta-header-nav,
+.ewseta-topbar {
+    .dropdown-menu {
+        box-shadow: $ewseta-shadow-lg;
+    }
+}
+
+// Odoo editor apps menu (grid icon when logged in on frontend)
+.o_frontend_to_backend_nav {
+    .o_frontend_to_backend_apps_menu {
+        background-color: #fff !important;
+        --bs-dropdown-bg: #fff !important;
+        --bs-body-bg: #fff !important;
+        border: 1px solid rgba($ewseta-dark, 0.1) !important;
+        box-shadow: $ewseta-shadow-lg;
+        min-width: 12rem;
+        padding: 0.35rem 0;
+
+        .dropdown-item {
+            color: $ewseta-dark !important;
+            padding: 0.45rem 1rem;
+
+            &:hover,
+            &:focus {
+                background-color: rgba($ewseta-orange, 0.08) !important;
+                color: $ewseta-orange !important;
+            }
+        }
+    }
+}
+
+// ── Hero (CHIETA-style: welcome + portraits + banner strip) ───
+
+@keyframes ewsetaHeroFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ewsetaHeroFadeScale {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes ewsetaHeroSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-6%, -50%) translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-6%, -50%) translateX(0);
+    }
+}
+
+@keyframes ewsetaHeroSlideFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes ewsetaHeroDecoDrift {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(3deg);
+    }
+}
+
+@keyframes ewsetaHeroArcPulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.72;
+    }
+}
+
+.s_ewseta_hero_carousel {
+    width: 100%;
+    max-width: 100%;
+    background: #fff;
+    border-bottom: 1px solid rgba($ewseta-dark, 0.06);
+    overflow: visible;
+
+    .ewseta-hero-welcome {
+        width: 100%;
+        background: #fff;
+        overflow: visible;
+
+        .ewseta-hero-welcome-text,
+        .ewseta-hero-rings-composition,
+        .ewseta-hero-featured-portrait,
+        .ewseta-hero-portrait-thumb {
+            opacity: 0;
+        }
+
+        &:not(.is-loaded) {
+            .ewseta-hero-welcome-text,
+            .ewseta-hero-rings-composition,
+            .ewseta-hero-featured-portrait,
+            .ewseta-hero-portrait-thumb {
+                opacity: 1;
+            }
+        }
+
+        &.is-loaded {
+            .ewseta-hero-welcome-text {
+                animation: ewsetaHeroFadeUp 0.6s ease forwards;
+            }
+
+            .ewseta-hero-rings-composition {
+                animation: ewsetaHeroFadeScale 0.7s ease 0.15s forwards;
+            }
+
+            .ewseta-hero-portrait-thumb {
+                animation: ewsetaHeroSlideFromLeft 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+                &:nth-child(1) {
+                    animation-delay: 0.2s;
+                }
+
+                &:nth-child(2) {
+                    animation-delay: 0.32s;
+                }
+
+                &:nth-child(3) {
+                    animation-delay: 0.44s;
+                }
+
+                &:nth-child(4) {
+                    animation-delay: 0.56s;
+                }
+
+                &:nth-child(5) {
+                    animation-delay: 0.68s;
+                }
+            }
+
+            .ewseta-hero-featured-portrait {
+                animation: ewsetaHeroSlideIn 0.7s ease 0.3s forwards;
+            }
+        }
+    }
+
+    .ewseta-hero-welcome-row {
+        width: 100%;
+        margin-inline: 0;
+    }
+
+    .ewseta-hero-welcome-text {
+        padding-right: clamp(0rem, 2vw, 2rem);
+    }
+
+    .ewseta-hero-title {
+        font-size: clamp(1.85rem, 4vw, 2.75rem);
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 1.25rem;
+        color: $ewseta-orange;
+    }
+
+    .ewseta-hero-text {
+        font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+        line-height: 1.75;
+        color: rgba($ewseta-dark, 0.65);
+        margin-bottom: 1.75rem;
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .ewseta-hero-cta {
+        border-radius: 50px;
+        padding: 0.65rem 1.75rem;
+        font-weight: 600;
+    }
+
+    .ewseta-hero-visual-stack {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ewseta-hero-welcome-visual {
+        display: flex;
+        justify-content: center;
+    }
+
+    .ewseta-hero-visual-stage {
+        position: relative;
+        width: fit-content;
+        max-width: 100%;
+        margin-inline: auto;
+        padding-right: #{"min(280px, 30vw)"};
+        overflow: visible;
+    }
+
+    .ewseta-hero-portrait-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .ewseta-hero-portrait-thumb {
+        border: 3px solid transparent;
+        border-radius: 50%;
+        width: 4.25rem;
+        height: 4.25rem;
+        padding: 0;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 6px 20px rgba($ewseta-dark, 0.12);
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        &:hover,
+        &:focus,
+        &.is-active {
+            transform: scale(1.12);
+            border-color: $ewseta-orange;
+            box-shadow: 0 10px 28px rgba($ewseta-orange, 0.25);
+            outline: none;
+        }
+    }
+
+    .ewseta-hero-rings-composition {
+        position: relative;
+        width: #{"min(300px, 62vw)"};
+        aspect-ratio: 1;
+        flex-shrink: 0;
+        overflow: visible;
+    }
+
+    @media (min-width: 1200px) {
+        .ewseta-hero-rings-composition {
+            width: #{"min(360px, 34vw)"};
+        }
+
+        .ewseta-hero-welcome-text {
+            padding-right: clamp(1rem, 3vw, 3rem);
+        }
+    }
+
+    @media (min-width: 1400px) {
+        .ewseta-hero-rings-composition {
+            width: #{"min(400px, 30vw)"};
+        }
+    }
+
+    .ewseta-hero-gold-arc {
+        position: absolute;
+        width: 125%;
+        height: 125%;
+        top: -18%;
+        left: -38%;
+        border: 2px solid rgba($ewseta-orange, 0.55);
+        border-radius: 50%;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        transform: rotate(-22deg);
+        pointer-events: none;
+        z-index: 0;
+        animation: ewsetaHeroArcPulse 4s ease-in-out infinite;
+    }
+
+    .ewseta-hero-deco-rings {
+        position: absolute;
+        left: -8%;
+        bottom: -2%;
+        width: 58%;
+        height: 58%;
+        pointer-events: none;
+        z-index: 2;
+        animation: ewsetaHeroDecoDrift 40s linear infinite;
+        transform-origin: center center;
+    }
+
+    .ewseta-hero-deco-ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid;
+    }
+
+    .ewseta-hero-deco-ring-1 {
+        width: 52%;
+        height: 52%;
+        left: 0;
+        bottom: 0;
+        border-color: rgba($ewseta-dark, 0.55);
+        transform: rotate(-10deg);
+    }
+
+    .ewseta-hero-deco-ring-2 {
+        width: 68%;
+        height: 68%;
+        left: 10%;
+        bottom: 6%;
+        border-color: rgba($ewseta-orange, 0.5);
+        transform: rotate(14deg);
+    }
+
+    .ewseta-hero-deco-ring-3 {
+        width: 84%;
+        height: 84%;
+        left: 4%;
+        bottom: 12%;
+        border-color: rgba($ewseta-dark, 0.35);
+        transform: rotate(-6deg);
+    }
+
+    .ewseta-hero-deco-ring-4 {
+        width: 100%;
+        height: 100%;
+        left: 14%;
+        bottom: 0;
+        border-color: rgba($ewseta-orange, 0.35);
+        transform: rotate(20deg);
+    }
+
+    .ewseta-hero-rings {
+        position: relative;
+        aspect-ratio: 1;
+    }
+
+    .ewseta-hero-rings-main {
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .ewseta-hero-ring-bg {
+            inset: 0;
+            background:
+                radial-gradient(circle at 50% 50%, rgba($ewseta-blue, 0.06) 0%, rgba($ewseta-blue, 0.14) 42%, rgba($ewseta-orange, 0.08) 72%, transparent 74%),
+                radial-gradient(circle at 30% 30%, rgba($ewseta-orange, 0.1) 0%, transparent 55%),
+                radial-gradient(circle at 70% 70%, rgba($ewseta-blue, 0.08) 0%, transparent 50%);
+        }
+
+        &::before {
+            inset: 0;
+            border: 3px solid rgba($ewseta-dark, 0.75);
+            transform: rotate(-10deg);
+            z-index: 4;
+        }
+
+        &::after {
+            inset: 6%;
+            border: 2px solid rgba($ewseta-orange, 0.55);
+            transform: rotate(16deg);
+            z-index: 4;
+        }
+
+        .ewseta-hero-circle-img-main {
+            width: 80%;
+            z-index: 3;
+        }
+
+        &:hover,
+        &:focus-within {
+            transform: scale(1.1);
+            z-index: 3;
+
+            .ewseta-hero-circle-img-main {
+                box-shadow: 0 16px 48px rgba($ewseta-dark, 0.2);
+            }
+        }
+    }
+
+    .ewseta-hero-rings-small {
+        position: absolute;
+        left: -4%;
+        bottom: 4%;
+        width: 62%;
+        z-index: 4;
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &::before {
+            inset: 0;
+            border: 3px solid rgba($ewseta-green, 0.65);
+            transform: rotate(12deg);
+            z-index: 3;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &::after {
+            inset: 5%;
+            border: 3px solid rgba($ewseta-orange, 0.55);
+            transform: rotate(-14deg);
+            z-index: 3;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ewseta-hero-circle-img-small {
+            width: 80%;
+            z-index: 2;
+            box-shadow: 0 10px 32px rgba($ewseta-dark, 0.2);
+        }
+
+        &:hover,
+        &:focus-within {
+            transform: scale(1.1);
+            z-index: 6;
+
+            &::before {
+                transform: rotate(12deg) scale(1);
+            }
+
+            &::after {
+                transform: rotate(-14deg) scale(1);
+            }
+
+            .ewseta-hero-circle-img-small {
+                box-shadow: 0 12px 32px rgba($ewseta-dark, 0.22);
+            }
+        }
+    }
+
+    .ewseta-hero-ring-bg {
+        position: absolute;
+        inset: -8%;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 30% 30%, rgba($ewseta-orange, 0.12) 0%, transparent 55%),
+            radial-gradient(circle at 70% 70%, rgba($ewseta-blue, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .ewseta-hero-rings::before,
+    .ewseta-hero-rings::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 4;
+    }
+
+    .ewseta-hero-rings::before {
+        inset: 0;
+        border: 2px solid rgba($ewseta-orange, 0.55);
+        transform: rotate(-12deg);
+    }
+
+    .ewseta-hero-rings::after {
+        inset: 8%;
+        border: 2px solid rgba($ewseta-blue, 0.45);
+        transform: rotate(18deg);
+    }
+
+    .ewseta-hero-circle-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 72%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        object-fit: cover;
+        z-index: 2;
+        box-shadow: 0 12px 40px rgba($ewseta-dark, 0.12);
+        transition: opacity 0.35s ease, transform 0.35s ease;
+
+        &.is-fading {
+            opacity: 0;
+        }
+    }
+
+    .ewseta-hero-featured-portrait-img {
+        transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.is-fading {
+            opacity: 0;
+        }
+    }
+
+    .ewseta-hero-featured-portrait {
+        position: absolute;
+        top: 50%;
+        right: #{"min(-48px, -4vw)"};
+        z-index: 5;
+        display: block;
+        width: #{"min(300px, 34vw)"};
+        aspect-ratio: 1;
+        overflow: visible;
+        text-decoration: none;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translate(-6%, -50%);
+
+        .ewseta-hero-rings-main {
+            width: 100%;
+            height: 100%;
+        }
+
+        &:hover,
+        &:focus-visible {
+            transform: translate(-6%, -50%) scale(1.03);
+
+            .ewseta-hero-rings-main {
+                transform: scale(1.1);
+                z-index: 3;
+
+                .ewseta-hero-circle-img-main {
+                    box-shadow: 0 16px 48px rgba($ewseta-dark, 0.2);
+                }
+            }
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .ewseta-hero-featured-portrait {
+            width: #{"min(340px, 30vw)"};
+        }
+    }
+
+    @media (min-width: 1400px) {
+        .ewseta-hero-featured-portrait {
+            width: #{"min(380px, 26vw)"};
+        }
+    }
+
+    .ewseta-hero-banner-strip {
+        border-top: 1px solid rgba($ewseta-dark, 0.06);
+        background: #fff;
+        padding: 0.75rem 0 1.25rem;
+        overflow: hidden;
+
+        .carousel-inner,
+        .carousel-item {
+            min-height: auto;
+            width: 100%;
+        }
+
+        .carousel-item {
+            background: transparent;
+        }
+    }
+
+    .ewseta-hero-banner-link {
+        display: block;
+        width: 100%;
+        aspect-ratio: 6 / 1;
+        max-height: 200px;
+        height: auto;
+        padding: 0;
+        background: rgba($ewseta-dark, 0.04);
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    .ewseta-hero-banner-img,
+    .ewseta-hero-banner-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        border-radius: 0.75rem;
+    }
+
+    .ewseta-hero-banner-indicators {
+        bottom: 0.35rem;
+        margin-bottom: 0;
+        gap: 0.35rem;
+
+        [data-bs-target] {
+            width: 1.75rem;
+            height: 3px;
+            border-radius: 3px;
+            border: none;
+            background: rgba($ewseta-dark, 0.18);
+            opacity: 1;
+
+            &.active {
+                background: $ewseta-orange;
+                width: 2.5rem;
+            }
+        }
+    }
+
+    .ewseta-hero-banner-control {
+        width: 2.25rem;
+        height: 2.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 1;
+
+        &.carousel-control-prev {
+            left: 0.5rem;
+        }
+
+        &.carousel-control-next {
+            right: 0.5rem;
+        }
+
+        .ewseta-control-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            background: rgba($ewseta-dark, 0.06);
+            border-radius: 50%;
+            color: $ewseta-dark;
+            font-size: 0.85rem;
+            transition: $ewseta-transition;
+        }
+
+        &:hover .ewseta-control-icon {
+            background: $ewseta-orange;
+            color: #fff;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ewseta-hero-gold-arc,
+        .ewseta-hero-deco-rings {
+            animation: none !important;
+        }
+
+        .ewseta-hero-welcome {
+            .ewseta-hero-welcome-text,
+            .ewseta-hero-rings-composition,
+            .ewseta-hero-featured-portrait,
+            .ewseta-hero-portrait-thumb {
+                opacity: 1 !important;
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+    }
+}
+
+// ── Welcome + stats ────────────────────────────────────────────
+
+.s_ewseta_welcome {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background: #fff;
+
+    .ewseta-stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .ewseta-stat-card {
+        background: #fff;
+        border-radius: $ewseta-radius;
+        padding: 1.5rem;
+        box-shadow: $ewseta-shadow;
+        border-left: 4px solid $ewseta-orange;
+
+        &.ewseta-stat-blue { border-left-color: $ewseta-blue; }
+        &.ewseta-stat-green { border-left-color: $ewseta-green; }
+        &.ewseta-stat-dark { border-left-color: $ewseta-dark; }
+
+        .ewseta-stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: $ewseta-dark;
+            line-height: 1;
+        }
+
+        .ewseta-stat-icon {
+            display: block;
+            font-size: 1.75rem;
+            color: $ewseta-orange;
+            margin-bottom: 0.25rem;
+        }
+
+        .ewseta-stat-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: $ewseta-dark;
+            margin-top: 0.5rem;
+        }
+
+        .ewseta-stat-desc {
+            display: block;
+            font-size: 0.8rem;
+            color: rgba($ewseta-dark, 0.55);
+        }
+    }
+}
+
+// ── KPI dashboard (Performance overview) ───────────────────────
+
+.s_ewseta_performance {
+    padding: clamp(3.5rem, 7vw, 5.5rem) 0 clamp(3rem, 6vw, 4.5rem);
+    background: linear-gradient(180deg, #fff 0%, $ewseta-light 55%, #fff 100%);
+    overflow: hidden;
+
+    .ewseta-section-title {
+        color: $ewseta-blue;
+    }
+
+    .ewseta-kpi-cta-wrap {
+        margin-top: clamp(1.75rem, 4vw, 2.5rem);
+    }
+}
+
+.ewseta-kpi-panel {
+    position: relative;
+    margin-top: 0.5rem;
+    padding: clamp(2rem, 5vw, 3rem) 0;
+    background:
+        linear-gradient(125deg, darken($ewseta-dark, 4%) 0%, $ewseta-dark 42%, lighten($ewseta-dark, 6%) 100%);
+    border-block: 1px solid rgba(#fff, 0.06);
+
+    .ewseta-kpi-panel-glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(70px);
+        opacity: 0.35;
+    }
+
+    .ewseta-kpi-panel-glow-orange {
+        width: #{"min(28rem, 50vw)"};
+        height: #{"min(28rem, 50vw)"};
+        top: -35%;
+        left: -8%;
+        background: radial-gradient(circle, rgba($ewseta-orange, 0.55) 0%, transparent 70%);
+    }
+
+    .ewseta-kpi-panel-glow-blue {
+        width: #{"min(24rem, 45vw)"};
+        height: #{"min(24rem, 45vw)"};
+        bottom: -40%;
+        right: -6%;
+        background: radial-gradient(circle, rgba($ewseta-blue, 0.45) 0%, transparent 70%);
+    }
+}
+
+.ewseta-kpi-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.ewseta-kpi {
+    --kpi-accent: #{$ewseta-orange};
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.35rem 1.1rem 1.15rem;
+    border-radius: $ewseta-radius-lg;
+    background: rgba(#fff, 0.045);
+    border: 1px solid rgba(#fff, 0.09);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2.75rem;
+        height: 3px;
+        border-radius: 0 0 4px 4px;
+        background: var(--kpi-accent);
+    }
+
+    &.ewseta-kpi-blue { --kpi-accent: #{$ewseta-blue}; }
+    &.ewseta-kpi-green { --kpi-accent: #{$ewseta-green}; }
+    &.ewseta-kpi-dark { --kpi-accent: #{lighten($ewseta-dark, 55%)}; }
+
+    .ewseta-kpi-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 0.65rem;
+    }
+
+    .ewseta-kpi-tag {
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--kpi-accent);
+        padding: 0.18rem 0.5rem;
+        border-radius: 999px;
+        border: 1px solid rgba(#fff, 0.12);
+        background: rgba(#fff, 0.06);
+    }
+
+    .ewseta-kpi-icon {
+        color: rgba(#fff, 0.45);
+        font-size: 0.95rem;
+    }
+
+    .ewseta-kpi-gauge-wrap {
+        margin-bottom: 0.75rem;
+    }
+
+    .ewseta-kpi-gauge {
+        --kpi-progress: 0;
+        position: relative;
+        width: 5.25rem;
+        height: 5.25rem;
+    }
+
+    .ewseta-kpi-gauge-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .ewseta-kpi-gauge-bg {
+        fill: none;
+        stroke: rgba(#fff, 0.12);
+        stroke-width: 2.6;
+    }
+
+    .ewseta-kpi-gauge-fill {
+        fill: none;
+        stroke: var(--kpi-accent);
+        stroke-width: 2.6;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1.4s $ewseta-section-ease, filter 0.75s ease;
+    }
+
+    .ewseta-kpi-gauge-label,
+    .ewseta-kpi-gauge-icon {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ewseta-kpi-gauge-label {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+    }
+
+    .ewseta-kpi-gauge-icon {
+        color: var(--kpi-accent);
+        font-size: 1.15rem;
+    }
+
+    .ewseta-kpi-number {
+        margin: 0;
+        font-size: clamp(1.75rem, 2.8vw, 2.4rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        color: #fff;
+    }
+
+    .ewseta-kpi-title {
+        margin: 0.35rem 0 0;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.35;
+        color: rgba(#fff, 0.92);
+    }
+
+    .ewseta-kpi-note {
+        margin: 0.35rem 0 0;
+        font-size: 0.76rem;
+        line-height: 1.45;
+        color: rgba(#fff, 0.55);
+    }
+
+    .ewseta-kpi-footer {
+        width: 100%;
+        margin-top: 0.85rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(#fff, 0.08);
+    }
+
+    .ewseta-kpi-track {
+        height: 0.35rem;
+        border-radius: 999px;
+        background: rgba(#fff, 0.1);
+        overflow: hidden;
+    }
+
+    .ewseta-kpi-track-fill {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--kpi-accent), rgba(#fff, 0.85));
+    }
+
+    .ewseta-kpi-target {
+        display: block;
+        margin-top: 0.45rem;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: rgba(#fff, 0.5);
+    }
+}
+
+// KPI entrance + hover (slow stagger — driven by JS)
+.s_ewseta_performance {
+    .ewseta-kpi,
+    .ewseta-kpi-cta-wrap {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .s_ewseta_performance.ewseta-kpis-animated {
+        .ewseta-kpi:not(.ewseta-kpi-is-visible) {
+            opacity: 0;
+            transform: translateY(52px) scale(0.92);
+            transition:
+                opacity 1.85s $ewseta-section-ease,
+                transform 1.85s $ewseta-section-ease,
+                border-color 0.8s ease,
+                box-shadow 0.8s ease;
+
+            .ewseta-kpi-gauge {
+                transition: transform 0.85s $ewseta-section-ease;
+            }
+
+            .ewseta-kpi-number {
+                transition: transform 0.85s $ewseta-section-ease, color 0.85s ease;
+            }
+
+            .ewseta-kpi-icon {
+                transition: transform 0.85s $ewseta-section-ease, color 0.85s ease;
+            }
+        }
+
+        .ewseta-kpi-is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition:
+                opacity 1.85s $ewseta-section-ease,
+                transform 1.85s $ewseta-section-ease,
+                border-color 0.8s ease,
+                box-shadow 0.8s ease;
+        }
+
+        .ewseta-kpi-cta-wrap:not(.ewseta-kpi-cta-visible) {
+            opacity: 0;
+            transform: translateY(20px);
+            transition:
+                opacity 1.4s $ewseta-section-ease,
+                transform 1.4s $ewseta-section-ease;
+        }
+
+        .ewseta-kpi-cta-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition:
+                opacity 1.4s $ewseta-section-ease,
+                transform 1.4s $ewseta-section-ease;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .s_ewseta_performance {
+        .ewseta-kpi,
+        .ewseta-kpi-cta-wrap {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+    }
+}
+
+// ── Programmes ─────────────────────────────────────────────────
+
+.s_ewseta_programmes {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background: $ewseta-light;
+
+    .ewseta-programme-card {
+        background: #fff;
+        border-radius: $ewseta-radius-lg;
+        padding: 2rem 1.75rem;
+        height: 100%;
+        box-shadow: $ewseta-shadow;
+        border: 1px solid rgba($ewseta-dark, 0.05);
+
+        .ewseta-programme-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 1rem;
+            font-size: 1.35rem;
+            margin-bottom: 1.25rem;
+
+            &.ewseta-icon-orange {
+                background: rgba($ewseta-orange, 0.12);
+                color: $ewseta-orange;
+            }
+
+            &.ewseta-icon-blue {
+                background: rgba($ewseta-blue, 0.12);
+                color: $ewseta-blue;
+            }
+
+            &.ewseta-icon-green {
+                background: rgba($ewseta-green, 0.12);
+                color: $ewseta-green;
+            }
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: $ewseta-dark;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: rgba($ewseta-dark, 0.65);
+            line-height: 1.65;
+            margin-bottom: 1.25rem;
+        }
+    }
+}
+
+// ── Sectors ────────────────────────────────────────────────────
+
+.s_ewseta_sectors {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background: #fff;
+
+    .ewseta-section-title {
+        color: $ewseta-green;
+    }
+
+    .ewseta-sector-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: $ewseta-radius-lg;
+        min-height: 360px;
+        background-size: cover;
+        background-position: center;
+
+        .ewseta-sector-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba($ewseta-dark, 0.88) 0%,
+                rgba($ewseta-dark, 0.35) 55%,
+                rgba($ewseta-dark, 0.1) 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            color: #fff;
+            transition: $ewseta-transition;
+        }
+
+        .ewseta-sector-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 0.75rem;
+            background: rgba(#fff, 0.15);
+            backdrop-filter: blur(4px);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            line-height: 1.65;
+            margin-bottom: 1rem;
+        }
+
+        .ewseta-sector-link {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-decoration: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: $ewseta-transition;
+
+            i { margin-left: 0.25rem; }
+        }
+
+        &.ewseta-sector-energy .ewseta-sector-icon { color: $ewseta-orange; }
+        &.ewseta-sector-water .ewseta-sector-icon { color: $ewseta-blue; }
+        &.ewseta-sector-sustainability .ewseta-sector-icon { color: $ewseta-green; }
+    }
+}
+
+// ── News ───────────────────────────────────────────────────────
+
+.s_ewseta_news {
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background: $ewseta-light;
+
+    .ewseta-news-card {
+        background: #fff;
+        border-radius: $ewseta-radius-lg;
+        overflow: hidden;
+        box-shadow: $ewseta-shadow;
+        height: 100%;
+
+        .ewseta-news-img {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: transform 0.5s $ewseta-section-ease;
+        }
+
+        .ewseta-news-tag {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: $ewseta-orange;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.85rem;
+            border-radius: 50px;
+        }
+
+        .ewseta-news-body {
+            padding: 1.5rem;
+
+            .ewseta-news-date {
+                display: block;
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: $ewseta-blue;
+                margin-bottom: 0.5rem;
+            }
+
+            h3, h4 {
+                font-weight: 800;
+                color: $ewseta-dark;
+                line-height: 1.35;
+            }
+
+            h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+            h4 { font-size: 1rem; margin-bottom: 0.5rem; }
+
+            p {
+                font-size: 0.9rem;
+                color: rgba($ewseta-dark, 0.65);
+                line-height: 1.65;
+            }
+        }
+
+        &.ewseta-news-featured .ewseta-news-img { height: 280px; }
+
+        &.ewseta-news-horizontal {
+            display: flex;
+            flex-direction: row;
+
+            .ewseta-news-img {
+                width: 140px;
+                min-height: 120px;
+                flex-shrink: 0;
+            }
+
+            .ewseta-news-body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 1rem 1.25rem;
+            }
+        }
+    }
+}
+
+// ── Voice ──────────────────────────────────────────────────────
+
+.s_ewseta_voice {
+    padding: clamp(3rem, 6vw, 4rem) 0;
+    background: linear-gradient(135deg, $ewseta-blue 0%, darken($ewseta-blue, 12%) 100%);
+
+    .ewseta-voice-panel {
+        color: #fff;
+    }
+
+    .ewseta-voice-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4.5rem;
+        height: 4.5rem;
+        background: rgba(#fff, 0.15);
+        backdrop-filter: blur(8px);
+        border-radius: 50%;
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 800;
+        color: #fff;
+    }
+
+    .ewseta-voice-text {
+        font-size: 1.05rem;
+        opacity: 0.9;
+        line-height: 1.65;
+    }
+}
+
+// ── Subscribe ──────────────────────────────────────────────────
+
+.s_ewseta_subscribe {
+    padding: clamp(3rem, 6vw, 5rem) 0;
+    background: #fff;
+
+    .ewseta-section-title {
+        color: $ewseta-green;
+    }
+
+    .ewseta-subscribe-panel {
+        background: linear-gradient(135deg, rgba($ewseta-green, 0.08) 0%, rgba($ewseta-blue, 0.06) 100%);
+        border: 1px solid rgba($ewseta-green, 0.2);
+        border-radius: $ewseta-radius-lg;
+        padding: clamp(2rem, 4vw, 3rem);
+    }
+
+    .ewseta-subscribe-input-wrap {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 50px;
+        padding: 0.35rem 0.35rem 0.35rem 1.25rem;
+        box-shadow: $ewseta-shadow;
+        border: 1px solid rgba($ewseta-dark, 0.08);
+        margin-bottom: 0.75rem;
+
+        .ewseta-input-icon {
+            color: rgba($ewseta-dark, 0.35);
+            margin-right: 0.75rem;
+        }
+
+        .form-control {
+            border: none;
+            box-shadow: none;
+            padding: 0.75rem 0;
+            background: transparent;
+
+            &:focus { box-shadow: none; }
+        }
+
+        .btn-subscribe {
+            background: $ewseta-orange;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            white-space: nowrap;
+            transition: $ewseta-transition;
+
+            &:hover {
+                background: darken($ewseta-orange, 8%);
+                transform: scale(1.03);
+            }
+        }
+    }
+
+    .ewseta-subscribe-note {
+        font-size: 0.8rem;
+        color: rgba($ewseta-dark, 0.5);
+        padding-left: 1.25rem;
+    }
+}
+
+// ── Section scroll animations ──────────────────────────────────
+
+$ewseta-stagger-delay-step: 0.55s;
+$ewseta-section-fallback-duration: 3s;
+
+@function ewseta-stagger-delay($index: 0) {
+    @return $index * $ewseta-stagger-delay-step;
+}
+
+@function ewseta-view-timeline() {
+    @return unquote('view()');
+}
+
+// Hover motion on all homepage cards (transitions — safe alongside entrance animations)
+@media (prefers-reduced-motion: no-preference) {
+    .ewseta-stat-card,
+    .ewseta-programme-card,
+    .ewseta-news-card {
+        transition: box-shadow 0.55s $ewseta-section-ease;
+
+        &:hover {
+            transition: transform 0.55s $ewseta-section-ease, box-shadow 0.55s ease;
+            transform: perspective(900px) rotateX(5deg) rotateY(-5deg) translateY(-10px) scale(1.03);
+            box-shadow: $ewseta-shadow-lg;
+        }
+    }
+
+    .ewseta-stat-card:hover .ewseta-stat-icon,
+    .ewseta-programme-card:hover .ewseta-programme-icon {
+        transform: rotate(-14deg) scale(1.18);
+    }
+
+    .ewseta-stat-icon,
+    .ewseta-programme-icon {
+        transition: transform 0.55s $ewseta-section-ease;
+    }
+
+    .ewseta-kpi {
+        transition:
+            transform 0.85s $ewseta-section-ease,
+            border-color 0.8s ease,
+            box-shadow 0.8s ease;
+
+        &:hover {
+            transform: translateY(-14px) scale(1.05);
+            border-color: rgba(#fff, 0.28);
+            box-shadow:
+                0 24px 50px rgba(#000, 0.38),
+                0 0 0 1px rgba(#fff, 0.14);
+
+            .ewseta-kpi-gauge {
+                transform: scale(1.1);
+            }
+
+            .ewseta-kpi-gauge-fill {
+                filter: drop-shadow(0 0 10px var(--kpi-accent));
+            }
+
+            .ewseta-kpi-number {
+                transform: scale(1.07);
+            }
+
+            .ewseta-kpi-icon {
+                transform: rotate(-14deg) scale(1.2);
+                color: var(--kpi-accent);
+            }
+
+            .ewseta-kpi-track-fill {
+                filter: brightness(1.2);
+            }
+
+            &::before {
+                width: 3.5rem;
+                transition: width 0.85s $ewseta-section-ease;
+            }
+        }
+
+        &::before {
+            transition: width 0.85s $ewseta-section-ease;
+        }
+    }
+
+    .ewseta-sector-card {
+        transition: box-shadow 0.55s $ewseta-section-ease;
+
+        &:hover {
+            transition: transform 0.55s $ewseta-section-ease, box-shadow 0.55s ease;
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: $ewseta-shadow-lg;
+
+            .ewseta-sector-overlay {
+                background: linear-gradient(
+                    to top,
+                    rgba($ewseta-dark, 0.92) 0%,
+                    rgba($ewseta-dark, 0.4) 60%,
+                    rgba($ewseta-dark, 0.15) 100%
+                );
+            }
+
+            .ewseta-sector-link {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .ewseta-sector-icon {
+                transform: rotate(-14deg) scale(1.18);
+            }
+        }
+
+        .ewseta-sector-icon {
+            transition: transform 0.55s $ewseta-section-ease;
+        }
+    }
+
+    .ewseta-news-card {
+        .ewseta-news-img {
+            transition: transform 0.65s $ewseta-section-ease;
+        }
+    }
+
+    .ewseta-news-card:hover .ewseta-news-img {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes ewsetaSectionFadeUp {
+    0% { opacity: 0; transform: translate3d(0, 28px, 0); }
+    55% { opacity: 0.88; transform: translate3d(0, 6px, 0); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ewsetaSectionSlideRight {
+    0% { opacity: 0; transform: translate3d(40px, 0, 0); }
+    55% { opacity: 0.88; transform: translate3d(8px, 0, 0); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ewsetaSectionSlideLeft {
+    0% { opacity: 0; transform: translate3d(-40px, 0, 0); }
+    55% { opacity: 0.88; transform: translate3d(-8px, 0, 0); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ewsetaSectionFlipIn {
+    0% { opacity: 0; transform: perspective(900px) rotateY(-42deg) translate3d(0, 14px, 0); }
+    55% { opacity: 0.9; transform: perspective(900px) rotateY(-8deg) translate3d(0, 4px, 0); }
+    100% { opacity: 1; transform: perspective(900px) rotateY(0) translate3d(0, 0, 0); }
+}
+
+@keyframes ewsetaSectionRotateIn {
+    0% { opacity: 0; transform: rotate(-90deg) scale(0.82); }
+    55% { opacity: 0.9; transform: rotate(-12deg) scale(0.96); }
+    100% { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@keyframes ewsetaSectionScaleRotateIn {
+    0% { opacity: 0; transform: rotate(-4deg) scale(0.94); }
+    55% { opacity: 0.9; transform: rotate(-1deg) scale(0.98); }
+    100% { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@keyframes ewsetaSectionFlipPanel {
+    0% { opacity: 0; transform: perspective(1000px) rotateX(10deg) translate3d(0, 28px, 0); }
+    55% { opacity: 0.9; transform: perspective(1000px) rotateX(3deg) translate3d(0, 8px, 0); }
+    100% { opacity: 1; transform: perspective(1000px) rotateX(0) translate3d(0, 0, 0); }
+}
+
+@mixin ewseta-scroll-reveal($animation, $start: 0%, $end: cover 48%) {
+    animation-name: $animation;
+    animation-timing-function: $ewseta-section-ease;
+    animation-fill-mode: both;
+    animation-timeline: ewseta-view-timeline();
+    animation-range: entry $start $end;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+// Primary: scroll-driven animations (slow, smooth — tied to scroll distance)
+@supports #{'(animation-timeline: view())'} {
+    @media (prefers-reduced-motion: no-preference) {
+        // KPI header only — tile stagger stays JS-driven (unchanged)
+        .s_ewseta_performance {
+            .ewseta-section-header { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 0%, cover 48%); }
+
+            .ewseta-kpi-cta-wrap .btn { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 34%, cover 58%); }
+        }
+
+        .s_ewseta_welcome {
+            .ewseta-section-header { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 0%, cover 85%); }
+            .col-lg-6:first-child > p { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 8%, cover 88%); }
+            .col-lg-6:first-child > .btn { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 14%, cover 92%); }
+
+            @for $i from 1 through 4 {
+                .ewseta-stat-card:nth-child(#{$i}) {
+                    @include ewseta-scroll-reveal(
+                        ewsetaSectionFlipIn,
+                        (18 + ($i - 1) * 8) * 1%,
+                        unquote('cover #{(90 + ($i - 1) * 2.5)}%')
+                    );
+                }
+            }
+        }
+
+        .s_ewseta_programmes {
+            .ewseta-section-header { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 0%, cover 85%); }
+
+            @for $i from 1 through 4 {
+                .row.g-4 > div:nth-child(#{$i}) .ewseta-programme-card {
+                    @include ewseta-scroll-reveal(
+                        ewsetaSectionFlipIn,
+                        (12 + ($i - 1) * 10) * 1%,
+                        unquote('cover #{(88 + ($i - 1) * 3)}%')
+                    );
+                }
+            }
+        }
+
+        .s_ewseta_sectors {
+            .ewseta-section-header { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 0%, cover 85%); }
+
+            @for $i from 1 through 6 {
+                .row.g-4 > div:nth-child(#{$i}) .ewseta-sector-card {
+                    @include ewseta-scroll-reveal(
+                        ewsetaSectionScaleRotateIn,
+                        (10 + ($i - 1) * 8) * 1%,
+                        unquote('cover #{(86 + ($i - 1) * 2.5)}%')
+                    );
+                }
+            }
+        }
+
+        .s_ewseta_news {
+            .ewseta-section-header { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 0%, cover 82%); }
+            .d-flex.flex-wrap > .btn { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 8%, cover 86%); }
+            .ewseta-news-featured { @include ewseta-scroll-reveal(ewsetaSectionSlideLeft, 14%, cover 90%); }
+
+            @for $i from 1 through 3 {
+                .col-lg-6:last-child .row.g-4 > .col-12:nth-child(#{$i}) .ewseta-news-horizontal {
+                    @include ewseta-scroll-reveal(
+                        ewsetaSectionSlideRight,
+                        (22 + ($i - 1) * 10) * 1%,
+                        unquote('cover #{(92 + ($i - 1) * 3)}%')
+                    );
+                }
+            }
+        }
+
+        .s_ewseta_voice {
+            .ewseta-voice-icon { @include ewseta-scroll-reveal(ewsetaSectionRotateIn, 0%, cover 80%); }
+            .ewseta-voice-panel h2 { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 10%, cover 84%); }
+            .ewseta-voice-text { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 18%, cover 88%); }
+            .ewseta-voice-panel .btn:nth-child(1) { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 26%, cover 92%); }
+            .ewseta-voice-panel .btn:nth-child(2) { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 34%, cover 96%); }
+        }
+
+        .s_ewseta_subscribe {
+            .ewseta-subscribe-panel { @include ewseta-scroll-reveal(ewsetaSectionFlipPanel, 0%, cover 80%); }
+            .col-lg-5 { @include ewseta-scroll-reveal(ewsetaSectionFadeUp, 12%, cover 86%); }
+            .ewseta-subscribe-form { @include ewseta-scroll-reveal(ewsetaSectionSlideRight, 22%, cover 92%); }
+        }
+    }
+}
+
+// Fallback: JS adds ewseta-section-visible on browsers without scroll-driven animations
+@supports not #{'(animation-timeline: view())'} {
+.s_ewseta_performance.ewseta-section-visible {
+        .ewseta-section-header {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+}
+
+.s_ewseta_welcome.ewseta-section-visible {
+        .ewseta-section-header {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+
+        .col-lg-6:first-child > p {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(1);
+        }
+
+        .col-lg-6:first-child > .btn {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(2);
+        }
+
+        @for $i from 1 through 4 {
+            .ewseta-stat-card:nth-child(#{$i}) {
+                animation: ewsetaSectionFlipIn $ewseta-section-fallback-duration $ewseta-section-ease both;
+                animation-delay: ewseta-stagger-delay(2 + $i);
+            }
+        }
+}
+
+.s_ewseta_programmes.ewseta-section-visible {
+        .ewseta-section-header {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+
+        @for $i from 1 through 4 {
+            .row.g-4 > div:nth-child(#{$i}) .ewseta-programme-card {
+                animation: ewsetaSectionFlipIn $ewseta-section-fallback-duration $ewseta-section-ease both;
+                animation-delay: ewseta-stagger-delay($i);
+            }
+        }
+}
+
+.s_ewseta_sectors.ewseta-section-visible {
+        .ewseta-section-header {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+
+        @for $i from 1 through 6 {
+            .row.g-4 > div:nth-child(#{$i}) .ewseta-sector-card {
+                animation: ewsetaSectionScaleRotateIn $ewseta-section-fallback-duration $ewseta-section-ease both;
+                animation-delay: ewseta-stagger-delay($i);
+            }
+        }
+}
+
+.s_ewseta_news.ewseta-section-visible {
+        .ewseta-section-header {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+
+        .d-flex.flex-wrap > .btn {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(1);
+        }
+
+        .ewseta-news-featured {
+            animation: ewsetaSectionSlideLeft $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(2);
+        }
+
+        @for $i from 1 through 3 {
+            .col-lg-6:last-child .row.g-4 > .col-12:nth-child(#{$i}) .ewseta-news-horizontal {
+                animation: ewsetaSectionSlideRight $ewseta-section-fallback-duration $ewseta-section-ease both;
+                animation-delay: ewseta-stagger-delay(2 + $i);
+            }
+        }
+}
+
+.s_ewseta_voice.ewseta-section-visible {
+        .ewseta-voice-icon {
+            animation: ewsetaSectionRotateIn $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+
+        .ewseta-voice-panel h2 {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(1);
+        }
+
+        .ewseta-voice-text {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(2);
+        }
+
+        .ewseta-voice-panel .btn:nth-child(1) {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(3);
+        }
+
+        .ewseta-voice-panel .btn:nth-child(2) {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(4);
+        }
+}
+
+.s_ewseta_subscribe.ewseta-section-visible {
+        .ewseta-subscribe-panel {
+            animation: ewsetaSectionFlipPanel $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(0);
+        }
+
+        .col-lg-5 {
+            animation: ewsetaSectionFadeUp $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(1);
+        }
+
+        .ewseta-subscribe-form {
+            animation: ewsetaSectionSlideRight $ewseta-section-fallback-duration $ewseta-section-ease both;
+            animation-delay: ewseta-stagger-delay(2);
+        }
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .s_ewseta_welcome,
+    .s_ewseta_performance,
+    .s_ewseta_programmes,
+    .s_ewseta_sectors,
+    .s_ewseta_news,
+    .s_ewseta_voice,
+    .s_ewseta_subscribe {
+        &.ewseta-section-visible * {
+            animation: none !important;
+        }
+    }
+
+    .s_ewseta_performance {
+        .ewseta-kpi-panel,
+        .ewseta-kpi,
+        .ewseta-kpi-cta-wrap {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    }
+
+    .s_ewseta_welcome,
+    .s_ewseta_programmes,
+    .s_ewseta_sectors,
+    .s_ewseta_news {
+        * {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    }
+}
+
+// ── Footer ─────────────────────────────────────────────────────
+
+#footer.ewseta-footer {
+    .ewseta-footer-heading {
+        color: $ewseta-orange;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        margin-bottom: 1rem;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+        transition: color $ewseta-transition;
+
+        &:hover { color: $ewseta-blue; }
+    }
+}
+
+// ── Responsive ─────────────────────────────────────────────────
+
+@media (max-width: 991.98px) {
+    .ewseta-topbar {
+        .ewseta-topbar-left,
+        .ewseta-topbar-right {
+            text-align: left;
+        }
+    }
+
+    .s_ewseta_hero_carousel {
+        .ewseta-hero-banner-control { display: none; }
+
+        .ewseta-hero-visual-stage {
+            padding-right: 0;
+            width: 100%;
+        }
+
+        .ewseta-hero-featured-portrait {
+            position: static;
+            transform: none;
+            width: #{"min(280px, 78vw)"};
+            margin: 1.25rem auto 0;
+            right: auto;
+
+            &:hover,
+            &:focus-visible {
+                transform: scale(1.03);
+
+                img,
+                .ewseta-hero-featured-portrait-img {
+                    transform: scale(1.1);
+                }
+            }
+        }
+
+        .ewseta-hero-welcome.is-loaded .ewseta-hero-featured-portrait {
+            animation: ewsetaHeroFadeUp 0.6s ease 0.3s forwards;
+        }
+    }
+
+    .s_ewseta_welcome .ewseta-stats-grid {
+        margin-top: 1rem;
+    }
+
+    .ewseta-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .s_ewseta_sectors .ewseta-sector-card {
+        min-height: 300px;
+
+        .ewseta-sector-link {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    .s_ewseta_news .ewseta-news-card.ewseta-news-horizontal {
+        flex-direction: column;
+
+        .ewseta-news-img {
+            width: 100%;
+            height: 160px;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    :root {
+        --ewseta-topbar-height: 86px;
+        --ewseta-mobile-header-height: 52px;
+    }
+
+    .ewseta-topbar {
+        .ewseta-topbar-link-text {
+            display: none;
+        }
+
+        .ewseta-topbar-link,
+        .ewseta-topbar-hours .dropdown-toggle {
+            padding: 0.25rem 0.4rem;
+        }
+
+        .ewseta-topbar-chip {
+            font-size: 0.68rem;
+            padding: 0.12rem 0.45rem;
+        }
+    }
+
+    .s_ewseta_hero_carousel {
+        .ewseta-hero-visual-stack {
+            flex-direction: column;
+        }
+
+        .ewseta-hero-portrait-stack {
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .ewseta-hero-rings-composition {
+            width: #{"min(260px, 70vw)"};
+        }
+
+        .ewseta-hero-deco-rings {
+            width: 58%;
+            height: 58%;
+            left: -8%;
+            bottom: -2%;
+        }
+
+        .ewseta-hero-gold-arc {
+            width: 115%;
+            height: 115%;
+            left: -42%;
+        }
+
+        .ewseta-hero-rings-small {
+            width: 58%;
+            left: -4%;
+            bottom: 2%;
+        }
+
+        .ewseta-hero-title {
+            font-size: clamp(1.65rem, 7vw, 2.25rem);
+        }
+
+        .ewseta-hero-banner-link {
+            aspect-ratio: 3 / 1;
+            max-height: 140px;
+        }
+
+        .ewseta-hero-cta {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    .s_ewseta_welcome .ewseta-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ewseta-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .s_ewseta_subscribe .ewseta-subscribe-input-wrap {
+        flex-direction: column;
+        border-radius: $ewseta-radius;
+        padding: 1rem;
+
+        .btn-subscribe {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+    }
+}
+
+// ── WhatsApp floating button ──────────────────────────────────
+
+.ewseta-whatsapp-float {
+    position: fixed;
+    right: #{"max(1.25rem, env(safe-area-inset-right))"};
+    bottom: #{"max(1.25rem, env(safe-area-inset-bottom))"};
+    z-index: 1050;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: #25D366;
+    color: #fff !important;
+    text-decoration: none !important;
+    box-shadow: 0 8px 24px rgba(#25D366, 0.45);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    .fa {
+        font-size: 1.75rem;
+        line-height: 1;
+        color: #fff !important;
+    }
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        transform: scale(1.08);
+        box-shadow: 0 12px 32px rgba(#25D366, 0.55);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(#25D366, 0.45);
+        outline-offset: 3px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ewseta-whatsapp-float {
+        width: 3.15rem;
+        height: 3.15rem;
+
+        .fa {
+            font-size: 1.55rem;
+        }
+    }
+}

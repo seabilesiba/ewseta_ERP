@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_voice" name="EWSETA Your Voice Counts">
+    <section class="s_ewseta_voice" data-snippet="s_ewseta_voice">
+        <div class="container">
+            <div class="ewseta-voice-panel">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-2 text-center text-lg-start">
+                        <div class="ewseta-voice-icon">
+                            <i class="fa fa-comments"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center text-lg-start">
+                        <h2 class="mb-2">Your Voice Counts</h2>
+                        <p class="mb-0 ewseta-voice-text">Let us hear your ideas, thoughts and address your queries. We value stakeholder feedback in shaping our services.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-flex flex-column flex-sm-row flex-lg-column gap-3 justify-content-center">
+                            <a href="#" class="btn btn-ewseta-light">Share Your Feedback</a>
+                            <a href="#" class="btn btn-ewseta-outline-light">Send Me Your Query</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

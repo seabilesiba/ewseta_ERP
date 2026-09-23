@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_sectors" name="EWSETA Sectors">
+    <section class="s_ewseta_sectors" data-snippet="s_ewseta_sectors">
+        <div class="container">
+            <div class="ewseta-section-header text-center mx-auto mb-5">
+                <span class="ewseta-eyebrow">Our Focus Areas</span>
+                <h2 class="ewseta-section-title">Powering South Africa's Future</h2>
+                <p class="ewseta-section-lead">Skills development at the heart of energy, water, and sustainability challenges.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="ewseta-sector-card ewseta-sector-energy" style="background-image: url('/ewseta_web/static/img/sector_energy.jpg');">
+                        <div class="ewseta-sector-overlay">
+                            <div class="ewseta-sector-icon"><i class="fa fa-bolt"/></div>
+                            <h3>Energy</h3>
+                            <p>Effective skills development as a key growth driver amid infrastructure challenges and growing demand across the energy sector.</p>
+                            <a href="#" class="ewseta-sector-link">Explore Energy <i class="fa fa-arrow-right"/></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="ewseta-sector-card ewseta-sector-water" style="background-image: url('/ewseta_web/static/img/sector_water.jpg');">
+                        <div class="ewseta-sector-overlay">
+                            <div class="ewseta-sector-icon"><i class="fa fa-tint"/></div>
+                            <h3>Water</h3>
+                            <p>Critical water skills for South Africa's future supply — addressing ageing infrastructure, technical shortages, and rising demand.</p>
+                            <a href="#" class="ewseta-sector-link">Explore Water <i class="fa fa-arrow-right"/></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="ewseta-sector-card ewseta-sector-sustainability" style="background-image: url('/ewseta_web/static/img/sector_sustainability.jpg');">
+                        <div class="ewseta-sector-overlay">
+                            <div class="ewseta-sector-icon"><i class="fa fa-leaf"/></div>
+                            <h3>Sustainability</h3>
+                            <p>Remarkable growth in renewable energy presents numerous opportunities for skills development and green economy careers.</p>
+                            <a href="#" class="ewseta-sector-link">Explore Sustainability <i class="fa fa-arrow-right"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

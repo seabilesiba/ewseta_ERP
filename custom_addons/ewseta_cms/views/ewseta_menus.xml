@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_ewseta_website_root"
+        name="EWSETA Website"
+        groups="group_ewseta_marketing,group_ewseta_hr,group_ewseta_supply_chain,group_ewseta_website_admin"
+        sequence="85"/>
+
+    <menuitem id="menu_ewseta_homepage"
+        name="Homepage"
+        parent="menu_ewseta_website_root"
+        groups="group_ewseta_marketing,group_ewseta_website_admin"
+        sequence="10"/>
+
+    <menuitem id="menu_ewseta_hero_slides"
+        name="Hero Slides"
+        parent="menu_ewseta_homepage"
+        action="ewseta_hero_slide_action"
+        sequence="10"/>
+
+    <menuitem id="menu_ewseta_welcome"
+        name="Welcome Section"
+        parent="menu_ewseta_homepage"
+        action="ewseta_home_welcome_action"
+        sequence="20"/>
+
+    <menuitem id="menu_ewseta_performance_metrics"
+        name="Performance Metrics"
+        parent="menu_ewseta_homepage"
+        action="ewseta_performance_metric_action"
+        sequence="25"/>
+
+    <menuitem id="menu_ewseta_programme_cards"
+        name="Programme Cards"
+        parent="menu_ewseta_homepage"
+        action="ewseta_programme_card_action"
+        sequence="30"/>
+
+    <menuitem id="menu_ewseta_sector_cards"
+        name="Sector Cards"
+        parent="menu_ewseta_homepage"
+        action="ewseta_sector_card_action"
+        sequence="40"/>
+
+    <menuitem id="menu_ewseta_section_headers"
+        name="Section Headers"
+        parent="menu_ewseta_homepage"
+        action="ewseta_home_settings_action"
+        sequence="50"
+        groups="group_ewseta_website_admin"/>
+
+    <menuitem id="menu_ewseta_topbar"
+        name="Top Bar"
+        parent="menu_ewseta_website_root"
+        action="ewseta_website_topbar_action"
+        groups="group_ewseta_marketing,group_ewseta_website_admin"
+        sequence="5"/>
+
+    <menuitem id="menu_ewseta_navigation"
+        name="Navigation"
+        parent="menu_ewseta_website_root"
+        groups="group_ewseta_marketing,group_ewseta_website_admin"
+        sequence="6"/>
+
+    <menuitem id="menu_ewseta_navbar_settings"
+        name="Navbar Settings"
+        parent="menu_ewseta_navigation"
+        action="ewseta_navbar_settings_action"
+        sequence="10"/>
+
+    <menuitem id="menu_ewseta_theme_settings"
+        name="Theme Settings"
+        parent="menu_ewseta_navigation"
+        action="ewseta_theme_settings_server_action"
+        sequence="15"/>
+
+    <menuitem id="menu_ewseta_custom_themes"
+        name="Custom Themes"
+        parent="menu_ewseta_navigation"
+        action="ewseta_website_theme_server_action"
+        sequence="16"/>
+
+    <menuitem id="menu_ewseta_website_menus"
+        name="Menu Items"
+        parent="menu_ewseta_navigation"
+        action="ewseta_website_menu_action"
+        sequence="20"/>
+
+    <menuitem id="menu_ewseta_news"
+        name="News &amp; Events"
+        parent="menu_ewseta_website_root"
+        groups="group_ewseta_marketing,group_ewseta_website_admin"
+        sequence="20"/>
+
+    <menuitem id="menu_ewseta_news_articles"
+        name="Articles"
+        parent="menu_ewseta_news"
+        action="ewseta_news_article_action"
+        sequence="10"/>
+
+    <menuitem id="menu_ewseta_vacancies"
+        name="Vacancies"
+        parent="menu_ewseta_website_root"
+        action="hr_job_ewseta_vacancies_action"
+        groups="group_ewseta_hr,group_ewseta_website_admin"
+        sequence="30"/>
+
+    <menuitem id="menu_ewseta_supply_chain"
+        name="Supply Chain"
+        parent="menu_ewseta_website_root"
+        groups="group_ewseta_supply_chain,group_ewseta_website_admin"
+        sequence="40"/>
+
+    <menuitem id="menu_ewseta_tenders"
+        name="Tenders"
+        parent="menu_ewseta_supply_chain"
+        action="ewseta_tender_action"
+        sequence="10"/>
+
+    <menuitem id="menu_ewseta_rfqs"
+        name="RFQs"
+        parent="menu_ewseta_supply_chain"
+        action="ewseta_rfq_action"
+        sequence="20"/>
+
+    <menuitem id="menu_ewseta_website_settings"
+        name="Website Settings"
+        parent="menu_ewseta_website_root"
+        action="website.action_website_configuration"
+        groups="group_ewseta_website_admin"
+        sequence="90"/>
+
+</odoo>

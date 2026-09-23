@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="proc_cms_header_logo" inherit_id="website.option_header_brand_logo" name="Proc CMS Navbar Logo" priority="50">
+        <xpath expr="//span[@t-field='website.logo']" position="replace">
+            <t t-set="cms_logo" t-value="website.proc_cms_logo_url()"/>
+            <img t-if="cms_logo"
+                 t-att-src="cms_logo"
+                 alt="EW SETA"
+                 class="img img-fluid o_website_logo ewseta-navbar-logo"
+                 loading="lazy"/>
+            <span t-else="" t-field="website.logo" t-options="{'widget': 'image', 'class': 'img img-fluid o_website_logo ewseta-navbar-logo'}"/>
+        </xpath>
+    </template>
+
+    <template id="proc_cms_favicon" inherit_id="web.frontend_layout" name="Proc CMS Favicon" priority="100">
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <t t-set="cms_favicon" t-value="website.proc_cms_favicon_url()"/>
+            <link type="image/x-icon" rel="icon" t-att-href="cms_favicon"/>
+            <link type="image/x-icon" rel="shortcut icon" t-att-href="cms_favicon"/>
+        </xpath>
+    </template>
+
+    <template id="proc_cms_header_search" inherit_id="website.header_search_box" name="Proc CMS Header Search" priority="55">
+        <xpath expr="//li" position="attributes">
+            <attribute name="t-if">website.proc_cms_header_search_enabled()</attribute>
+        </xpath>
+    </template>
+
+    <template id="proc_cms_header_phone" inherit_id="website.header_text_element" name="Proc CMS Header Phone" priority="55">
+        <xpath expr="//li" position="replace">
+            <li t-if="website.proc_cms_header_phone_enabled()" t-attf-class="#{_item_class}">
+                <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                    <a t-att-href="'tel:%s' % website.proc_cms_header_phone_href()"
+                       class="nav-link o_nav-link_secondary p-2">
+                        <i class="fa fa-1x fa-fw fa-phone me-1"/>
+                        <span class="o_force_ltr"><small t-esc="website.proc_cms_header_phone_display()"/></span>
+                    </a>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="proc_cms_header_cta" inherit_id="website.header_call_to_action" name="Proc CMS Header CTA" priority="50">
+        <xpath expr="//a[hasclass('btn_cta')]" position="replace">
+            <a t-if="website.proc_cms_header_cta_visible()"
+               t-att-href="website.proc_cms_header_cta_url()"
+               t-att-target="'_blank' if website.proc_cms_header_cta_new_window() else None"
+               class="oe_unremovable btn btn-primary btn_cta ewseta-nav-cta">
+                <t t-esc="website.proc_cms_header_cta_label()"/>
+            </a>
+        </xpath>
+    </template>
+
+    <template id="proc_cms_button_snippet" name="Proc CMS Button">
+        <t t-if="btn">
+            <a t-att-href="btn.url"
+               t-att-class="btn.css_classes()"
+               t-att-target="'_blank' if btn.new_window else None">
+                <t t-esc="btn.label"/>
+            </a>
+        </t>
+    </template>
+
+    <template id="proc_cms_page_layout" name="Proc CMS Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure ew-proc-portal mt-4 mb-5">
+                <div class="container">
+                    <header class="mb-4">
+                        <h1 class="h2" t-esc="cms_page.page_title or cms_page.name"/>
+                        <p t-if="cms_page.subtitle" class="text-muted lead" t-esc="cms_page.subtitle"/>
+                    </header>
+                    <div class="proc-cms-page-content" t-field="cms_page.content"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

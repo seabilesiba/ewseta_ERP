@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="ewseta_topbar_cms" inherit_id="ewseta_web.ewseta_topbar" name="EWSETA Top Bar CMS" priority="30">
+    <xpath expr="//div[hasclass('ewseta-topbar')]" position="replace">
+        <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+        <t t-set="topbar" t-value="request.env['ewseta.website.topbar'].sudo().get_for_website(website.id)"/>
+        <div class="ewseta-topbar" t-if="topbar">
+            <div class="container">
+                <div class="ewseta-topbar-inner">
+                    <div class="ewseta-topbar-left">
+                        <span class="ewseta-topbar-item ewseta-topbar-hotline" t-if="topbar.hotline_phone">
+                            <span class="ewseta-topbar-icon"><i class="fa fa-phone"/></span>
+                            <span class="ewseta-topbar-label" t-if="topbar.hotline_label" t-out="topbar.hotline_label"/>
+                            <a t-att-href="'tel:%s' % topbar.hotline_phone_link" class="ewseta-topbar-chip" t-out="topbar.hotline_phone"/>
+                            <span class="ewseta-topbar-meta" t-if="topbar.hotline_meta" t-out="topbar.hotline_meta"/>
+                        </span>
+                        <t t-set="topbar_links" t-value="topbar.link_ids.filtered('is_published')"/>
+                        <t t-foreach="topbar_links" t-as="link">
+                            <a t-att-href="link.url" class="ewseta-topbar-item ewseta-topbar-link" t-att-aria-label="link.label">
+                                <span class="ewseta-topbar-icon"><i t-attf-class="fa #{link.icon}"/></span>
+                                <span class="ewseta-topbar-link-text" t-out="link.label"/>
+                            </a>
+                        </t>
+                        <div class="dropdown ewseta-topbar-hours" t-if="topbar.hours_line_ids">
+                            <a href="#" class="ewseta-topbar-item ewseta-topbar-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" t-att-aria-label="topbar.hours_menu_label">
+                                <span class="ewseta-topbar-icon"><i class="fa fa-clock-o"/></span>
+                                <span class="ewseta-topbar-link-text" t-out="topbar.hours_menu_label"/>
+                            </a>
+                            <div class="dropdown-menu ewseta-topbar-hours-menu">
+                                <h6 class="dropdown-header" t-if="topbar.hours_title" t-out="topbar.hours_title"/>
+                                <p class="ewseta-hours-address dropdown-item-text" t-if="topbar.hours_address" t-out="topbar.hours_address"/>
+                                <div class="dropdown-divider" t-if="topbar.hours_address"/>
+                                <t t-set="hours_lines" t-value="topbar.hours_line_ids"/>
+                                <t t-foreach="hours_lines" t-as="hours_line">
+                                    <div class="ewseta-hours-row">
+                                        <span class="day" t-out="hours_line.day_label"/>
+                                        <span t-attf-class="time #{ 'ewseta-hours-closed' if hours_line.is_closed else '' }" t-out="hours_line.time_label"/>
+                                    </div>
+                                </t>
+                                <div class="dropdown-divider" t-if="topbar.hours_note"/>
+                                <p class="ewseta-hours-note dropdown-item-text" t-if="topbar.hours_note" t-out="topbar.hours_note"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ewseta-topbar-socials" t-if="topbar.social_ids.filtered('is_published')">
+                        <span class="ewseta-topbar-socials-label" t-if="topbar.social_label" t-out="topbar.social_label"/>
+                        <t t-set="social_links" t-value="topbar.social_ids.filtered('is_published')"/>
+                        <t t-foreach="social_links" t-as="social">
+                            <a t-att-href="social.url" class="ewseta-social-link" target="_blank" rel="noopener noreferrer" t-att-aria-label="social.label">
+                                <i t-attf-class="fa #{social.network}"/>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Apply saved theme before first paint; default is light (no class). -->
+    <template id="ewseta_proc_theme_init" inherit_id="website.layout" name="EWSETA Procurement Theme Init" priority="30">
+        <xpath expr="//head" position="inside">
+            <script id="ew-proc-theme-init" type="text/javascript">
+                (function () {
+                    try {
+                        if (localStorage.getItem('ew-proc-theme') === 'dark') {
+                            document.documentElement.classList.add('ew-proc-dark');
+                            document.documentElement.dataset.ewProcTheme = 'dark';
+                            document.documentElement.style.colorScheme = 'dark';
+                        }
+                    } catch (e) {}
+                })();
+            </script>
+        </xpath>
+    </template>
+
+    <template id="ewseta_proc_theme_toggle_button" name="EWSETA Procurement Theme Toggle">
+        <li class="nav-item o_not_editable ew-proc-theme-toggle-item">
+            <button type="button"
+                    class="ew-proc-theme-toggle o_not_editable"
+                    aria-label="Switch to dark mode"
+                    title="Dark mode">
+                <i class="fa fa-moon-o" aria-hidden="true"/>
+            </button>
+        </li>
+    </template>
+
+    <template id="ewseta_proc_theme_toggle_desktop" inherit_id="website.template_header_default" name="EWSETA Procurement Theme Toggle Desktop" priority="35">
+        <xpath expr="//t[@t-call='website.placeholder_header_search_box'][@_layout.f='modal']" position="before">
+            <t t-call="ewseta_procurement.ewseta_proc_theme_toggle_button"/>
+        </xpath>
+    </template>
+
+    <template id="ewseta_proc_theme_toggle_mobile" inherit_id="website.template_header_mobile" name="EWSETA Procurement Theme Toggle Mobile" priority="35">
+        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="inside">
+            <t t-call="ewseta_procurement.ewseta_proc_theme_toggle_button"/>
+        </xpath>
+    </template>
+
+</odoo>

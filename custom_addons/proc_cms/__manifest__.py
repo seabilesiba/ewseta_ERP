@@ -1,0 +1,32 @@
+{
+    "name": "Procurement Website CMS",
+    "version": "19.0.1.0.17",
+    "post_init_hook": "post_init_hook",
+    "category": "Website",
+    "summary": "Manage procurement website pages, cards, buttons, navbar, logo and footer",
+    "depends": ["website"],
+    "data": [
+        "security/groups.xml",
+        "security/ir.model.access.csv",
+        "security/rules.xml",
+        "views/proc_cms_site_views.xml",
+        "views/proc_cms_nav_views.xml",
+        "views/proc_cms_button_views.xml",
+        "views/proc_cms_card_views.xml",
+        "views/proc_cms_block_views.xml",
+        "views/proc_cms_page_views.xml",
+        "views/proc_cms_footer_views.xml",
+        "views/proc_cms_menus.xml",
+        "data/proc_cms_default.xml",
+        "data/proc_cms_sync.xml",
+        "views/website_cms_templates.xml",
+    ],
+    "installable": True,
+    "application": True,
+    "license": "LGPL-3",
+    "assets": {
+        "web.assets_backend": [
+            "proc_cms/static/src/css/proc_cms_backend.css",
+        ],
+    },
+}

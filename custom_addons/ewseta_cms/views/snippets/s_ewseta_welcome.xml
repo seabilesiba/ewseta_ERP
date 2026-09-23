@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_welcome_dynamic" inherit_id="ewseta_web.s_ewseta_welcome" name="EWSETA Welcome Dynamic">
+    <xpath expr="//section[@class='s_ewseta_welcome']" position="replace">
+        <section class="s_ewseta_welcome" data-snippet="s_ewseta_welcome">
+            <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+            <t t-set="welcome" t-value="request.env['ewseta.home.welcome'].sudo().search([('is_published', '=', True)] + list(website.website_domain()), limit=1)"/>
+            <div class="container" t-if="welcome">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <div class="ewseta-section-header text-start mb-0">
+                            <span class="ewseta-eyebrow" t-if="welcome.eyebrow" t-out="welcome.eyebrow"/>
+                            <h2 class="ewseta-section-title" t-out="welcome.section_title if 'section_title' in welcome._fields and welcome.section_title else 'About Us'"/>
+                            <div class="ewseta-section-lead" t-if="welcome.body" t-out="welcome.body"/>
+                        </div>
+                        <a t-if="welcome.cta_label" t-att-href="welcome.cta_url or '#'" class="btn btn-ewseta-primary">
+                            <t t-out="welcome.cta_label"/> <i class="fa fa-arrow-right ms-2"/>
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="ewseta-stats-grid">
+                            <t t-foreach="welcome.stat_ids" t-as="stat">
+                                <div t-attf-class="ewseta-stat-card ewseta-stat-#{stat.color}">
+                                    <t t-if="stat.display_mode == 'icon'">
+                                        <span class="ewseta-stat-icon"><i t-attf-class="fa #{stat.icon_class}"/></span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="ewseta-stat-number" t-out="stat.value"/>
+                                    </t>
+                                    <span class="ewseta-stat-label" t-out="stat.label"/>
+                                    <span class="ewseta-stat-desc" t-if="stat.description" t-out="stat.description"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

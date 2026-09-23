@@ -1,0 +1,86 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Styled Onboarding Welcome Email Template -->
+        <record id="mail_tmpl_private_rfq_invitation" model="mail.template">
+            <field name="name">Private RFQ Invitation</field>
+            <field name="model_id" ref="ewseta_procurement.model_ew_submission"/>
+            <field name="subject">Invitation to Apply – {{object.rfq_id.name}}</field>
+            <field name="email_from">{{user.email}}</field>
+            <field name="email_to">{{object.create_uid.email_formatted}}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                    <div style="max-width: 600px; margin: 0 auto; background: #ffffff;
+                                border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+
+                        <div style="background-color: #ffffff; padding: 20px;text-align: center;">
+                            <table style="border-collapse: collapse;">
+                                <tr>
+                                    <!-- Logo Left -->
+
+                                    <td valign="middle" align="right"
+                                        t-if="not object.company_id.uses_default_logo">
+                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                             t-att-alt="object.company_id.name"/>
+
+                                    </td>
+                                    <!-- Title Right -->
+                                    <td style="text-align: right; vertical-align: middle;">
+                                        <h1 style="color: #ffffff; margin: 0;">Welcome to EWSETA</h1>
+                                    </td>
+
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <!-- Body -->
+                        <div style="padding: 20px; color: #333333; line-height: 1.6;">
+                            <p>Dear Service Provider,
+                            </p>
+
+                            <p>You have been invited to apply for the private RFQ/RFP:</p>
+                            <p>
+                                <strong>
+                                    <t t-out="object.name"></t>
+                                </strong>
+                            </p>
+
+                            <p>Click the link below to apply:</p>
+
+                            <p>
+                                <a href="{{object.private_rfq_url}}"
+                                   style="padding:10px 15px;background:#004080;color:white;text-decoration:none;">
+                                    Apply Now
+                                </a>
+
+                            </p>
+
+                            <p>Closing Date:
+                                <strong>
+                                    <t t-out="object.closing_at"></t>
+                                </strong>
+                            </p>
+
+                            <p>Thank you,</p>
+                            <p>EWSETA SCM</p>
+                        </div>
+
+
+                        <!-- Footer -->
+                        <div style="background-color: #ffffff; color: #c1c1c1; text-align: center; padding: 10px; font-size: 12px;">
+
+                            <p class="mb-0">©
+                                <span t-esc="time.strftime('%Y-%m-%d')"/>
+                                EWSETA. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

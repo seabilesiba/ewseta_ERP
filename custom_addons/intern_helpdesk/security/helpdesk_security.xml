@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="res.groups.privilege" id="res_groups_privilege_intern_helpdesk">
+        <field name="name">ICT Helpdesk</field>
+        <field name="category_id" ref="base.module_category_services"/>
+    </record>
+
+    <record id="group_helpdesk_user" model="res.groups">
+        <field name="name">Helpdesk User</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_intern_helpdesk"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_helpdesk_technician" model="res.groups">
+        <field name="name">Helpdesk Technician</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_intern_helpdesk"/>
+        <field name="implied_ids" eval="[(4, ref('group_helpdesk_user'))]"/>
+    </record>
+
+    <record id="group_helpdesk_manager" model="res.groups">
+        <field name="name">Helpdesk Manager</field>
+        <field name="sequence">30</field>
+        <field name="privilege_id" ref="res_groups_privilege_intern_helpdesk"/>
+        <field name="implied_ids" eval="[(4, ref('group_helpdesk_technician'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Multi-company -->
+    <record id="helpdesk_ticket_rule_company" model="ir.rule">
+        <field name="name">Helpdesk Ticket: multi-company</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="helpdesk_category_rule_company" model="ir.rule">
+        <field name="name">Helpdesk Category: multi-company</field>
+        <field name="model_id" ref="model_helpdesk_category"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- Manager: all tickets -->
+    <record id="helpdesk_ticket_rule_manager" model="ir.rule">
+        <field name="name">Helpdesk Ticket: manager sees all</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_helpdesk_manager'))]"/>
+    </record>
+
+    <!-- Technician: assigned tickets or unassigned open tickets -->
+    <record id="helpdesk_ticket_rule_technician" model="ir.rule">
+        <field name="name">Helpdesk Ticket: technician assigned or open queue</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">['|', ('technician_id', '=', user.id), ('state', 'in', ('new', 'assigned'))]</field>
+        <field name="groups" eval="[(4, ref('group_helpdesk_technician'))]"/>
+    </record>
+
+    <!-- User: own tickets only -->
+    <record id="helpdesk_ticket_rule_user" model="ir.rule">
+        <field name="name">Helpdesk Ticket: user own tickets</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">[('requester_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_helpdesk_user'))]"/>
+    </record>
+
+</odoo>

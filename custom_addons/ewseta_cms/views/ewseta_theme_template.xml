@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ewseta_theme_config_init" inherit_id="ewseta_web.ewseta_dark_mode_init" name="EWSETA Theme Config Init" priority="40">
+        <xpath expr="//script[@id='ewseta-theme-init']" position="replace">
+            <script id="ewseta-theme-init" type="text/javascript">
+                (function () {
+                    var BUILTIN_CLASSES = {
+                        dark: 'ewseta-dark-mode',
+                        blue: 'ewseta-blue-mode',
+                        green: 'ewseta-green-mode',
+                        orange: 'ewseta-orange-mode',
+                    };
+                    var THEME_CLASSES = [
+                        'ewseta-dark-mode',
+                        'ewseta-blue-mode',
+                        'ewseta-green-mode',
+                        'ewseta-orange-mode',
+                        'ewseta-custom-mode',
+                    ];
+                    var CSS_VARS = [
+                        '--ewseta-dm-bg',
+                        '--ewseta-dm-bg-elevated',
+                        '--ewseta-dm-bg-subtle',
+                        '--ewseta-dm-bg-deep',
+                        '--ewseta-dm-text',
+                        '--ewseta-dm-text-muted',
+                        '--ewseta-dm-border',
+                        '--ewseta-dm-shadow',
+                        '--ewseta-voice-gradient-start',
+                        '--ewseta-body-gradient',
+                    ];
+
+                    function clearThemeState(html) {
+                        html.classList.remove.apply(html.classList, THEME_CLASSES);
+                        CSS_VARS.forEach(function (key) {
+                            html.style.removeProperty(key);
+                        });
+                        html.style.removeProperty('color-scheme');
+                    }
+
+                    function applyTheme(theme, config) {
+                        var html = document.documentElement;
+                        var themes = config.themes || ['light'];
+                        var resolved = themes.indexOf(theme) >= 0 ? theme : (config.defaultTheme || 'light');
+                        var meta = (config.themeMeta &amp;&amp; config.themeMeta[resolved]) || {};
+                        clearThemeState(html);
+                        if (resolved === 'light') {
+                            // Base stylesheet.
+                        } else if (meta.type === 'custom' &amp;&amp; meta.cssVars) {
+                            html.classList.add('ewseta-custom-mode');
+                            html.style.colorScheme = 'dark';
+                            Object.keys(meta.cssVars).forEach(function (key) {
+                                html.style.setProperty(key, meta.cssVars[key]);
+                            });
+                        } else if (BUILTIN_CLASSES[resolved]) {
+                            html.classList.add(BUILTIN_CLASSES[resolved]);
+                        }
+                        html.dataset.ewsetaTheme = resolved;
+                    }
+
+                    try {
+                        var config = <t t-raw="request.env['ewseta.theme.settings'].sudo().get_frontend_config_json(website.id)"/>;
+                        window.ewsetaThemeConfig = config;
+                        var theme = config.defaultTheme || 'light';
+                        if (config.rememberUserChoice) {
+                            var stored = localStorage.getItem('ewseta-theme');
+                            if (stored &amp;&amp; config.themes.indexOf(stored) >= 0) {
+                                theme = stored;
+                            }
+                        }
+                        applyTheme(theme, config);
+                    } catch (e) {}
+                })();
+            </script>
+        </xpath>
+    </template>
+
+    <template id="ewseta_theme_toggle_visibility" inherit_id="ewseta_web.ewseta_dark_mode_toggle_button" name="EWSETA Theme Toggle Visibility" priority="40">
+        <xpath expr="//li[hasclass('ewseta-theme-toggle-item')]" position="before">
+            <t t-set="ewseta_theme_toggle_enabled" t-value="request.env['ewseta.theme.settings'].sudo().is_toggle_enabled_for_website(website.id)"/>
+        </xpath>
+        <xpath expr="//li[hasclass('ewseta-theme-toggle-item')]" position="attributes">
+            <attribute name="t-if">ewseta_theme_toggle_enabled</attribute>
+        </xpath>
+    </template>
+
+</odoo>

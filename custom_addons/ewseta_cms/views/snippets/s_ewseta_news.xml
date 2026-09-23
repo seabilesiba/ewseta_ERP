@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_news_dynamic" inherit_id="ewseta_web.s_ewseta_news" name="EWSETA News Dynamic">
+    <xpath expr="//section[@class='s_ewseta_news']" position="replace">
+        <section class="s_ewseta_news" data-snippet="s_ewseta_news">
+            <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+            <t t-set="settings" t-value="request.env['ewseta.home.settings'].sudo().search(list(website.website_domain()), limit=1)"/>
+            <t t-set="domain" t-value="[('is_published', '=', True)] + list(website.website_domain())"/>
+            <t t-set="featured" t-value="request.env['ewseta.news.article'].sudo().search(domain + [('is_featured', '=', True)], order='publish_date desc', limit=1)"/>
+            <t t-set="featured_id" t-value="featured.id if featured else False"/>
+            <t t-set="others" t-value="request.env['ewseta.news.article'].sudo().search(domain + (featured_id and [('id', '!=', featured_id)] or []), order='publish_date desc', limit=3)"/>
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+                    <div class="ewseta-section-header text-start mb-0">
+                        <span class="ewseta-eyebrow" t-out="settings.news_eyebrow if settings else 'Stay Informed'"/>
+                        <h2 class="ewseta-section-title mb-0" t-out="settings.news_title if settings else 'Latest News'"/>
+                    </div>
+                    <a href="/news" class="btn btn-ewseta-outline-dark">View All News <i class="fa fa-arrow-right ms-1"/></a>
+                </div>
+                <div class="row g-4" t-if="featured or others">
+                    <div class="col-lg-6" t-if="featured">
+                        <article class="ewseta-news-card ewseta-news-featured">
+                            <div class="ewseta-news-img" t-att-style="featured._featured_image_style()">
+                                <span class="ewseta-news-tag">Featured</span>
+                            </div>
+                            <div class="ewseta-news-body">
+                                <time class="ewseta-news-date" t-field="featured.publish_date"/>
+                                <h3 t-out="featured.name"/>
+                                <p t-if="featured.subtitle" t-out="featured.subtitle"/>
+                                <a t-att-href="featured.website_url" class="ewseta-card-link">Read full story <i class="fa fa-arrow-right"/></a>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row g-4">
+                            <t t-foreach="others" t-as="article">
+                                <div class="col-12">
+                                    <article class="ewseta-news-card ewseta-news-horizontal">
+                                        <div class="ewseta-news-img" t-att-style="article._featured_image_style()">
+                                        </div>
+                                        <div class="ewseta-news-body">
+                                            <time class="ewseta-news-date" t-field="article.publish_date"/>
+                                            <h4 t-out="article.name"/>
+                                            <a t-att-href="article.website_url" class="ewseta-card-link">Read more</a>
+                                        </div>
+                                    </article>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

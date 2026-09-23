@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_site_tree" model="ir.ui.view">
+        <field name="name">proc.cms.site.tree</field>
+        <field name="model">proc.cms.site</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="website_id"/>
+                <field name="block_count" string="Blocks"/>
+                <field name="button_count" string="Buttons"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_site_form" model="ir.ui.view">
+        <field name="name">proc.cms.site.form</field>
+        <field name="model">proc.cms.site</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Website content" class="proc-cms-form proc-cms-site-form">
+                <header>
+                    <button name="action_preview_website" type="object"
+                            string="View live site"
+                            class="btn-primary"
+                            icon="fa-external-link"/>
+                    <button name="action_load_default_content" type="object"
+                            string="Reload defaults"
+                            class="btn-secondary"
+                            confirm="This overwrites CMS text and buttons with the built-in EWSETA procurement defaults. Continue?"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_blocks" type="object" class="oe_stat_button" icon="fa-align-left">
+                            <field name="block_count" widget="statinfo" string="Blocks"/>
+                        </button>
+                        <button name="action_open_buttons" type="object" class="oe_stat_button" icon="fa-hand-pointer-o">
+                            <field name="button_count" widget="statinfo" string="Buttons"/>
+                        </button>
+                        <button name="action_open_cards" type="object" class="oe_stat_button" icon="fa-clone">
+                            <field name="card_count" widget="statinfo" string="Cards"/>
+                        </button>
+                        <button name="action_open_nav" type="object" class="oe_stat_button" icon="fa-bars">
+                            <field name="nav_count" widget="statinfo" string="Navbar"/>
+                        </button>
+                        <button name="action_open_footer" type="object" class="oe_stat_button" icon="fa-link">
+                            <field name="footer_count" widget="statinfo" string="Footer"/>
+                        </button>
+                        <button name="action_open_pages" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <span class="o_stat_text">Pages</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="website_id" readonly="1" options="{'no_open': True}"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">Edit procurement website copy, navbar utilities, and branding.</p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div>
+                            <span class="proc-cms-form-hero__label">Site status</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                        <div class="proc-cms-form-hero__chips">
+                            <span class="proc-cms-chip"><field name="block_count" readonly="1"/> content blocks</span>
+                            <span class="proc-cms-chip"><field name="button_count" readonly="1"/> buttons</span>
+                            <span class="proc-cms-chip"><field name="card_count" readonly="1"/> cards</span>
+                        </div>
+                    </div>
+
+                    <notebook class="proc-cms-form-notebook">
+                        <page string="Page copy" name="blocks" icon="fa-align-left">
+                            <p class="proc-cms-form-hint">
+                                Homepage and contact hero text, section titles, and body HTML. Click a row to edit full copy and images.
+                                Do not add new lines here — each block code (home_hero, contact_hero, …) is fixed for the site template.
+                            </p>
+                            <field name="block_ids" nolabel="1" class="proc-cms-o2m"
+                                   context="{'default_website_id': website_id, 'default_cms_site_id': id}">
+                                <list editable="bottom" create="false" delete="false" decoration-muted="active == False">
+                                    <field name="code" readonly="1"/>
+                                    <field name="name"/>
+                                    <field name="page_key"/>
+                                    <field name="title"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="code" readonly="1"/>
+                                                <field name="name"/>
+                                                <field name="page_key"/>
+                                            </group>
+                                            <group>
+                                                <field name="active" widget="boolean_toggle"/>
+                                                <field name="website_id" invisible="1"/>
+                                                <field name="cms_site_id" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <group string="Copy">
+                                            <field name="eyebrow"/>
+                                            <field name="title"/>
+                                            <field name="lead"/>
+                                            <field name="body"/>
+                                        </group>
+                                        <group string="Media">
+                                            <field name="static_background_url"/>
+                                            <field name="static_image_url"/>
+                                            <field name="background_image" widget="image"/>
+                                            <field name="image" widget="image"/>
+                                            <field name="image_alt"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Buttons" name="buttons" icon="fa-hand-pointer-o">
+                            <p class="proc-cms-form-hint">Call-to-action labels and links used on the landing page (not the orange header button).</p>
+                            <field name="button_ids" nolabel="1" class="proc-cms-o2m"
+                                   context="{'default_website_id': website_id, 'default_cms_site_id': id}">
+                                <list editable="bottom" create="false" delete="false" decoration-muted="active == False">
+                                    <field name="key" readonly="1"/>
+                                    <field name="label"/>
+                                    <field name="url"/>
+                                    <field name="style"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Cards &amp; steps" name="cards" icon="fa-clone">
+                            <field name="card_ids" nolabel="1" class="proc-cms-o2m"
+                                   context="{'default_website_id': website_id, 'default_cms_site_id': id}">
+                                <list editable="bottom" decoration-muted="active == False">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="section_key"/>
+                                    <field name="title"/>
+                                    <field name="card_type"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="title"/>
+                                        <field name="section_key"/>
+                                        <field name="card_type"/>
+                                        <field name="sequence"/>
+                                        <field name="active"/>
+                                        <field name="website_id" invisible="1"/>
+                                        <field name="cms_site_id" invisible="1"/>
+                                    </group>
+                                    <field name="body"/>
+                                    <field name="static_image_url"/>
+                                    <field name="image" widget="image"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Navbar" name="nav" icon="fa-bars">
+                            <p class="proc-cms-form-hint">
+                                Menu links and the orange <strong>Contact Us</strong> header button (row with Header button). Sign-in stays managed by Odoo.
+                            </p>
+                            <field name="nav_item_ids" nolabel="1" class="proc-cms-o2m"
+                                   context="{'default_website_id': website_id, 'default_cms_site_id': id}">
+                                <list editable="bottom" decoration-muted="active == False">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="url"/>
+                                    <field name="is_cta" string="Header button"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Footer links" name="footer" icon="fa-link">
+                            <field name="footer_link_ids" nolabel="1" class="proc-cms-o2m"
+                                   context="{'default_website_id': website_id, 'default_cms_site_id': id}">
+                                <list editable="bottom" decoration-muted="active == False">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="column_title"/>
+                                    <field name="label"/>
+                                    <field name="url"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Branding &amp; header" name="settings" icon="fa-paint-brush">
+                            <div class="proc-cms-form-grid">
+                                <div class="proc-cms-form-card">
+                                    <div class="proc-cms-form-card__head">Logo &amp; favicon</div>
+                                    <div class="proc-cms-branding-images">
+                                        <field name="logo" widget="image"/>
+                                        <field name="favicon" widget="image"/>
+                                    </div>
+                                    <field name="logo_filename" invisible="1"/>
+                                    <field name="favicon_filename" invisible="1"/>
+                                </div>
+                                <div class="proc-cms-form-card">
+                                    <div class="proc-cms-form-card__head">Top bar (search &amp; phone)</div>
+                                    <group>
+                                        <field name="header_search_enabled" widget="boolean_toggle"/>
+                                        <field name="header_phone_enabled" widget="boolean_toggle"/>
+                                        <field name="header_phone" invisible="not header_phone_enabled"/>
+                                        <field name="header_phone_link" invisible="not header_phone_enabled"/>
+                                    </group>
+                                </div>
+                            </div>
+                            <div class="proc-cms-form-card">
+                                <div class="proc-cms-form-card__head">Footer text</div>
+                                <group>
+                                    <field name="footer_tagline" colspan="2"/>
+                                    <field name="copyright_suffix"/>
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_site" model="ir.actions.act_window">
+        <field name="name">Site &amp; branding</field>
+        <field name="res_model">proc.cms.site</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_proc_cms_dashboard" model="ir.actions.server">
+        <field name="name">Website content</field>
+        <field name="model_id" ref="model_proc_cms_site"/>
+        <field name="state">code</field>
+        <field name="code">action = env["proc.cms.site"].action_open_website_cms()</field>
+    </record>
+</odoo>

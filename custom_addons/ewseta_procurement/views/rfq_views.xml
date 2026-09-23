@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- RFQ Form -->
+    <record id="view_ew_rfq_form" model="ir.ui.view">
+        <field name="name">ew.rfq.form.scm</field>
+        <field name="model">ew.rfq</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <form string="RFQ/RFP" class="ew-proc-rfq-form">
+                <header>
+                    <button name="action_publish" type="object" string="Publish" invisible="state != 'draft'"
+                            class="btn-primary"/>
+                    <button name="action_close" type="object" string="Close Now" invisible="state != 'published'"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,published,closed"/>
+                </header>
+
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    <field name="scm_show_submission_stats" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                name="action_open_submissions"
+                                class="oe_stat_button"
+                                icon="fa-inbox"
+                                invisible="state != 'closed'">
+                            <field name="scm_submission_count" widget="statinfo" string="Submissions"/>
+                        </button>
+                    </div>
+                    <div class="oe_title ew-proc-form-title">
+                        <h1>
+                            <field name="name" placeholder="RFQ / RFP title"/>
+                        </h1>
+                    </div>
+
+                    <div class="ew-proc-form-hero">
+                        <div class="ew-proc-form-hero__main">
+                            <span class="ew-proc-form-label">Reference</span>
+                            <field name="reference" class="ew-proc-form-ref"/>
+                        </div>
+                        <div class="ew-proc-form-hero__type">
+                            <field name="type" widget="badge"
+                                   decoration-info="type == 'rfq'"
+                                   decoration-success="type == 'rfp'"/>
+                        </div>
+                    </div>
+
+                    <div class="ew-proc-form-grid">
+                        <div class="ew-proc-form-card">
+                            <div class="ew-proc-form-card__head">Schedule</div>
+                            <group colspan="2" class="ew-proc-form-card-group">
+                                <group colspan="2">
+                                    <field name="opening_at" string="Opens on" readonly="1"/>
+                                    <field name="closing_at" string="Closing date &amp; time" required="1"
+                                           class="ew-proc-field-emphasis"/>
+                                    <field name="unlocked" readonly="1" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div class="ew-proc-form-card">
+                            <div class="ew-proc-form-card__head">RFQ document</div>
+                            <p class="ew-proc-form-hint">Required before publishing.</p>
+                            <group colspan="2" class="ew-proc-form-card-group">
+                                <group colspan="2">
+                                    <field name="rfq_document" string="Document"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="ew-proc-form-card ew-proc-form-card--wide">
+                        <div class="ew-proc-form-card__head">Supplier instructions</div>
+                        <field name="supplier_note" placeholder="Instructions shown to applicants on the portal…" nolabel="1"/>
+                    </div>
+
+                    <notebook class="ew-proc-form-notebook">
+                        <!-- Mandatory requirements -->
+                        <page string="Required documents">
+                            <div class="ew-proc-docs-panel">
+                            <field name="requirement_ids"
+                                   domain="[('section','=','mandatory')]"
+                                   context="{'default_section': 'mandatory'}">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <!--                                    <field name="code"/>-->
+                                    <field name="is_mandatory"/>
+                                    <!--                                    <field name="section" invisible="1"/>-->
+                                    <!--                                    <field name="help_text"/>-->
+                                </list>
+                            </field>
+                            </div>
+                        </page>
+
+                        <page string="Description">
+                            <div class="ew-proc-desc-panel">
+                                <field name="description" widget="html" nolabel="1"/>
+                            </div>
+                        </page>
+
+                        <!-- Not Mandatory requirements -->
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- RFQ Tree (List) -->
+    <record id="view_ew_rfq_tree" model="ir.ui.view">
+        <field name="name">ew.rfq.list.scm</field>
+        <field name="model">ew.rfq</field>
+        <field name="arch" type="xml">
+            <list default_order="create_date desc" class="ew-proc-rfq-list">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="type"/>
+                <field name="opening_at"/>
+                <field name="closing_at"/>
+                <field name="create_uid" widget="many2one_avatar_user" optional="show"/>
+                <field name="unlocked" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'published'"
+                       decoration-danger="state == 'closed'"/>
+                <field name="scm_submission_count" widget="badge"
+                       decoration-info="scm_submission_count >= 0" optional="show"/>
+                <field name="scm_show_submission_stats" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ew_rfq_kanban" model="ir.ui.view">
+        <field name="name">ew.rfq.kanban.scm</field>
+        <field name="model">ew.rfq</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column ew-proc-rfq-kanban">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="state"/>
+                <field name="create_date"/>
+                <field name="closing_at"/>
+                <field name="scm_show_submission_stats"/>
+                <field name="scm_submission_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="ew-proc-rfq-card ew-proc-rfq-card--#{record.state.raw_value}">
+                            <field name="name" class="ew-proc-rfq-card__title fw-bold"/>
+                            <div class="ew-proc-rfq-card__ref">
+                                Ref: <field name="reference"/>
+                            </div>
+                            <field name="state" widget="badge"
+                                   decoration-info="state == 'draft'"
+                                   decoration-success="state == 'published'"
+                                   decoration-danger="state == 'closed'"/>
+                            <div class="ew-proc-rfq-card__meta">
+                                <div class="ew-proc-rfq-card__meta-row">
+                                    <span>Opens</span>
+                                    <field name="create_date"/>
+                                </div>
+                                <div class="ew-proc-rfq-card__meta-row">
+                                    <span>Closes</span>
+                                    <field name="closing_at"/>
+                                </div>
+                            </div>
+                            <footer t-if="record.state.raw_value == 'closed'"
+                                    class="d-flex align-items-center gap-2 flex-wrap">
+                                <button type="object"
+                                        name="action_open_submissions"
+                                        class="btn btn-primary btn-sm">
+                                    Submissions
+                                </button>
+                                <span class="ms-auto badge rounded-pill text-bg-info ew-proc-submission-count-badge">
+                                    <field name="scm_submission_count" widget="integer"/>
+                                    <span class="ms-1">received</span>
+                                </span>
+                            </footer>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!-- RFQs -->
+    <record id="action_ew_rfq" model="ir.actions.act_window">
+        <field name="name">RFQs/RFPs</field>
+        <field name="res_model">ew.rfq</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_ids" eval="[Command.clear(),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_ew_rfq_kanban')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('view_ew_rfq_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_ew_rfq_form')})]"/>
+        <field name="context">{'ewseta_procurement_scm_ui': 1}</field>
+    </record>
+
+
+</odoo>
+
+

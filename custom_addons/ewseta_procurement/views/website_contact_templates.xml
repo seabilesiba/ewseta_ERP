@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="contactus_procurement" inherit_id="website.contactus" name="EWSETA procurement contact" priority="40">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure ew-contact">
+                <t t-set="blk_contact_hero" t-value="website.proc_cms_block('contact_hero')"/>
+                <t t-set="blk_contact_form" t-value="website.proc_cms_block('contact_form')"/>
+                <t t-set="blk_contact_sidebar" t-value="website.proc_cms_block('contact_sidebar')"/>
+                <t t-set="btn_contact_home" t-value="website.proc_cms_button('contact_quick_home')"/>
+                <t t-set="btn_contact_rfq" t-value="website.proc_cms_button('contact_quick_rfq')"/>
+                <section class="ew-contact__hero ew-landing__fullbleed">
+                    <div class="ew-contact__hero-overlay"/>
+                    <div class="container ew-contact__hero-inner">
+                        <span class="ew-landing__eyebrow text-white opacity-75">
+                            <t t-if="blk_contact_hero and blk_contact_hero.eyebrow" t-esc="blk_contact_hero.eyebrow"/>
+                            <t t-else="">Contact</t>
+                        </span>
+                        <h1 class="ew-contact__hero-title">
+                            <t t-if="blk_contact_hero and blk_contact_hero.title" t-esc="blk_contact_hero.title"/>
+                            <t t-else="">Get in touch</t>
+                        </h1>
+                        <p class="ew-contact__hero-lead">
+                            <t t-if="blk_contact_hero and blk_contact_hero.lead" t-out="blk_contact_hero.lead"/>
+                            <t t-else="">Questions about procurement, RFQs/RFPs, or general enquiries — send us a message and we will respond as soon as we can.</t>
+                        </p>
+                    </div>
+                </section>
+
+                <section class="ew-contact__main">
+                    <div class="container">
+                        <div class="row g-4 g-lg-5 align-items-start">
+                            <div class="col-lg-7">
+                                <div class="ew-contact__form-card">
+                                    <span class="ew-landing__eyebrow">
+                                        <t t-if="blk_contact_form and blk_contact_form.eyebrow" t-esc="blk_contact_form.eyebrow"/>
+                                        <t t-else="">Send a message</t>
+                                    </span>
+                                    <h2 class="ew-contact__form-title">
+                                        <t t-if="blk_contact_form and blk_contact_form.title" t-esc="blk_contact_form.title"/>
+                                        <t t-else="">How can we help?</t>
+                                    </h2>
+                                    <p class="ew-contact__form-lead text-muted">
+                                        <t t-if="blk_contact_form and blk_contact_form.lead" t-out="blk_contact_form.lead"/>
+                                        <t t-else="">Complete the form below. Required fields are marked with an asterisk.</t>
+                                    </p>
+                                    <section class="s_website_form ew-contact__form" data-vcss="001" data-snippet="s_website_form">
+                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data"
+                                              class="o_mark_required" data-mark="*" data-model_name="mail.mail"
+                                              data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
+                                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                    <label class="form-label s_website_form_label" for="contact1">
+                                                        <span class="s_website_form_label_content">Name</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact1" type="text" class="form-control s_website_form_input" name="name" required="" data-fill-with="name"/>
+                                                </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="form-label s_website_form_label" for="contact2">
+                                                        <span class="s_website_form_label_content">Phone</span>
+                                                    </label>
+                                                    <input id="contact2" type="tel" class="form-control s_website_form_input" name="phone" data-fill-with="phone"/>
+                                                </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
+                                                    <label class="form-label s_website_form_label" for="contact3">
+                                                        <span class="s_website_form_label_content">Email</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
+                                                </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="form-label s_website_form_label" for="contact4">
+                                                        <span class="s_website_form_label_content">Company / organisation</span>
+                                                    </label>
+                                                    <input id="contact4" type="text" class="form-control s_website_form_input" name="company" data-fill-with="commercial_company_name"/>
+                                                </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                                    <label class="form-label s_website_form_label" for="contact5">
+                                                        <span class="s_website_form_label_content">Subject</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required=""/>
+                                                </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                                    <label class="form-label s_website_form_label" for="contact6">
+                                                        <span class="s_website_form_label_content">Message</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <textarea id="contact6" class="form-control s_website_form_input" name="description" required="" rows="6"/>
+                                                </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_dnone">
+                                                    <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to" t-att-value="res_company.email or ''"/>
+                                                </div>
+                                                <div class="mb-0 col-12 s_website_form_submit s_website_form_no_submit_label ew-contact__submit" data-name="Submit Button">
+                                                    <a href="#" role="button" class="btn ew-landing__btn ew-landing__btn--primary s_website_form_send">Send message</a>
+                                                    <span id="s_website_form_result"/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-5">
+                                <aside class="ew-contact__company-card">
+                                    <span class="ew-landing__eyebrow">
+                                        <t t-if="blk_contact_sidebar and blk_contact_sidebar.eyebrow" t-esc="blk_contact_sidebar.eyebrow"/>
+                                        <t t-else="">Our company</t>
+                                    </span>
+                                    <h2 class="ew-contact__company-name" t-esc="res_company.name"/>
+                                    <t t-set="cp" t-value="res_company.partner_id"/>
+                                    <t t-set="ew_phone" t-value="(cp.phone if cp else False) or res_company.phone"/>
+                                    <t t-set="ew_email" t-value="(cp.email if cp else False) or res_company.email"/>
+                                    <t t-set="ew_website" t-value="(cp.website if cp else False) or res_company.website"/>
+                                    <ul class="ew-contact__detail-list list-unstyled mb-0">
+                                        <li t-if="cp and (cp.street or cp.city or cp.country_id) or res_company.street or res_company.city"
+                                            class="ew-contact__detail-item">
+                                            <div class="ew-contact__detail-icon ew-contact__detail-icon--address" aria-hidden="true">
+                                                <i class="fa fa-map-marker"/>
+                                            </div>
+                                            <div class="ew-contact__detail-body">
+                                                <span class="ew-contact__detail-label">Physical address</span>
+                                                <div class="ew-contact__detail-value">
+                                                    <t t-if="cp and cp.street" t-esc="cp.street"/>
+                                                    <t t-elif="res_company.street" t-esc="res_company.street"/>
+                                                    <t t-if="cp and cp.street2"><br/><t t-esc="cp.street2"/></t>
+                                                    <t t-if="(cp and cp.city) or res_company.city">
+                                                        <br/>
+                                                        <t t-if="cp and cp.city" t-esc="cp.city"/>
+                                                        <t t-else="" t-esc="res_company.city"/>
+                                                        <t t-if="cp and cp.state_id">, <t t-esc="cp.state_id.name"/></t>
+                                                        <t t-if="(cp and cp.zip) or res_company.zip">
+                                                            <t t-if="cp and cp.zip" t-esc="' ' + cp.zip"/>
+                                                            <t t-else="" t-esc="' ' + res_company.zip"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="cp and cp.country_id"><br/><t t-esc="cp.country_id.name"/></t>
+                                                    <t t-elif="res_company.country_id"><br/><t t-esc="res_company.country_id.name"/></t>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li t-if="ew_phone" class="ew-contact__detail-item">
+                                            <div class="ew-contact__detail-icon ew-contact__detail-icon--phone" aria-hidden="true">
+                                                <i class="fa fa-phone"/>
+                                            </div>
+                                            <div class="ew-contact__detail-body">
+                                                <span class="ew-contact__detail-label">Telephone</span>
+                                                <a class="ew-contact__detail-value ew-contact__detail-link o_force_ltr"
+                                                   t-attf-href="tel:{{ ew_phone }}"
+                                                   t-esc="ew_phone"/>
+                                            </div>
+                                        </li>
+                                        <li t-if="ew_email" class="ew-contact__detail-item">
+                                            <div class="ew-contact__detail-icon ew-contact__detail-icon--email" aria-hidden="true">
+                                                <i class="fa fa-envelope"/>
+                                            </div>
+                                            <div class="ew-contact__detail-body">
+                                                <span class="ew-contact__detail-label">Email</span>
+                                                <a class="ew-contact__detail-value ew-contact__detail-link"
+                                                   t-attf-href="mailto:{{ ew_email }}"
+                                                   t-esc="ew_email"/>
+                                            </div>
+                                        </li>
+                                        <li t-if="ew_website" class="ew-contact__detail-item">
+                                            <div class="ew-contact__detail-icon ew-contact__detail-icon--web" aria-hidden="true">
+                                                <i class="fa fa-globe"/>
+                                            </div>
+                                            <div class="ew-contact__detail-body">
+                                                <span class="ew-contact__detail-label">Website</span>
+                                                <a class="ew-contact__detail-value ew-contact__detail-link"
+                                                   t-att-href="ew_website if ew_website.startswith('http') else 'https://' + ew_website"
+                                                   t-esc="ew_website"/>
+                                            </div>
+                                        </li>
+                                        <li t-if="res_company.company_registry" class="ew-contact__detail-item">
+                                            <div class="ew-contact__detail-icon ew-contact__detail-icon--reg" aria-hidden="true">
+                                                <i class="fa fa-building"/>
+                                            </div>
+                                            <div class="ew-contact__detail-body">
+                                                <span class="ew-contact__detail-label">Registration no.</span>
+                                                <span class="ew-contact__detail-value" t-esc="res_company.company_registry"/>
+                                            </div>
+                                        </li>
+                                        <li t-if="res_company.vat" class="ew-contact__detail-item">
+                                            <div class="ew-contact__detail-icon ew-contact__detail-icon--vat" aria-hidden="true">
+                                                <i class="fa fa-file-text-o"/>
+                                            </div>
+                                            <div class="ew-contact__detail-body">
+                                                <span class="ew-contact__detail-label">VAT number</span>
+                                                <span class="ew-contact__detail-value" t-esc="res_company.vat"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="ew-contact__quick-links mt-4">
+                                        <t t-if="btn_contact_home">
+                                            <a t-att-href="btn_contact_home.url" t-att-class="btn_contact_home.css_classes()" t-esc="btn_contact_home.label"/>
+                                        </t>
+                                        <t t-if="btn_contact_rfq">
+                                            <a t-att-href="btn_contact_rfq.url" t-att-class="btn_contact_rfq.css_classes()" t-esc="btn_contact_rfq.label"/>
+                                        </t>
+                                    </div>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

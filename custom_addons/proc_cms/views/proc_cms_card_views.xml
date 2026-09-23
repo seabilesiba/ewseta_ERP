@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_card_tree" model="ir.ui.view">
+        <field name="name">proc.cms.card.tree</field>
+        <field name="model">proc.cms.card</field>
+        <field name="arch" type="xml">
+            <list class="proc-cms-card-list" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="section_key"/>
+                <field name="title"/>
+                <field name="card_type" widget="badge"
+                       decoration-info="card_type == 'step'"
+                       decoration-success="card_type == 'gallery'"
+                       decoration-warning="card_type == 'feature'"/>
+                <field name="page_key" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_card_form" model="ir.ui.view">
+        <field name="name">proc.cms.card.form</field>
+        <field name="model">proc.cms.card</field>
+        <field name="arch" type="xml">
+            <form string="Content card" class="proc-cms-form proc-cms-card-form">
+                <header>
+                    <button name="action_open_website_content" type="object"
+                            string="All website content"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="title" placeholder="Card title on the website"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">
+                            <field name="section_key" readonly="1" class="oe_inline"/>
+                            ·
+                            <field name="page_key" readonly="1" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div>
+                            <span class="proc-cms-form-hero__label">Card type</span>
+                            <div class="mt-1">
+                                <field name="card_type" widget="badge"
+                                       decoration-info="card_type == 'step'"
+                                       decoration-success="card_type == 'gallery'"
+                                       decoration-warning="card_type == 'feature'"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Order</span>
+                            <div class="mt-1 proc-cms-card-form__sequence">
+                                <field name="sequence" nolabel="1"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Visible on site</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="proc-cms-form-hint">
+                        Cards are grouped on the site by <strong>section key</strong>
+                        (e.g. <code>home_how_steps</code>, <code>home_gallery</code>).
+                        Reorder with sequence; do not duplicate section keys unless you intend multiple items in the same group.
+                    </p>
+
+                    <div class="proc-cms-form-grid proc-cms-card-form__main">
+                        <div class="proc-cms-form-card proc-cms-card-form__copy">
+                            <div class="proc-cms-form-card__head">Copy</div>
+                            <group>
+                                <field name="title" placeholder="Headline"/>
+                                <field name="subtitle" placeholder="Optional subheading"/>
+                                <field name="body" widget="html" options="{'style-inline': true}"/>
+                            </group>
+                        </div>
+                        <div class="proc-cms-form-card proc-cms-card-form__image">
+                            <div class="proc-cms-form-card__head">Image</div>
+                            <group>
+                                <field name="image" widget="image" class="oe_avatar"/>
+                                <field name="image_filename" invisible="1"/>
+                                <field name="image_alt" placeholder="Alt text for accessibility"/>
+                                <field name="static_image_url"
+                                       placeholder="/ewseta_procurement/static/src/img/…"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="proc-cms-form-card">
+                        <div class="proc-cms-form-card__head">Optional link</div>
+                        <group>
+                            <field name="link_url" placeholder="https:// or /application/rfqs"/>
+                            <field name="link_label" placeholder="Link text on the card"/>
+                        </group>
+                    </div>
+
+                    <div class="proc-cms-form-card">
+                        <div class="proc-cms-form-card__head">Placement</div>
+                        <group>
+                            <field name="section_key" readonly="1"/>
+                            <field name="page_key"/>
+                            <field name="card_type"/>
+                            <field name="sequence"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_card" model="ir.actions.act_window">
+        <field name="name">Content cards</field>
+        <field name="res_model">proc.cms.card</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

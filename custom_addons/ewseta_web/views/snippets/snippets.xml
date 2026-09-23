@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippets" inherit_id="website.snippets" name="EWSETA Snippets">
+    <xpath expr="//t[@id='installed_snippets_hook']" position="after">
+        <t snippet-group="ewseta" t-snippet="website.s_snippet_group" string="EWSETA"
+            t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.svg"/>
+    </xpath>
+    <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+        <t t-snippet="ewseta_web.s_ewseta_hero_carousel" string="EWSETA Hero Carousel" group="ewseta">
+            <keywords>hero, banner, carousel, ewseta, slide, video</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_welcome" string="EWSETA Welcome" group="ewseta">
+            <keywords>welcome, intro, ewseta</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_performance" string="EWSETA Performance Overview" group="ewseta">
+            <keywords>performance, metrics, kpi, impact, overview</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_programmes" string="EWSETA Programmes" group="ewseta">
+            <keywords>programmes, grants, skills, columns</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_sectors" string="EWSETA Sectors" group="ewseta">
+            <keywords>energy, water, sustainability, sectors</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_news" string="EWSETA Latest News" group="ewseta">
+            <keywords>news, articles, cards, latest</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_voice" string="EWSETA Your Voice Counts" group="ewseta">
+            <keywords>feedback, voice, cta, query</keywords>
+        </t>
+        <t t-snippet="ewseta_web.s_ewseta_subscribe" string="EWSETA Subscribe" group="ewseta">
+            <keywords>newsletter, subscribe, email</keywords>
+        </t>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,36 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ewseta_hero_slide_marketing,ewseta.hero.slide marketing,model_ewseta_hero_slide,group_ewseta_marketing,1,1,1,1
+access_ewseta_home_welcome_marketing,ewseta.home.welcome marketing,model_ewseta_home_welcome,group_ewseta_marketing,1,1,1,1
+access_ewseta_home_stat_marketing,ewseta.home.stat marketing,model_ewseta_home_stat,group_ewseta_marketing,1,1,1,1
+access_ewseta_home_settings_marketing,ewseta.home.settings marketing,model_ewseta_home_settings,group_ewseta_marketing,1,1,1,1
+access_ewseta_programme_card_marketing,ewseta.programme.card marketing,model_ewseta_programme_card,group_ewseta_marketing,1,1,1,1
+access_ewseta_performance_metric_marketing,ewseta.performance.metric marketing,model_ewseta_performance_metric,group_ewseta_marketing,1,1,1,1
+access_ewseta_sector_card_marketing,ewseta.sector.card marketing,model_ewseta_sector_card,group_ewseta_marketing,1,1,1,1
+access_ewseta_news_article_marketing,ewseta.news.article marketing,model_ewseta_news_article,group_ewseta_marketing,1,1,1,1
+access_ewseta_tender_supply,ewseta.tender supply chain,model_ewseta_tender,group_ewseta_supply_chain,1,1,1,1
+access_ewseta_rfq_supply,ewseta.rfq supply chain,model_ewseta_rfq,group_ewseta_supply_chain,1,1,1,1
+access_ewseta_hero_slide_admin,ewseta.hero.slide admin,model_ewseta_hero_slide,group_ewseta_website_admin,1,1,1,1
+access_ewseta_home_welcome_admin,ewseta.home.welcome admin,model_ewseta_home_welcome,group_ewseta_website_admin,1,1,1,1
+access_ewseta_home_stat_admin,ewseta.home.stat admin,model_ewseta_home_stat,group_ewseta_website_admin,1,1,1,1
+access_ewseta_home_settings_admin,ewseta.home.settings admin,model_ewseta_home_settings,group_ewseta_website_admin,1,1,1,1
+access_ewseta_programme_card_admin,ewseta.programme.card admin,model_ewseta_programme_card,group_ewseta_website_admin,1,1,1,1
+access_ewseta_performance_metric_admin,ewseta.performance.metric admin,model_ewseta_performance_metric,group_ewseta_website_admin,1,1,1,1
+access_ewseta_sector_card_admin,ewseta.sector.card admin,model_ewseta_sector_card,group_ewseta_website_admin,1,1,1,1
+access_ewseta_news_article_admin,ewseta.news.article admin,model_ewseta_news_article,group_ewseta_website_admin,1,1,1,1
+access_ewseta_tender_admin,ewseta.tender admin,model_ewseta_tender,group_ewseta_website_admin,1,1,1,1
+access_ewseta_rfq_admin,ewseta.rfq admin,model_ewseta_rfq,group_ewseta_website_admin,1,1,1,1
+access_ewseta_website_topbar_marketing,ewseta.website.topbar marketing,model_ewseta_website_topbar,group_ewseta_marketing,1,1,1,1
+access_ewseta_topbar_link_marketing,ewseta.topbar.link marketing,model_ewseta_topbar_link,group_ewseta_marketing,1,1,1,1
+access_ewseta_topbar_hours_marketing,ewseta.topbar.hours.line marketing,model_ewseta_topbar_hours_line,group_ewseta_marketing,1,1,1,1
+access_ewseta_topbar_social_marketing,ewseta.topbar.social marketing,model_ewseta_topbar_social,group_ewseta_marketing,1,1,1,1
+access_ewseta_website_topbar_admin,ewseta.website.topbar admin,model_ewseta_website_topbar,group_ewseta_website_admin,1,1,1,1
+access_ewseta_topbar_link_admin,ewseta.topbar.link admin,model_ewseta_topbar_link,group_ewseta_website_admin,1,1,1,1
+access_ewseta_topbar_hours_admin,ewseta.topbar.hours.line admin,model_ewseta_topbar_hours_line,group_ewseta_website_admin,1,1,1,1
+access_ewseta_topbar_social_admin,ewseta.topbar.social admin,model_ewseta_topbar_social,group_ewseta_website_admin,1,1,1,1
+access_ewseta_navbar_settings_marketing,ewseta.navbar.settings marketing,model_ewseta_navbar_settings,group_ewseta_marketing,1,1,1,1
+access_ewseta_navbar_settings_admin,ewseta.navbar.settings admin,model_ewseta_navbar_settings,group_ewseta_website_admin,1,1,1,1
+access_ewseta_theme_settings_marketing,ewseta.theme.settings marketing,model_ewseta_theme_settings,group_ewseta_marketing,1,1,1,1
+access_ewseta_theme_settings_admin,ewseta.theme.settings admin,model_ewseta_theme_settings,group_ewseta_website_admin,1,1,1,1
+access_ewseta_website_theme_marketing,ewseta.website.theme marketing,model_ewseta_website_theme,group_ewseta_marketing,1,1,1,1
+access_ewseta_website_theme_admin,ewseta.website.theme admin,model_ewseta_website_theme,group_ewseta_website_admin,1,1,1,1
+access_website_menu_marketing,website.menu marketing,model_website_menu,group_ewseta_marketing,1,1,1,1

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_welcome" name="EWSETA Welcome">
+    <section class="s_ewseta_welcome" data-snippet="s_ewseta_welcome">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="ewseta-section-header text-start mb-0">
+                        <span class="ewseta-eyebrow">Who We Are</span>
+                        <h2 class="ewseta-section-title">About Us</h2>
+                        <p class="ewseta-section-lead">
+                            The Energy &amp; Water Sector Education Training Authority (EWSETA) is a skills development
+                            authority serving the energy and water sectors of South Africa.
+                        </p>
+                    </div>
+                    <p class="text-muted mb-4">
+                        We coordinate research, grants, and learning programmes that address poverty, inequality,
+                        and unemployment — empowering employers, training providers, and learners across the nation.
+                    </p>
+                    <a href="#" class="btn btn-ewseta-primary">Discover Our Mandate <i class="fa fa-arrow-right ms-2"/></a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ewseta-stats-grid">
+                        <div class="ewseta-stat-card ewseta-stat-orange">
+                            <span class="ewseta-stat-number">2</span>
+                            <span class="ewseta-stat-label">Core Sectors</span>
+                            <span class="ewseta-stat-desc">Energy &amp; Water</span>
+                        </div>
+                        <div class="ewseta-stat-card ewseta-stat-blue">
+                            <span class="ewseta-stat-number">4+</span>
+                            <span class="ewseta-stat-label">Grant Programmes</span>
+                            <span class="ewseta-stat-desc">Skills funding</span>
+                        </div>
+                        <div class="ewseta-stat-card ewseta-stat-green">
+                            <span class="ewseta-stat-number">1000s</span>
+                            <span class="ewseta-stat-label">Learners Supported</span>
+                            <span class="ewseta-stat-desc">Nationwide</span>
+                        </div>
+                        <div class="ewseta-stat-card ewseta-stat-dark">
+                            <span class="ewseta-stat-icon"><i class="fa fa-map-marker"/></span>
+                            <span class="ewseta-stat-label">Head Office</span>
+                            <span class="ewseta-stat-desc">Parktown, Johannesburg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

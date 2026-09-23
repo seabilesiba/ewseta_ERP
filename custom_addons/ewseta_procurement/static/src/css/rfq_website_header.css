@@ -1,0 +1,30 @@
+/* EWSETA procurement site — navbar logo + Contact Us CTA */
+.ewseta-navbar-logo {
+    max-height: 44px;
+    max-width: min(220px, 55vw);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+header .btn.ewseta-nav-cta,
+header .btn.ewseta-nav-cta.btn-primary {
+    --bs-btn-bg: #f29100;
+    --bs-btn-border-color: #f29100;
+    --bs-btn-hover-bg: #d97f00;
+    --bs-btn-hover-border-color: #c97400;
+    --bs-btn-active-bg: #c97400;
+    --bs-btn-active-border-color: #b36900;
+    background-color: #f29100;
+    border-color: #f29100;
+    color: #fff;
+}
+
+header .btn.ewseta-nav-cta:hover,
+header .btn.ewseta-nav-cta:focus,
+header .btn.ewseta-nav-cta.btn-primary:hover,
+header .btn.ewseta-nav-cta.btn-primary:focus {
+    background-color: #d97f00;
+    border-color: #d97f00;
+    color: #fff;
+}

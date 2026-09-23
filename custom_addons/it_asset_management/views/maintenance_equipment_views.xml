@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="maintenance_equipment_view_form_it_asset" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.it.asset</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_assignment_history"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-exchange"
+                    groups="it_asset_management.group_it_asset_user">
+                    <field name="assignment_history_count" string="History" widget="statinfo"/>
+                </button>
+                <button name="%(it_asset_management.it_asset_incident_report_action_equipment)d"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-exclamation-triangle"
+                    groups="it_asset_management.group_it_asset_user">
+                    <field name="incident_report_count" string="Incidents" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_return_asset" string="Return Asset" type="object"
+                        class="btn-secondary"
+                        invisible="asset_state not in ('assigned', 'in_repair')"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <button name="action_mark_in_repair" string="Mark In Repair" type="object"
+                        class="btn-secondary"
+                        invisible="asset_state in ('in_repair', 'disposed', 'lost')"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <button name="action_mark_disposed" string="Dispose" type="object"
+                        class="btn-secondary"
+                        invisible="asset_state == 'disposed'"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <field name="asset_state" widget="statusbar" statusbar_visible="available,assigned,in_repair,disposed"/>
+                </header>
+            </xpath>
+            <xpath expr="//h1" position="before">
+                <label for="asset_code"/>
+                <h2><field name="asset_code" readonly="1"/></h2>
+            </xpath>
+            <xpath expr="//group[@name='service_info_group']/group[1]" position="inside">
+                <field name="asset_type"/>
+                <field name="manufacturer_id"/>
+                <field name="location_note"/>
+            </xpath>
+            <xpath expr="//page[@name='product_information']" position="after">
+                <page string="IT Specs" name="it_specs">
+                    <group>
+                        <group string="Network">
+                            <field name="hostname"/>
+                            <field name="mac_address"/>
+                            <field name="ip_address"/>
+                        </group>
+                        <group string="System">
+                            <field name="operating_system"/>
+                            <field name="os_version"/>
+                            <field name="cpu"/>
+                            <field name="ram_gb"/>
+                            <field name="storage_gb"/>
+                        </group>
+                    </group>
+                    <group string="Software License" invisible="asset_type != 'software'">
+                        <group>
+                            <field name="license_key"/>
+                            <field name="license_expiry"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Lifecycle" name="lifecycle">
+                    <group>
+                        <group>
+                            <field name="purchase_date"/>
+                            <field name="purchase_value"/>
+                            <field name="company_currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="disposal_date" readonly="asset_state != 'disposed'"/>
+                            <field name="disposal_reason" readonly="asset_state != 'disposed'"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Assignment History" name="assignment_history">
+                    <field name="assignment_history_ids" readonly="1">
+                        <list>
+                            <field name="assign_date"/>
+                            <field name="return_date"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="assigned_by"/>
+                            <field name="notes"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_tree_it_asset" model="ir.ui.view">
+        <field name="name">maintenance.equipment.list.it.asset</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="asset_code"/>
+                <field name="manufacturer_id" optional="show"/>
+                <field name="hostname"/>
+                <field name="asset_state" widget="badge"
+                    decoration-success="asset_state == 'available'"
+                    decoration-info="asset_state == 'assigned'"
+                    decoration-warning="asset_state == 'in_repair'"
+                    decoration-muted="asset_state == 'disposed'"
+                    decoration-danger="asset_state == 'lost'"/>
+                <field name="operating_system" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_kanban_it_asset" model="ir.ui.view">
+        <field name="name">maintenance.equipment.kanban.it.asset</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="image_128"/>
+                <field name="manufacturer_id"/>
+                <field name="asset_code"/>
+                <field name="asset_state"/>
+                <field name="hostname"/>
+            </xpath>
+            <xpath expr="//t[@t-name='card']" position="replace">
+                <t t-name="card" class="flex-row">
+                    <aside class="me-2">
+                        <field
+                            name="image_128"
+                            widget="image"
+                            alt="Asset"
+                            options="{'img_class': 'rounded object-fit-cover', 'size': [80, 80]}"
+                            invisible="not image_128"
+                        />
+                        <div t-if="!record.image_128.raw_value"
+                            class="d-flex align-items-center justify-content-center bg-100 border rounded text-muted"
+                            style="width: 80px; height: 80px;">
+                            <i class="fa fa-laptop fa-2x" title="No image"/>
+                        </div>
+                    </aside>
+                    <main class="flex-grow-1">
+                        <div>
+                            <field name="name" class="fw-bold fs-5"/>
+                            <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model"/>)</span>
+                        </div>
+                        <div t-if="record.asset_code.raw_value" class="text-muted small">
+                            <field name="asset_code"/>
+                        </div>
+                        <div t-if="record.manufacturer_id.raw_value" class="text-muted small">
+                            <field name="manufacturer_id"/>
+                        </div>
+                        <field t-if="record.serial_no.raw_value" name="serial_no"/>
+                        <div t-if="record.hostname.raw_value" class="text-muted small">
+                            <i class="fa fa-sitemap me-1" title="Hostname"/>
+                            <field name="hostname"/>
+                        </div>
+                        <div t-if="!record.employee_id.raw_value and !record.department_id.raw_value" class="text-muted small">
+                            Unassigned
+                        </div>
+                        <field t-if="record.employee_id.raw_value" name="employee_id"/>
+                        <field t-if="record.department_id.raw_value" name="department_id"/>
+                        <footer>
+                            <span class="badge rounded-pill text-bg-secondary">
+                                <field name="asset_state"/>
+                            </span>
+                            <div class="badge text-bg-danger" t-if="record.maintenance_open_count.raw_value">
+                                <field name="maintenance_open_count"/> Request
+                            </div>
+                            <div class="d-flex ms-auto align-items-center">
+                                <field name="activity_ids" widget="kanban_activity"/>
+                                <field name="employee_id" widget="many2one_avatar_employee" class="ms-1"
+                                    invisible="not employee_id"/>
+                            </div>
+                        </footer>
+                    </main>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_search_it_asset" model="ir.ui.view">
+        <field name="name">maintenance.equipment.search.it.asset</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', '|', '|',
+                    ('name', 'ilike', self), ('model', 'ilike', self), ('serial_no', 'ilike', self),
+                    ('asset_code', 'ilike', self), ('hostname', 'ilike', self), ('partner_ref', 'ilike', self)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="asset_code"/>
+                <field name="hostname"/>
+                <field name="asset_state"/>
+                <field name="asset_type"/>
+                <field name="manufacturer_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Manufacturer" name="group_manufacturer" context="{'group_by': 'manufacturer_id'}"/>
+            </xpath>
+            <xpath expr="//filter[@name='available']" position="after">
+                <separator/>
+                <filter string="Available" name="it_available" domain="[('asset_state', '=', 'available')]"/>
+                <filter string="Assigned" name="it_assigned" domain="[('asset_state', '=', 'assigned')]"/>
+                <filter string="In Repair" name="it_in_repair" domain="[('asset_state', '=', 'in_repair')]"/>
+                <filter string="Disposed" name="it_disposed" domain="[('asset_state', '=', 'disposed')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Asset State" name="group_asset_state" context="{'group_by': 'asset_state'}"/>
+                <filter string="Asset Type" name="group_asset_type" context="{'group_by': 'asset_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

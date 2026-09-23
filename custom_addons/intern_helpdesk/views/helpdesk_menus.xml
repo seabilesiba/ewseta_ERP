@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_helpdesk_root"
+        name="ICT Helpdesk"
+        sequence="50"
+        groups="intern_helpdesk.group_helpdesk_user"/>
+
+    <menuitem id="menu_helpdesk_my_tickets"
+        name="My Tickets"
+        parent="menu_helpdesk_root"
+        action="helpdesk_ticket_action_my"
+        sequence="10"/>
+
+    <menuitem id="menu_helpdesk_all_tickets"
+        name="All Tickets"
+        parent="menu_helpdesk_root"
+        action="helpdesk_ticket_action_all"
+        sequence="20"
+        groups="intern_helpdesk.group_helpdesk_technician"/>
+
+    <menuitem id="menu_helpdesk_my_assignments"
+        name="My Assignments"
+        parent="menu_helpdesk_root"
+        action="helpdesk_ticket_action_technician"
+        sequence="30"
+        groups="intern_helpdesk.group_helpdesk_technician"/>
+
+    <menuitem id="menu_helpdesk_reporting"
+        name="Reporting"
+        parent="menu_helpdesk_root"
+        sequence="80"
+        groups="intern_helpdesk.group_helpdesk_manager"/>
+
+    <menuitem id="menu_helpdesk_report_tickets"
+        name="Ticket Report"
+        parent="menu_helpdesk_reporting"
+        action="action_report_helpdesk_ticket"
+        sequence="10"/>
+
+    <menuitem id="menu_helpdesk_configuration"
+        name="Configuration"
+        parent="menu_helpdesk_root"
+        sequence="90"
+        groups="intern_helpdesk.group_helpdesk_manager"/>
+
+    <menuitem id="menu_helpdesk_categories"
+        name="Categories"
+        parent="menu_helpdesk_configuration"
+        action="helpdesk_category_action"
+        sequence="10"/>
+
+</odoo>

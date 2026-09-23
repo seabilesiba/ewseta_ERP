@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="it_asset_action_all" model="ir.actions.act_window">
+        <field name="name">All IT Assets</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="maintenance.hr_equipment_view_search"/>
+        <field name="context">{'search_default_it_available': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register your first IT asset
+            </p>
+            <p>
+                Track laptops, phones, monitors, and other organizational IT hardware.
+            </p>
+        </field>
+    </record>
+
+    <record id="it_asset_action_available" model="ir.actions.act_window">
+        <field name="name">Available</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('asset_state', '=', 'available')]</field>
+        <field name="context">{'default_asset_state': 'available'}</field>
+    </record>
+
+    <record id="it_asset_action_assigned" model="ir.actions.act_window">
+        <field name="name">Assigned</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('asset_state', '=', 'assigned')]</field>
+    </record>
+
+    <record id="it_asset_action_in_repair" model="ir.actions.act_window">
+        <field name="name">In Repair</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('asset_state', '=', 'in_repair')]</field>
+    </record>
+
+    <record id="it_asset_action_by_employee" model="ir.actions.act_window">
+        <field name="name">By Employee</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_employee': 1}</field>
+    </record>
+
+    <record id="it_asset_action_by_department" model="ir.actions.act_window">
+        <field name="name">By Department</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_department': 1}</field>
+    </record>
+
+    <menuitem id="menu_it_asset_root"
+        name="IT Assets"
+        sequence="85"
+        groups="it_asset_management.group_it_asset_user"/>
+
+    <menuitem id="menu_it_asset_assets"
+        name="IT Assets"
+        parent="menu_it_asset_root"
+        sequence="10"/>
+
+    <menuitem id="menu_it_asset_all"
+        name="All IT Assets"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_all"
+        sequence="10"/>
+
+    <menuitem id="menu_it_asset_available"
+        name="Available"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_available"
+        sequence="20"/>
+
+    <menuitem id="menu_it_asset_assigned"
+        name="Assigned"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_assigned"
+        sequence="30"/>
+
+    <menuitem id="menu_it_asset_in_repair"
+        name="In Repair"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_in_repair"
+        sequence="40"/>
+
+    <menuitem id="menu_it_asset_by_employee"
+        name="By Employee"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_by_employee"
+        sequence="50"/>
+
+    <menuitem id="menu_it_asset_by_department"
+        name="By Department"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_by_department"
+        sequence="60"/>
+
+    <menuitem id="menu_it_asset_reporting"
+        name="Reporting"
+        parent="menu_it_asset_root"
+        sequence="20"/>
+
+    <menuitem id="menu_it_asset_assignment_history"
+        name="Assignment History"
+        parent="menu_it_asset_reporting"
+        action="it_asset_assignment_history_action"
+        sequence="10"/>
+
+    <menuitem id="menu_it_asset_incident_reports"
+        name="Incident Reports"
+        parent="menu_it_asset_reporting"
+        action="it_asset_incident_report_action"
+        sequence="20"/>
+
+    <menuitem id="menu_it_asset_configuration"
+        name="Configuration"
+        parent="menu_it_asset_root"
+        sequence="90"
+        groups="it_asset_management.group_it_asset_administrator"/>
+
+    <menuitem id="menu_it_asset_categories"
+        name="IT Categories"
+        parent="menu_it_asset_configuration"
+        action="maintenance.hr_equipment_category_action"
+        sequence="10"/>
+
+    <menuitem id="menu_it_asset_manufacturers"
+        name="Manufacturers"
+        parent="menu_it_asset_configuration"
+        action="it_asset_manufacturer_action"
+        sequence="20"/>
+
+</odoo>

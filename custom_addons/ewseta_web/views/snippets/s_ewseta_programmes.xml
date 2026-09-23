@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_programmes" name="EWSETA Programmes">
+    <section class="s_ewseta_programmes" data-snippet="s_ewseta_programmes">
+        <div class="container">
+            <div class="ewseta-section-header text-center mx-auto mb-5">
+                <span class="ewseta-eyebrow">What We Offer</span>
+                <h2 class="ewseta-section-title">Skills Development Programmes</h2>
+                <p class="ewseta-section-lead">Funding and support for employers, training providers, and learners in the energy and water sectors.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="ewseta-programme-card">
+                        <div class="ewseta-programme-icon ewseta-icon-orange">
+                            <i class="fa fa-line-chart"/>
+                        </div>
+                        <h3>Skills Planning</h3>
+                        <p>Coordinated skills development informed by quality research to address South Africa's triple challenge of poverty, inequality and unemployment.</p>
+                        <a href="#" class="ewseta-card-link">Learn more <i class="fa fa-arrow-right"/></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="ewseta-programme-card">
+                        <div class="ewseta-programme-icon ewseta-icon-blue">
+                            <i class="fa fa-money"/>
+                        </div>
+                        <h3>Mandatory Grants</h3>
+                        <p>Eligible employers who contribute the skills development levy and receive WSP/ATR approval can access Mandatory Grant funding.</p>
+                        <a href="#" class="ewseta-card-link">Learn more <i class="fa fa-arrow-right"/></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="ewseta-programme-card">
+                        <div class="ewseta-programme-icon ewseta-icon-green">
+                            <i class="fa fa-handshake-o"/>
+                        </div>
+                        <h3>Discretionary Grants</h3>
+                        <p>Board-approved funding subject to stringent assessment of applications received during approved discretionary grant windows.</p>
+                        <a href="#" class="ewseta-card-link">Learn more <i class="fa fa-arrow-right"/></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="ewseta-programme-card">
+                        <div class="ewseta-programme-icon ewseta-icon-orange">
+                            <i class="fa fa-graduation-cap"/>
+                        </div>
+                        <h3>Learning Programmes</h3>
+                        <p>Programmes funded in accordance with skills development priorities defined in the annually reviewed EWSETA Sector Skills Plan.</p>
+                        <a href="#" class="ewseta-card-link">Learn more <i class="fa fa-arrow-right"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_it_asset_assignment_history_user,it.asset.assignment.history user,model_it_asset_assignment_history,group_it_asset_user,1,0,0,0
+access_it_asset_assignment_history_manager,it.asset.assignment.history manager,model_it_asset_assignment_history,group_it_asset_manager,1,1,1,1
+access_it_asset_assignment_history_admin,it.asset.assignment.history admin,model_it_asset_assignment_history,group_it_asset_administrator,1,1,1,1
+access_it_asset_manufacturer_user,it.asset.manufacturer user,model_it_asset_manufacturer,group_it_asset_user,1,0,0,0
+access_it_asset_manufacturer_manager,it.asset.manufacturer manager,model_it_asset_manufacturer,group_it_asset_manager,1,1,1,0
+access_it_asset_manufacturer_admin,it.asset.manufacturer admin,model_it_asset_manufacturer,group_it_asset_administrator,1,1,1,1
+access_it_asset_incident_report_user,it.asset.incident.report user,model_it_asset_incident_report,group_it_asset_user,1,1,1,0
+access_it_asset_incident_report_manager,it.asset.incident.report manager,model_it_asset_incident_report,group_it_asset_manager,1,1,1,1
+access_it_asset_incident_report_admin,it.asset.incident.report admin,model_it_asset_incident_report,group_it_asset_administrator,1,1,1,1
+access_it_asset_incident_approve_wizard_user,it.asset.incident.approve.wizard user,model_it_asset_incident_approve_wizard,group_it_asset_user,1,1,1,1
+access_it_asset_incident_approve_wizard_manager,it.asset.incident.approve.wizard manager,model_it_asset_incident_approve_wizard,group_it_asset_manager,1,1,1,1
+access_it_asset_incident_submit_wizard_user,it.asset.incident.submit.wizard user,model_it_asset_incident_submit_wizard,group_it_asset_user,1,1,1,1
+access_it_asset_incident_submit_wizard_manager,it.asset.incident.submit.wizard manager,model_it_asset_incident_submit_wizard,group_it_asset_manager,1,1,1,1

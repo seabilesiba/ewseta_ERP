@@ -1,0 +1,69 @@
+2026-07-29 12:52:45,841 23640 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 12:52:45,843 23640 INFO ? odoo: Odoo version 19.0 
+2026-07-29 12:52:45,843 23640 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 12:52:45,844 23640 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 12:52:45,844 23640 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 12:52:50,888 23640 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 12:52:50,888 23640 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 13:15:26,668 34376 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 13:15:26,669 34376 INFO ? odoo: Odoo version 19.0 
+2026-07-29 13:15:26,669 34376 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 13:15:26,670 34376 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 13:15:26,670 34376 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 13:15:27,657 34376 INFO ? odoo.service.server: HTTP service (werkzeug) running on LESIBA202404.ewseta.org.za:8022 
+2026-07-29 13:15:52,024 34376 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 13:15:52,024 34376 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 13:15:52,463 34376 INFO ? odoo.service.server: cron0 max age (0s) reached, releasing connection. 
+2026-07-29 13:15:52,463 34376 INFO ? odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 2 connections  
+2026-07-29 13:15:52,483 34376 INFO ? odoo.service.server: cron1 max age (0s) reached, releasing connection. 
+2026-07-29 13:17:24,134 18440 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 13:17:24,137 18440 INFO ? odoo: Odoo version 19.0 
+2026-07-29 13:17:24,137 18440 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 13:17:24,138 18440 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 13:17:24,138 18440 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 13:17:26,396 18440 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 13:17:26,396 18440 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 13:57:31,129 35964 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 13:57:31,130 35964 INFO ? odoo: Odoo version 19.0 
+2026-07-29 13:57:31,130 35964 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 13:57:31,130 35964 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 13:57:31,130 35964 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 13:57:32,859 35964 INFO ? odoo.service.server: HTTP service (werkzeug) running on LESIBA202404.ewseta.org.za:8022 
+2026-07-29 13:59:12,656 35964 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 13:59:12,656 35964 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 13:59:12,878 35964 INFO ? odoo.service.server: cron0 max age (0s) reached, releasing connection. 
+2026-07-29 13:59:12,879 35964 INFO ? odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 2 connections  
+2026-07-29 13:59:12,893 35964 INFO ? odoo.service.server: cron1 max age (0s) reached, releasing connection. 
+2026-07-29 13:59:42,243 6892 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 13:59:42,244 6892 INFO ? odoo: Odoo version 19.0 
+2026-07-29 13:59:42,245 6892 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 13:59:42,245 6892 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 13:59:42,245 6892 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 13:59:43,108 6892 INFO ? odoo.service.server: HTTP service (werkzeug) running on LESIBA202404.ewseta.org.za:8022 
+2026-07-29 14:04:11,069 6892 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 14:04:11,069 6892 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 14:04:11,497 6892 INFO ? odoo.service.server: cron0 max age (0s) reached, releasing connection. 
+2026-07-29 14:04:11,497 6892 INFO ? odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 2 connections  
+2026-07-29 14:04:11,516 6892 INFO ? odoo.service.server: cron1 max age (0s) reached, releasing connection. 
+2026-07-29 14:04:31,576 23196 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 14:04:31,577 23196 INFO ? odoo: Odoo version 19.0 
+2026-07-29 14:04:31,577 23196 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 14:04:31,577 23196 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 14:04:31,577 23196 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 14:04:32,638 23196 INFO ? odoo.service.server: HTTP service (werkzeug) running on LESIBA202404.ewseta.org.za:8022 
+2026-07-29 14:05:17,076 23196 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 14:05:17,076 23196 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 14:05:17,163 23196 INFO ? odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 2 connections  
+2026-07-29 14:05:17,178 23196 INFO ? odoo.service.server: cron0 max age (0s) reached, releasing connection. 
+2026-07-29 14:05:17,178 23196 INFO ? odoo.service.server: cron1 max age (0s) reached, releasing connection. 
+2026-07-29 14:14:55,700 36212 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-07-29 14:14:55,702 36212 INFO ? odoo: Odoo version 19.0 
+2026-07-29 14:14:55,702 36212 INFO ? odoo: Using configuration file at c:\users\lesibas\music\mythings\odoo-19.0\odoo-19.0\odoo.conf 
+2026-07-29 14:14:55,702 36212 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\lesibas\\Music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons', 'c:\\users\\lesibas\\appdata\\local\\openerp s.a\\odoo\\addons\\19.0', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\addons', 'c:\\users\\lesibas\\music\\mythings\\odoo-19.0\\odoo-19.0\\odoo\\addons']) 
+2026-07-29 14:14:55,703 36212 INFO ? odoo: database: Odoo-19@localhost:5432 
+2026-07-29 14:14:57,189 36212 INFO ? odoo.service.server: HTTP service (werkzeug) running on LESIBA202404.ewseta.org.za:8022 
+2026-07-29 14:15:19,587 36212 INFO ? odoo.service.server: Initiating shutdown 
+2026-07-29 14:15:19,587 36212 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-07-29 14:15:19,899 36212 INFO ? odoo.service.server: cron0 max age (0s) reached, releasing connection. 
+2026-07-29 14:15:19,899 36212 INFO ? odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 2 connections  
+2026-07-29 14:15:19,912 36212 INFO ? odoo.service.server: cron1 max age (0s) reached, releasing connection. 

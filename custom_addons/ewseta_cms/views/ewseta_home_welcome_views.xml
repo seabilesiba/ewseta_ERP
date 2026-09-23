@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ewseta_home_welcome_view_list" model="ir.ui.view">
+        <field name="name">ewseta.home.welcome.list</field>
+        <field name="model">ewseta.home.welcome</field>
+        <field name="arch" type="xml">
+            <list string="Welcome Sections">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="is_published" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ewseta_home_welcome_view_form" model="ir.ui.view">
+        <field name="name">ewseta.home.welcome.form</field>
+        <field name="model">ewseta.home.welcome</field>
+        <field name="arch" type="xml">
+            <form string="Welcome Section">
+                <sheet>
+                    <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not is_published"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="eyebrow"/>
+                            <field name="title"/>
+                            <field name="section_title"/>
+                            <field name="is_published"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
+                        </group>
+                        <group>
+                            <field name="cta_label"/>
+                            <field name="cta_url"/>
+                        </group>
+                    </group>
+                    <field name="body"/>
+                    <separator string="Hero Visual Images"/>
+                    <group>
+                        <group string="Main Circle (centre)">
+                            <field name="hero_circle_image" widget="image" options="{'size': [0, 0]}"/>
+                            <field name="hero_circle_image_url" placeholder="/ewseta_web/static/img/hero_energy.jpg"/>
+                        </group>
+                        <group string="Right Portrait Circle">
+                            <field name="hero_featured_portrait_image" widget="image" options="{'size': [0, 0]}"/>
+                            <field name="hero_featured_portrait_image_url" placeholder="/ewseta_web/static/img/hero_sustainability.jpg"/>
+                            <field name="hero_featured_portrait_url" placeholder="Optional link URL when visitors click the right circle"/>
+                        </group>
+                        <group string="Small Circle (southwest overlap)">
+                            <field name="hero_overlap_image" widget="image" options="{'size': [0, 0]}"/>
+                            <field name="hero_overlap_image_url" placeholder="/ewseta_web/static/img/hero_water.jpg"/>
+                        </group>
+                    </group>
+                    <separator string="Statistics"/>
+                    <field name="stat_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="display_mode"/>
+                            <field name="value"/>
+                            <field name="icon_class" invisible="display_mode != 'icon'"/>
+                            <field name="label"/>
+                            <field name="description"/>
+                            <field name="color"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_home_welcome_action" model="ir.actions.act_window">
+        <field name="name">Welcome Section</field>
+        <field name="res_model">ewseta.home.welcome</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="ewseta_home_settings_view_form" model="ir.ui.view">
+        <field name="name">ewseta.home.settings.form</field>
+        <field name="model">ewseta.home.settings</field>
+        <field name="arch" type="xml">
+            <form string="Homepage Section Headers">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="website_id" groups="website.group_multi_website"/>
+                    </group>
+                    <group string="Programmes Section">
+                        <field name="programme_eyebrow"/>
+                        <field name="programme_title"/>
+                        <field name="programme_lead"/>
+                    </group>
+                    <group string="Sectors Section">
+                        <field name="sector_eyebrow"/>
+                        <field name="sector_title"/>
+                        <field name="sector_lead"/>
+                    </group>
+                    <group string="News Section">
+                        <field name="news_eyebrow"/>
+                        <field name="news_title"/>
+                    </group>
+                    <group string="Performance Overview Section">
+                        <field name="performance_eyebrow"/>
+                        <field name="performance_title"/>
+                        <field name="performance_lead"/>
+                        <field name="performance_cta_label"/>
+                        <field name="performance_cta_url"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_home_settings_action" model="ir.actions.act_window">
+        <field name="name">Section Headers</field>
+        <field name="res_model">ewseta.home.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,136 @@
+/* EWSETA — replace Odoo default purple primary on the public website */
+
+#wrapwrap {
+    --ew-brand-orange: #f29100;
+    --ew-brand-green: #1a6b4a;
+    --bs-primary: #f29100;
+    --bs-primary-rgb: 242, 145, 0;
+    --bs-link-color: #1a6b4a;
+    --bs-link-hover-color: #f29100;
+}
+
+#wrapwrap .btn-primary:not(.ewseta-nav-cta) {
+    --bs-btn-bg: #f29100;
+    --bs-btn-border-color: #f29100;
+    --bs-btn-hover-bg: #d97f00;
+    --bs-btn-hover-border-color: #d97f00;
+    --bs-btn-active-bg: #c97400;
+    --bs-btn-active-border-color: #b36900;
+    --bs-btn-focus-shadow-rgb: 242, 145, 0;
+    background-color: #f29100 !important;
+    border-color: #f29100 !important;
+    color: #fff !important;
+}
+
+#wrapwrap .btn-primary:not(.ewseta-nav-cta):hover,
+#wrapwrap .btn-primary:not(.ewseta-nav-cta):focus-visible,
+#wrapwrap .btn-primary:not(.ewseta-nav-cta):active {
+    background-color: #d97f00 !important;
+    border-color: #d97f00 !important;
+    color: #fff !important;
+}
+
+#wrapwrap .btn-outline-primary {
+    --bs-btn-color: #f29100;
+    --bs-btn-border-color: #f29100;
+    --bs-btn-hover-bg: #f29100;
+    --bs-btn-hover-border-color: #f29100;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #d97f00;
+    --bs-btn-active-border-color: #d97f00;
+    color: #f29100 !important;
+    border-color: #f29100 !important;
+}
+
+#wrapwrap .btn-outline-primary:hover,
+#wrapwrap .btn-outline-primary:focus-visible,
+#wrapwrap .btn-outline-primary:active {
+    color: #fff !important;
+    background-color: #f29100 !important;
+    border-color: #f29100 !important;
+}
+
+#wrapwrap .btn-link,
+#wrapwrap a.btn-link,
+#wrapwrap .alert-link {
+    --bs-btn-color: #f29100;
+    --bs-link-color: #f29100;
+    color: #f29100 !important;
+    text-decoration-color: rgba(242, 145, 0, 0.45);
+}
+
+#wrapwrap .btn-link:hover,
+#wrapwrap a.btn-link:hover,
+#wrapwrap .alert-link:hover {
+    color: #d97f00 !important;
+}
+
+#wrapwrap .text-primary,
+#wrapwrap .text-o-color-1,
+#wrapwrap a.text-primary:not(.btn) {
+    color: #f29100 !important;
+}
+
+#wrapwrap .link-primary,
+#wrapwrap a.link-primary {
+    color: #f29100 !important;
+}
+
+#wrapwrap .link-primary:hover,
+#wrapwrap a.link-primary:hover {
+    color: #d97f00 !important;
+}
+
+#wrapwrap .form-control:focus,
+#wrapwrap .form-select:focus {
+    border-color: rgba(242, 145, 0, 0.55);
+    box-shadow: 0 0 0 0.2rem rgba(242, 145, 0, 0.15);
+}
+
+#wrapwrap .form-check-input:checked {
+    background-color: #f29100;
+    border-color: #f29100;
+}
+
+#wrapwrap .form-check-input:focus {
+    border-color: rgba(242, 145, 0, 0.55);
+    box-shadow: 0 0 0 0.2rem rgba(242, 145, 0, 0.15);
+}
+
+#wrapwrap .page-item.active .page-link {
+    background-color: #f29100;
+    border-color: #f29100;
+}
+
+#wrapwrap .page-link {
+    color: #1a6b4a;
+}
+
+#wrapwrap .page-link:hover {
+    color: #f29100;
+}
+
+/* Portal account (light mode) */
+#wrapwrap .o_portal_wrap a:not(.btn):not(.dropdown-item):not(.nav-link) {
+    color: #1a6b4a;
+}
+
+#wrapwrap .o_portal_wrap a:not(.btn):not(.dropdown-item):not(.nav-link):hover {
+    color: #f29100;
+}
+
+#wrapwrap .o_portal_index_card a.bg-100:hover {
+    border-color: rgba(242, 145, 0, 0.35);
+}
+
+#wrapwrap .o_portal .breadcrumb-item a {
+    color: #1a6b4a;
+}
+
+#wrapwrap .o_portal .breadcrumb-item a:hover {
+    color: #f29100;
+}
+
+#wrapwrap .spinner-border.text-o-color-2 {
+    color: #f29100 !important;
+}

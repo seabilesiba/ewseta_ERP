@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+  Odoo QWeb Template Inheritance EXPLAINED:
+
+  <template> tag attributes:
+    - id            : Unique technical identifier within your module. Used to reference, extend, or override this template elsewhere.
+    - inherit_id    : (optional) Set this to the id of a parent template you want to modify/extend. 
+                      If inherit_id is present, this template will *not* render by itself—instead, it describes *modifications* to another template.
+    - name          : Human-readable name of the template. Used in backend UIs or website options menus.
+    - priority      : Inherited templates are processed in order of priority (largest first). 
+                      Higher-priority templates apply their changes before lower ones. Default is usually 16 or 20.
+
+  <xpath> tag: This is ONLY valid in templates WITH inherit_id. Each <xpath> describes a change to apply inside the parent template:
+    - expr         : An XPath expression (mini-query language for XML trees), selects one or more nodes inside the parent template.
+                     Example: //header       = selects all <header> tags regardless of nesting
+                              //header[@id='top']   = selects <header> only where id="top"
+    - position     : What to do with the nodes matched by expr. Options:
+                     - "before"     : Insert your content just before those nodes.
+                     - "after"      : Insert your content just after those nodes.
+                     - "replace"    : Replace those nodes with your content.
+                     - "attributes" : Change attributes of those nodes (without replacing their whole content).
+
+  Example below:
+  - This template extends (inherits) "website.layout" (the main website layout).
+  - It PREPENDS a custom topbar <div> before every <header> in that layout.
+  - It ADDS a class ("ewseta-header-nav") to the <header id="top"> element.
+-->
+<template id="ewseta_topbar" inherit_id="website.layout" name="EWSETA Top Bar" priority="20">
+    <xpath expr="//header" position="before">
+        <div class="ewseta-topbar">
+            <div class="container">
+                <div class="ewseta-topbar-inner">
+                    <div class="ewseta-topbar-left">
+                        <span class="ewseta-topbar-item ewseta-topbar-hotline">
+                            <span class="ewseta-topbar-icon"><i class="fa fa-phone"/></span>
+                            <span class="ewseta-topbar-label">Fraud Hotline</span>
+                            <a href="tel:0800611205" class="ewseta-topbar-chip">0800 611 205</a>
+                            <span class="ewseta-topbar-meta">Toll Free</span>
+                        </span>
+                        <a href="mailto:ewseta@thehotline.co.za" class="ewseta-topbar-item ewseta-topbar-link" aria-label="Email ewseta@thehotline.co.za">
+                            <span class="ewseta-topbar-icon"><i class="fa fa-envelope"/></span>
+                            <span class="ewseta-topbar-link-text">ewseta@thehotline.co.za</span>
+                        </a>
+                        <a href="/contactus" class="ewseta-topbar-item ewseta-topbar-link" aria-label="Contact Us">
+                            <span class="ewseta-topbar-icon"><i class="fa fa-comments"/></span>
+                            <span class="ewseta-topbar-link-text">Contact Us</span>
+                        </a>
+                        <a href="#" class="ewseta-topbar-item ewseta-topbar-link" aria-label="EWSETA Vacancies">
+                            <span class="ewseta-topbar-icon"><i class="fa fa-briefcase"/></span>
+                            <span class="ewseta-topbar-link-text">EWSETA Vacancies</span>
+                        </a>
+                        <div class="dropdown ewseta-topbar-hours">
+                            <a href="#" class="ewseta-topbar-item ewseta-topbar-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Opening Hours">
+                                <span class="ewseta-topbar-icon"><i class="fa fa-clock-o"/></span>
+                                <span class="ewseta-topbar-link-text">Opening Hours</span>
+                            </a>
+                            <div class="dropdown-menu ewseta-topbar-hours-menu">
+                                <h6 class="dropdown-header">Head Office</h6>
+                                <p class="ewseta-hours-address dropdown-item-text">22 Wellington Road, Parktown, Johannesburg</p>
+                                <div class="dropdown-divider"/>
+                                <div class="ewseta-hours-row">
+                                    <span class="day">Monday – Friday</span>
+                                    <span class="time">8:00 AM – 4:30 PM</span>
+                                </div>
+                                <div class="ewseta-hours-row">
+                                    <span class="day">Saturday</span>
+                                    <span class="time ewseta-hours-closed">Closed</span>
+                                </div>
+                                <div class="ewseta-hours-row">
+                                    <span class="day">Sunday</span>
+                                    <span class="time ewseta-hours-closed">Closed</span>
+                                </div>
+                                <div class="dropdown-divider"/>
+                                <p class="ewseta-hours-note dropdown-item-text">Closed on public holidays.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ewseta-topbar-socials">
+                        <span class="ewseta-topbar-socials-label">Follow us</span>
+                        <a href="https://www.facebook.com/ewseta" class="ewseta-social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa fa-facebook"/></a>
+                        <a href="https://twitter.com/ewseta" class="ewseta-social-link" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa fa-twitter"/></a>
+                        <a href="https://www.instagram.com/ewseta" class="ewseta-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"/></a>
+                        <a href="https://www.linkedin.com/company/ewseta" class="ewseta-social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa fa-linkedin"/></a>
+                        <a href="https://www.youtube.com/ewseta" class="ewseta-social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa fa-youtube-play"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//header[@id='top']" position="attributes">
+        <attribute name="t-attf-class" add="ewseta-header-nav" separator=" "/>
+    </xpath>
+</template>
+
+<!-- EWSETA logo -->
+<template id="ewseta_header_brand" inherit_id="website.option_header_brand_logo" name="EWSETA Header Logo" priority="20">
+    <xpath expr="//a[@data-name='Navbar Logo']/span[@t-field='website.logo']" position="replace">
+        <img src="/ewseta_web/static/img/ewseta_logo.png" alt="Energy &amp; Water SETA" width="220" height="55"/>
+    </xpath>
+</template>
+
+<!-- Branded footer -->
+<template id="ewseta_footer" inherit_id="website.layout" name="EWSETA Footer" priority="20">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo ewseta-footer border-top" t-if="not no_footer">
+            <section class="s_text_block pt40 pb24" data-snippet="s_text_block" data-name="EWSETA Footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 pt16 pb16">
+                            <h5 class="ewseta-footer-heading">Contact Us</h5>
+                            <p class="mb-2"><strong>HEAD OFFICE</strong><br/>
+                            22 Wellington Road<br/>
+                            Parktown, Johannesburg</p>
+                            <ul class="list-unstyled mb-0">
+                                <li class="py-1"><i class="fa fa-phone fa-fw me-2"/><a href="tel:+27112744700">+27 11 274-4700</a></li>
+                                <li class="py-1"><i class="fa fa-envelope fa-fw me-2"/><a href="mailto:info@ewseta.org.za">info@ewseta.org.za</a></li>
+                                <li class="py-1"><i class="fa fa-clock-o fa-fw me-2"/>Mon - Fri: 8:00AM - 4:30PM</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <h5 class="ewseta-footer-heading">Stakeholder Portal</h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="py-1"><a href="#">Workplace Skills Plan (WSP)</a></li>
+                                <li class="py-1"><a href="#">Assessor/Moderator Application</a></li>
+                                <li class="py-1"><a href="#">Discretionary Grants</a></li>
+                                <li class="py-1"><a href="#">ETQA Provider Registration</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <h5 class="ewseta-footer-heading">Links</h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="py-1"><a href="#">Information Privacy Statement</a></li>
+                                <li class="py-1"><a href="#">Website Disclaimer</a></li>
+                                <li class="py-1"><a href="/contactus">Contact Us</a></li>
+                                <li class="py-1"><a href="#">Supply Chain</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <h5 class="ewseta-footer-heading">Follow Us</h5>
+                            <div class="s_social_media o_not_editable" data-snippet="s_social_media" data-name="Social Media">
+                                <a href="https://www.facebook.com/ewseta" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+                                    <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="https://twitter.com/ewseta" class="s_social_media_twitter" target="_blank" aria-label="X">
+                                    <i class="fa fa-twitter rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="https://www.instagram.com/ewseta" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
+                                    <i class="fa fa-instagram rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="https://www.linkedin.com/company/ewseta" class="s_social_media_linkedin" target="_blank" aria-label="LinkedIn">
+                                    <i class="fa fa-linkedin rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                                <a href="https://www.youtube.com/ewseta" class="s_social_media_youtube" target="_blank" aria-label="YouTube">
+                                    <i class="fa fa-youtube rounded-circle shadow-sm o_editable_media"/>
+                                </a>
+                            </div>
+                            <p class="mt-3 mb-0 small text-muted">
+                                The Energy &amp; Water Sector Education Training Authority serving South Africa's energy and water sectors.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Branded search modal -->
+<template id="ewseta_header_search_modal" inherit_id="website.header_search_box" name="EWSETA Search Modal" priority="25">
+    <xpath expr="//div[@id='o_search_modal']" position="attributes">
+        <attribute name="class" add="ewseta-search-modal" separator=" "/>
+    </xpath>
+    <xpath expr="//div[@id='o_search_modal']//div[hasclass('modal-content')]" position="attributes">
+        <attribute name="class" add="ewseta-search-modal-content" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Orange header Contact Us button -->
+<template id="ewseta_header_cta" inherit_id="website.header_call_to_action" name="EWSETA Header CTA" priority="20">
+    <xpath expr="//a[hasclass('btn_cta')]" position="attributes">
+        <attribute name="class" add="btn-ewseta-primary" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Visible mobile menu toggle -->
+<template id="ewseta_mobile_menu_toggle" inherit_id="website.template_header_mobile" name="EWSETA Mobile Menu Toggle" priority="30">
+    <xpath expr="//button[@data-bs-target='#top_menu_collapse_mobile']" position="attributes">
+        <attribute name="class" add="ewseta-mobile-menu-toggle" separator=" "/>
+    </xpath>
+    <xpath expr="//button[@data-bs-target='#top_menu_collapse_mobile']/span[hasclass('navbar-toggler-icon')]" position="replace">
+        <i class="fa fa-bars ewseta-mobile-menu-icon" aria-hidden="true"/>
+    </xpath>
+</template>
+
+<template id="ewseta_footer_copyright" inherit_id="website.layout" name="EWSETA Footer Copyright" priority="20">
+    <xpath expr="//div[hasclass('o_footer_copyright')]//span[hasclass('o_footer_copyright_name')]" position="replace">
+        <span class="o_footer_copyright_name">Copyright © 2025 EWSETA | All Rights Reserved</span>
+    </xpath>
+</template>
+
+<!-- Theme init: light, dark, blue, green, or orange — before paint to avoid flash -->
+<template id="ewseta_dark_mode_init" inherit_id="website.layout" name="EWSETA Dark Mode Init" priority="30">
+    <xpath expr="//head" position="inside">
+        <script id="ewseta-theme-init" type="text/javascript">
+            (function () {
+                try {
+                    var stored = localStorage.getItem('ewseta-theme');
+                    if (stored === 'dark') {
+                        document.documentElement.classList.add('ewseta-dark-mode');
+                        document.documentElement.dataset.ewsetaTheme = 'dark';
+                    } else if (stored === 'blue') {
+                        document.documentElement.classList.add('ewseta-blue-mode');
+                        document.documentElement.dataset.ewsetaTheme = 'blue';
+                    } else if (stored === 'green') {
+                        document.documentElement.classList.add('ewseta-green-mode');
+                        document.documentElement.dataset.ewsetaTheme = 'green';
+                    } else if (stored === 'orange') {
+                        document.documentElement.classList.add('ewseta-orange-mode');
+                        document.documentElement.dataset.ewsetaTheme = 'orange';
+                    } else if (!stored &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.documentElement.classList.add('ewseta-dark-mode');
+                        document.documentElement.dataset.ewsetaTheme = 'dark';
+                    }
+                } catch (e) {}
+            })();
+        </script>
+    </xpath>
+</template>
+
+<template id="ewseta_dark_mode_toggle_button" name="EWSETA Theme Toggle">
+    <li class="nav-item o_not_editable ewseta-theme-toggle-item">
+        <button type="button"
+                class="ewseta-theme-toggle o_not_editable"
+                aria-label="Cycle theme: light, dark, blue, green, orange"
+                title="Cycle theme: light, dark, blue, green, orange">
+            <i class="fa fa-moon-o ewseta-theme-icon ewseta-theme-icon-next-dark" aria-hidden="true"/>
+            <i class="fa fa-tint ewseta-theme-icon ewseta-theme-icon-next-blue" aria-hidden="true"/>
+            <i class="fa fa-leaf ewseta-theme-icon ewseta-theme-icon-next-green" aria-hidden="true"/>
+            <i class="fa fa-fire ewseta-theme-icon ewseta-theme-icon-next-orange" aria-hidden="true"/>
+            <i class="fa fa-sun-o ewseta-theme-icon ewseta-theme-icon-next-light" aria-hidden="true"/>
+        </button>
+    </li>
+</template>
+
+<template id="ewseta_dark_mode_toggle_desktop" inherit_id="website.template_header_default" name="EWSETA Dark Mode Toggle Desktop" priority="35">
+    <xpath expr="//t[@t-call='website.placeholder_header_search_box'][@_layout.f='modal']" position="before">
+        <t t-call="ewseta_web.ewseta_dark_mode_toggle_button"/>
+    </xpath>
+</template>
+
+<template id="ewseta_dark_mode_toggle_mobile" inherit_id="website.template_header_mobile" name="EWSETA Dark Mode Toggle Mobile" priority="35">
+    <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="inside">
+        <t t-call="ewseta_web.ewseta_dark_mode_toggle_button"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_cron_unlock_rfqs" model="ir.cron">
+            <field name="name">RFQs: Auto unlock at closing time</field>
+            <field name="model_id" ref="model_ew_rfq"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_unlock_due_rfqs()</field>
+            <field name="interval_type">minutes</field>
+            <field name="interval_number">1</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="ir_cron_close_submissions" model="ir.cron">
+            <field name="name">Submissions: Auto close past deadline</field>
+            <field name="model_id" ref="model_ew_submission"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_close_submissions_past_deadline()</field>
+            <field name="interval_type">minutes</field>
+            <field name="interval_number">1</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+    </data>
+</odoo>

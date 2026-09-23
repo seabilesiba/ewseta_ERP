@@ -1,0 +1,422 @@
+/* EWSETA Procurement — backend RFQ/RFP views */
+
+:root {
+    --ew-proc-accent: #1a6b4a;
+    --ew-proc-accent-soft: #e8f5ef;
+    --ew-proc-border: #d8e3dc;
+    --ew-proc-muted: #5c6b63;
+    --ew-proc-shadow: 0 2px 8px rgba(26, 107, 74, 0.08);
+}
+
+/* —— Kanban —— */
+.ew-proc-rfq-kanban .o_kanban_renderer {
+    --KanbanRecord-width: 22rem;
+}
+
+.ew-proc-rfq-kanban .o_kanban_record {
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+    box-shadow: var(--ew-proc-shadow);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.ew-proc-rfq-kanban .o_kanban_record:hover {
+    box-shadow: 0 4px 14px rgba(26, 107, 74, 0.14);
+    transform: translateY(-1px);
+}
+
+.ew-proc-rfq-card {
+    padding: 0.15rem 0.35rem 0.15rem 0.65rem;
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+}
+
+.ew-proc-rfq-card__title {
+    font-size: 1.05rem;
+    line-height: 1.35;
+    color: #1f2933;
+}
+
+.ew-proc-rfq-card__ref {
+    color: var(--ew-proc-muted);
+    font-size: 0.8125rem;
+    margin-bottom: 0.35rem;
+}
+
+.ew-proc-rfq-card__meta {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    background: var(--ew-proc-accent-soft);
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    color: var(--ew-proc-muted);
+}
+
+.ew-proc-rfq-card__meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.ew-proc-rfq-card footer {
+    margin-top: 0.65rem;
+    padding-top: 0.55rem;
+    border-top: 1px dashed var(--ew-proc-border);
+}
+
+/* Kanban “N received” — same teal as list badge (decoration-info / text-bg-info) */
+.ew-proc-rfq-kanban .ew-proc-rfq-card footer .ew-proc-submission-count-badge {
+    --bs-badge-color: #fff;
+    --bs-badge-bg: var(--o-info, #17a2b8);
+    --Badge-color: #fff;
+    --Badge-bg: var(--o-info, #17a2b8);
+    background-color: var(--o-info, #17a2b8) !important;
+    color: #fff !important;
+    border: none;
+}
+
+.ew-proc-rfq-kanban .ew-proc-rfq-card footer .ew-proc-submission-count-badge * {
+    color: #fff !important;
+}
+
+.ew-proc-rfq-card--draft {
+    border-left: 4px solid #6c757d;
+}
+
+.ew-proc-rfq-card--published {
+    border-left: 4px solid var(--ew-proc-accent);
+}
+
+.ew-proc-rfq-card--closed {
+    border-left: 4px solid #c0392b;
+}
+
+/* —— List —— */
+.ew-proc-rfq-list thead {
+    background: var(--ew-proc-accent-soft);
+}
+
+.ew-proc-rfq-list thead th {
+    color: #1a4d38;
+    font-weight: 600;
+    border-bottom: 2px solid var(--ew-proc-accent);
+}
+
+.ew-proc-rfq-list tbody tr:hover {
+    background-color: #f4fbf7;
+}
+
+/* —— Form —— */
+.ew-proc-rfq-form .o_form_sheet {
+    border-top: 3px solid var(--ew-proc-accent);
+    border-radius: 0 0 10px 10px;
+    padding-top: 1.25rem;
+    background: linear-gradient(180deg, #fbfdfc 0%, #ffffff 120px);
+}
+
+.ew-proc-rfq-form .ew-proc-form-title h1 input,
+.ew-proc-rfq-form .ew-proc-form-title h1 span {
+    font-weight: 650;
+    font-size: 1.65rem;
+    color: #15251f;
+}
+
+.ew-proc-rfq-form .ew-proc-form-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.75rem 0 1.25rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--ew-proc-accent-soft);
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+}
+
+.ew-proc-rfq-form .ew-proc-form-label,
+.ew-proc-submission-form .ew-proc-form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ew-proc-muted);
+    margin-bottom: 0.15rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-ref,
+.ew-proc-submission-form .ew-proc-form-ref {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--ew-proc-accent);
+}
+
+.ew-proc-rfq-form .ew-proc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 992px) {
+    .ew-proc-rfq-form .ew-proc-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ew-proc-rfq-form .ew-proc-form-card {
+    background: #ffffff;
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem 0.85rem;
+    box-shadow: var(--ew-proc-shadow);
+}
+
+.ew-proc-rfq-form .ew-proc-form-card > .o_group,
+.ew-proc-rfq-form .ew-proc-form-card .ew-proc-form-card-group {
+    width: 100% !important;
+    max-width: 100%;
+    margin-bottom: 0;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card .o_inner_group {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(7.5rem, 38%) minmax(0, 1fr) !important;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card .o_cell.o_wrap_input,
+.ew-proc-rfq-form .ew-proc-form-card .o_cell:not(.o_wrap_label) {
+    min-width: 0;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card .o_field_widget {
+    width: 100% !important;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card .o_form_label {
+    font-weight: 600;
+    color: var(--ew-proc-muted);
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--wide {
+    margin-bottom: 1.25rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card__head {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ew-proc-accent);
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--ew-proc-border);
+}
+
+.ew-proc-rfq-form .ew-proc-form-hint,
+.ew-proc-submission-form .ew-proc-form-hint {
+    margin: -0.35rem 0 0.65rem;
+    font-size: 0.8125rem;
+    color: var(--ew-proc-muted);
+}
+
+.ew-proc-rfq-form .ew-proc-field-emphasis .o_input,
+.ew-proc-rfq-form .ew-proc-field-emphasis .o_field_datetime input,
+.ew-proc-submission-form .ew-proc-field-emphasis .o_input,
+.ew-proc-submission-form .ew-proc-field-emphasis .o_field_datetime input {
+    font-weight: 600;
+    color: #1a4d38;
+}
+
+.ew-proc-rfq-form .ew-proc-form-notebook .nav-tabs {
+    border-bottom: 2px solid var(--ew-proc-border);
+    margin-bottom: 0.75rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-notebook .nav-link.active {
+    color: var(--ew-proc-accent);
+    border-bottom: 2px solid var(--ew-proc-accent);
+    font-weight: 600;
+}
+
+.ew-proc-rfq-form .ew-proc-docs-panel,
+.ew-proc-rfq-form .ew-proc-desc-panel {
+    background: #fafcfb;
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    min-height: 12rem;
+}
+
+.ew-proc-rfq-form .ew-proc-desc-panel .odoo-editor-editable,
+.ew-proc-rfq-form .ew-proc-desc-panel .note-editable {
+    min-height: 10rem;
+}
+
+.ew-proc-rfq-form header .o_statusbar_status .o_arrow_button_current {
+    background-color: var(--ew-proc-accent);
+    border-color: var(--ew-proc-accent);
+}
+
+.ew-proc-rfq-form .oe_button_box .oe_stat_button {
+    border-color: var(--ew-proc-border);
+    border-radius: 8px;
+}
+
+/* —— Submission form (reuse RFQ form tokens) —— */
+.ew-proc-submission-form .o_form_sheet {
+    border-top: 3px solid var(--ew-proc-accent);
+    border-radius: 0 0 10px 10px;
+    padding-top: 1.25rem;
+    background: linear-gradient(180deg, #fbfdfc 0%, #ffffff 120px);
+}
+
+.ew-proc-submission-form .ew-proc-form-title h1 input,
+.ew-proc-submission-form .ew-proc-form-title h1 span {
+    font-weight: 650;
+    font-size: 1.5rem;
+    color: #15251f;
+}
+
+.ew-proc-submission-form__subtitle {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.ew-proc-submission-form .ew-proc-form-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.75rem 0 1.25rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--ew-proc-accent-soft);
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+}
+
+.ew-proc-submission-form .ew-proc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 992px) {
+    .ew-proc-submission-form .ew-proc-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ew-proc-submission-form .ew-proc-form-card {
+    background: #ffffff;
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem 0.85rem;
+    box-shadow: var(--ew-proc-shadow);
+}
+
+.ew-proc-submission-form .ew-proc-form-card > .o_group,
+.ew-proc-submission-form .ew-proc-form-card .ew-proc-form-card-group {
+    width: 100% !important;
+    max-width: 100%;
+    margin-bottom: 0;
+}
+
+.ew-proc-submission-form .ew-proc-form-card .o_inner_group {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(7.5rem, 38%) minmax(0, 1fr) !important;
+}
+
+.ew-proc-submission-form .ew-proc-form-card .o_cell.o_wrap_input,
+.ew-proc-submission-form .ew-proc-form-card .o_cell:not(.o_wrap_label) {
+    min-width: 0;
+}
+
+.ew-proc-submission-form .ew-proc-form-card .o_field_widget {
+    width: 100% !important;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.ew-proc-submission-form .ew-proc-form-card .o_field_widget.o_text_overflow {
+    width: 1px !important;
+    min-width: 100%;
+}
+
+.ew-proc-submission-form .ew-proc-form-card .o_field_widget span,
+.ew-proc-submission-form .ew-proc-form-card .o_field_char span {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.ew-proc-submission-form .ew-proc-form-card .o_form_label {
+    font-weight: 600;
+    color: var(--ew-proc-muted);
+}
+
+.ew-proc-submission-form .ew-proc-submission-form__badges .o_form_label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+}
+
+.ew-proc-submission-form .ew-proc-form-card__head {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ew-proc-accent);
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--ew-proc-border);
+}
+
+.ew-proc-submission-form .ew-proc-form-notebook .nav-tabs {
+    border-bottom: 2px solid var(--ew-proc-border);
+    margin-bottom: 0.75rem;
+}
+
+.ew-proc-submission-form .ew-proc-form-notebook .nav-link.active {
+    color: var(--ew-proc-accent);
+    border-bottom: 2px solid var(--ew-proc-accent);
+    font-weight: 600;
+}
+
+.ew-proc-submission-form__doc-hint {
+    margin: 0 0 0.75rem 0.15rem;
+}
+
+.ew-proc-submission-docs-panel {
+    background: #fafcfb;
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem 1rem;
+}
+
+.ew-proc-submission-doc-list thead {
+    background: var(--ew-proc-accent-soft);
+}
+
+.ew-proc-submission-doc-list thead th {
+    color: #1a4d38;
+    font-weight: 600;
+    border-bottom: 2px solid var(--ew-proc-accent);
+}
+
+.ew-proc-submission-doc-list tbody tr.o_data_row:hover {
+    background-color: #f4fbf7;
+}
+
+.ew-proc-submission-form header .o_statusbar_status .o_arrow_button_current {
+    background-color: var(--ew-proc-accent);
+    border-color: var(--ew-proc-accent);
+}

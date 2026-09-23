@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ewseta_cms_layout" name="EWSETA CMS Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure ewseta-cms-page">
+                <section class="pt-5 pb-3 bg-light border-bottom">
+                    <div class="container">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <t t-out="0"/>
+                            </ol>
+                        </nav>
+                    </div>
+                </section>
+                <section class="py-5">
+                    <div class="container">
+                        <t t-out="1"/>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="news_list" name="EWSETA News">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure s_ewseta_news">
+                <section class="pt-5 pb-4">
+                    <div class="container">
+                        <div class="ewseta-section-header mb-5">
+                            <span class="ewseta-eyebrow">Stay Informed</span>
+                            <h1 class="ewseta-section-title">Latest News</h1>
+                        </div>
+                        <div class="row g-4">
+                            <t t-foreach="articles" t-as="article">
+                                <div class="col-md-6 col-lg-4">
+                                    <article class="ewseta-news-card h-100">
+                                        <div class="ewseta-news-img" t-att-style="article._featured_image_style()">
+                                        </div>
+                                        <div class="ewseta-news-body">
+                                            <time class="ewseta-news-date" t-field="article.publish_date"/>
+                                            <h3 t-field="article.name"/>
+                                            <p t-if="article.subtitle" t-field="article.subtitle"/>
+                                            <a t-att-href="article.website_url" class="ewseta-card-link">Read more <i class="fa fa-arrow-right"/></a>
+                                        </div>
+                                    </article>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="mt-4" t-if="pager">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="news_detail" name="EWSETA News Article">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure s_ewseta_news">
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <article>
+                            <time class="ewseta-news-date d-block mb-2" t-field="article.publish_date"/>
+                            <h1 class="ewseta-section-title mb-3" t-field="article.name"/>
+                            <p t-if="article.subtitle" class="lead text-muted" t-field="article.subtitle"/>
+                            <div class="ewseta-news-img mb-4 rounded overflow-hidden" style="max-height: 420px; min-height: 320px;" t-if="article._featured_image_web_url()" t-att-style="article._featured_image_style()"/>
+                            <div class="oe_structure" t-field="article.body"/>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="tender_list" name="EWSETA Tenders">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <h1 class="ewseta-section-title mb-4">Tenders</h1>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Title</th>
+                                        <th>Closing Date</th>
+                                        <th/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="tenders" t-as="tender">
+                                        <tr>
+                                            <td t-field="tender.reference"/>
+                                            <td t-field="tender.name"/>
+                                            <td t-field="tender.closing_date"/>
+                                            <td><a t-att-href="tender.website_url" class="btn btn-sm btn-ewseta-primary">View</a></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4" t-if="pager">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="tender_detail" name="EWSETA Tender Detail">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <p class="text-muted mb-1" t-field="tender.reference"/>
+                        <h1 class="ewseta-section-title" t-field="tender.name"/>
+                        <p class="mb-4"><strong>Closing date:</strong> <span t-field="tender.closing_date"/></p>
+                        <div class="oe_structure mb-4" t-field="tender.description"/>
+                        <t t-if="tender.attachment_ids">
+                            <h3>Documents</h3>
+                            <ul class="list-unstyled">
+                                <t t-foreach="tender.attachment_ids" t-as="doc">
+                                    <li class="mb-2">
+                                        <a t-att-href="'/web/content/%s?download=true' % doc.id" class="text-decoration-none">
+                                            <i class="fa fa-download me-1"/> <t t-out="doc.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_list" name="EWSETA RFQs">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <h1 class="ewseta-section-title mb-4">Requests for Quotation</h1>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Title</th>
+                                        <th>Closing Date</th>
+                                        <th/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="rfqs" t-as="rfq">
+                                        <tr>
+                                            <td t-field="rfq.reference"/>
+                                            <td t-field="rfq.name"/>
+                                            <td t-field="rfq.closing_date"/>
+                                            <td><a t-att-href="rfq.website_url" class="btn btn-sm btn-ewseta-primary">View</a></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4" t-if="pager">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_detail" name="EWSETA RFQ Detail">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="pt-5 pb-5">
+                    <div class="container">
+                        <p class="text-muted mb-1" t-field="rfq.reference"/>
+                        <h1 class="ewseta-section-title" t-field="rfq.name"/>
+                        <p class="mb-4"><strong>Closing date:</strong> <span t-field="rfq.closing_date"/></p>
+                        <div class="oe_structure mb-4" t-field="rfq.description"/>
+                        <t t-if="rfq.attachment_ids">
+                            <h3>Documents</h3>
+                            <ul class="list-unstyled">
+                                <t t-foreach="rfq.attachment_ids" t-as="doc">
+                                    <li class="mb-2">
+                                        <a t-att-href="'/web/content/%s?download=true' % doc.id" class="text-decoration-none">
+                                            <i class="fa fa-download me-1"/> <t t-out="doc.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+</odoo>

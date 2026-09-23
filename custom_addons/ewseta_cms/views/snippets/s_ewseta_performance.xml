@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_performance_dynamic" inherit_id="ewseta_web.s_ewseta_performance" name="EWSETA Performance Overview Dynamic">
+    <xpath expr="//section[@class='s_ewseta_performance']" position="replace">
+        <section class="s_ewseta_performance" data-snippet="s_ewseta_performance">
+            <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+            <t t-set="has_performance_cms" t-value="'ewseta.performance.metric' in request.env"/>
+            <t t-if="has_performance_cms">
+                <t t-set="settings" t-value="request.env['ewseta.home.settings'].sudo().search(list(website.website_domain()), limit=1) if 'ewseta.home.settings' in request.env else False"/>
+                <t t-set="metrics" t-value="request.env['ewseta.performance.metric'].sudo().search([('is_published', '=', True)] + list(website.website_domain()), order='sequence')"/>
+                <t t-if="metrics">
+                    <div class="container">
+                        <div class="ewseta-section-header text-center mx-auto mb-4 mb-lg-5">
+                            <span class="ewseta-eyebrow" t-out="settings.performance_eyebrow if settings else 'Our Impact'"/>
+                            <h2 class="ewseta-section-title" t-out="settings.performance_title if settings else 'Key Performance Indicators'"/>
+                            <p class="ewseta-section-lead"
+                               t-if="settings and settings.performance_lead"
+                               t-out="settings.performance_lead"/>
+                        </div>
+                    </div>
+                    <div class="ewseta-kpi-panel">
+                        <div class="ewseta-kpi-panel-glow ewseta-kpi-panel-glow-orange"/>
+                        <div class="ewseta-kpi-panel-glow ewseta-kpi-panel-glow-blue"/>
+                        <div class="container">
+                            <div class="ewseta-kpi-grid">
+                                <t t-foreach="metrics" t-as="metric">
+                                    <t t-call="ewseta_web.s_ewseta_performance_metric">
+                                        <t t-set="color" t-value="metric.color"/>
+                                        <t t-set="icon_class" t-value="metric.icon_class"/>
+                                        <t t-set="value" t-value="metric.value"/>
+                                        <t t-set="label" t-value="metric.label"/>
+                                        <t t-set="description" t-value="metric.description"/>
+                                        <t t-set="progress" t-value="metric.progress if metric.progress and metric.progress &gt; 0 else 0"/>
+                                        <t t-set="progress_label" t-value="metric.progress_label if metric.progress and metric.progress &gt; 0 else False"/>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container text-center ewseta-kpi-cta-wrap" t-if="settings and settings.performance_cta_label">
+                        <a t-att-href="settings.performance_cta_url or '#'" class="btn btn-ewseta-outline-light">
+                            <t t-out="settings.performance_cta_label"/> <i class="fa fa-arrow-right ms-2"/>
+                        </a>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-call="ewseta_web.s_ewseta_performance_body"/>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-call="ewseta_web.s_ewseta_performance_body"/>
+            </t>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

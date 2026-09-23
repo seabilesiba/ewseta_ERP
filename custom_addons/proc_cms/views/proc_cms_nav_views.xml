@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_nav_tree" model="ir.ui.view">
+        <field name="name">proc.cms.nav.item.tree</field>
+        <field name="model">proc.cms.nav.item</field>
+        <field name="arch" type="xml">
+            <list class="proc-cms-nav-list" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="url"/>
+                <field name="is_cta" string="Header button" widget="boolean"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_nav_form" model="ir.ui.view">
+        <field name="name">proc.cms.nav.item.form</field>
+        <field name="model">proc.cms.nav.item</field>
+        <field name="arch" type="xml">
+            <form string="Navbar item" class="proc-cms-form proc-cms-nav-form">
+                <header>
+                    <button name="action_open_website_content" type="object"
+                            string="All website content"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="name" placeholder="Menu label"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">
+                            <field name="website_id" readonly="1" options="{'no_open': True}" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div>
+                            <span class="proc-cms-form-hero__label">Item type</span>
+                            <div class="mt-1">
+                                <span class="proc-cms-nav-type proc-cms-nav-type--menu" invisible="is_cta">Main menu link</span>
+                                <span class="proc-cms-nav-type proc-cms-nav-type--cta" invisible="not is_cta">Orange header button</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Visible on site</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="proc-cms-form-hint" invisible="is_cta">
+                        This link is synced to the website top menu (under Home / Contact). Use
+                        <strong>Header button</strong> below only for the orange Contact Us control — not for normal menu entries.
+                    </p>
+                    <p class="proc-cms-form-hint" invisible="not is_cta">
+                        Controls the orange <strong>Contact Us</strong> button in the top bar. It is not added as a main menu item.
+                    </p>
+
+                    <div class="proc-cms-form-grid proc-cms-nav-form__grid">
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Link</div>
+                            <group>
+                                <field name="url" placeholder="/application/rfqs"/>
+                                <field name="sequence"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            </group>
+                        </div>
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Behaviour</div>
+                            <group>
+                                <field name="is_cta" string="Header button (not main menu)" widget="boolean_toggle"/>
+                                <field name="new_window" widget="boolean_toggle"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="proc-cms-form-card proc-cms-nav-form__sync" invisible="not menu_id">
+                        <div class="proc-cms-form-card__head">Odoo menu sync</div>
+                        <group>
+                            <field name="menu_id" readonly="1"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_nav_item" model="ir.actions.act_window">
+        <field name="name">Navbar items</field>
+        <field name="res_model">proc.cms.nav.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

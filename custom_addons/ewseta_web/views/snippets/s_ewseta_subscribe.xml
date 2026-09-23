@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_subscribe" name="EWSETA Subscribe">
+    <section class="s_ewseta_subscribe" data-snippet="s_ewseta_subscribe">
+        <div class="container">
+            <div class="ewseta-subscribe-panel">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-5">
+                        <span class="ewseta-eyebrow ewseta-eyebrow-green">Newsletter</span>
+                        <h2 class="ewseta-section-title mb-3">Stay Up to Date</h2>
+                        <p class="mb-0 text-muted">Get the latest news, events, and sector updates from EWSETA. No spam — just relevant information for stakeholders.</p>
+                    </div>
+                    <div class="col-lg-7">
+                        <form class="ewseta-subscribe-form" action="#" method="post">
+                            <div class="ewseta-subscribe-input-wrap">
+                                <i class="fa fa-envelope ewseta-input-icon"/>
+                                <input type="email" class="form-control" placeholder="Enter your email address" aria-label="Email address"/>
+                                <button type="submit" class="btn btn-subscribe">Subscribe</button>
+                            </div>
+                            <p class="ewseta-subscribe-note mb-0"><i class="fa fa-lock me-1"/> We respect your privacy. Unsubscribe anytime.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_news" name="EWSETA Latest News">
+    <section class="s_ewseta_news" data-snippet="s_ewseta_news">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+                <div class="ewseta-section-header text-start mb-0">
+                    <span class="ewseta-eyebrow">Stay Informed</span>
+                    <h2 class="ewseta-section-title mb-0">Latest News</h2>
+                </div>
+                <a href="#" class="btn btn-ewseta-outline-dark">View All News <i class="fa fa-arrow-right ms-1"/></a>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <article class="ewseta-news-card ewseta-news-featured">
+                        <div class="ewseta-news-img" style="background-image: url('/ewseta_web/static/img/hero_energy.jpg');">
+                            <span class="ewseta-news-tag">Featured</span>
+                        </div>
+                        <div class="ewseta-news-body">
+                            <time class="ewseta-news-date">Jul 20, 2026</time>
+                            <h3>Mrs Kedibone Moroane-Nkhobo Appointed as EWSETA CEO</h3>
+                            <p>The Board of EWSETA is pleased to welcome Mrs Kedibone Moroane-Nkhobo as Chief Executive Officer, leading the organisation into a new chapter of skills development excellence.</p>
+                            <a href="#" class="ewseta-card-link">Read full story <i class="fa fa-arrow-right"/></a>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <article class="ewseta-news-card ewseta-news-horizontal">
+                                <div class="ewseta-news-img" style="background-image: url('/ewseta_web/static/img/hero_water.jpg');"/>
+                                <div class="ewseta-news-body">
+                                    <time class="ewseta-news-date">Jul 2, 2026</time>
+                                    <h4>Transactional Arrangement for Pre-2009 Qualifications</h4>
+                                    <a href="#" class="ewseta-card-link">Read more</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-12">
+                            <article class="ewseta-news-card ewseta-news-horizontal">
+                                <div class="ewseta-news-img" style="background-image: url('/ewseta_web/static/img/sector_energy.jpg');"/>
+                                <div class="ewseta-news-body">
+                                    <time class="ewseta-news-date">Jul 2, 2026</time>
+                                    <h4>QCTO National Roadshows 2026</h4>
+                                    <a href="#" class="ewseta-card-link">Read more</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-12">
+                            <article class="ewseta-news-card ewseta-news-horizontal">
+                                <div class="ewseta-news-img" style="background-image: url('/ewseta_web/static/img/sector_water.jpg');"/>
+                                <div class="ewseta-news-body">
+                                    <time class="ewseta-news-date">Mar 18, 2026</time>
+                                    <h4>Backlog in QCTO Artisan Certification Applications</h4>
+                                    <a href="#" class="ewseta-card-link">Read more</a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

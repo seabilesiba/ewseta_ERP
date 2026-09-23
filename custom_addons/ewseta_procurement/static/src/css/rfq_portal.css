@@ -1,0 +1,586 @@
+/* EWSETA Procurement — public portal (/application/rfqs) */
+
+.ew-proc-portal {
+    --ew-portal-accent: #1a6b4a;
+    --ew-portal-accent-soft: #e8f5ef;
+    --ew-portal-border: #d8e3dc;
+    --ew-portal-muted: #5c6b63;
+    --ew-portal-shadow: 0 4px 18px rgba(26, 107, 74, 0.1);
+    font-family: inherit;
+}
+
+.ew-proc-portal__hero {
+    background: linear-gradient(135deg, #f0faf5 0%, #ffffff 55%);
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 14px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--ew-portal-shadow);
+}
+
+.ew-proc-portal__hero h1 {
+    font-size: clamp(1.65rem, 3vw, 2.1rem);
+    font-weight: 700;
+    color: #15251f;
+    margin-bottom: 0.35rem;
+}
+
+.ew-proc-portal__hero-lead {
+    color: var(--ew-portal-muted);
+    max-width: 42rem;
+    margin-bottom: 0;
+}
+
+.ew-proc-portal__tabs.nav-tabs {
+    border-bottom: 2px solid var(--ew-portal-border);
+    gap: 0.25rem;
+}
+
+.ew-proc-portal__tabs .nav-link {
+    color: var(--ew-portal-muted);
+    font-weight: 600;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.65rem 1.1rem;
+}
+
+.ew-proc-portal__tabs .nav-link.active {
+    color: var(--ew-portal-accent);
+    background: transparent;
+    border-bottom-color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__view-toolbar-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ew-portal-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ew-proc-portal__view-toggle .btn.active {
+    background: var(--ew-portal-accent);
+    border-color: var(--ew-portal-accent);
+    color: #fff;
+}
+
+.ew-proc-portal__view-toggle .btn-outline-secondary:not(.active):hover {
+    border-color: var(--ew-portal-accent);
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__filter-card {
+    overflow: visible;
+}
+
+.ew-proc-portal__filter-card-body {
+    padding: 1rem 1.15rem;
+}
+
+.ew-proc-portal__filter-card .form-control,
+.ew-proc-portal__filter-card .form-select,
+.ew-proc-portal__filter-card .input-group-text {
+    border-color: var(--ew-portal-border);
+    border-radius: 8px;
+}
+
+.ew-proc-portal__filter-card .input-group .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.ew-proc-portal__filter-card .input-group .input-group-text {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ew-proc-portal__datatable-toolbar .input-group-text,
+.ew-proc-portal__filter-toolbar .input-group-text {
+    background: var(--ew-portal-accent-soft);
+    border-color: var(--ew-portal-border);
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__datatable-empty,
+.ew-proc-portal__filter-empty {
+    border-radius: 10px;
+    border: 1px dashed var(--ew-portal-border);
+    background: #fafcfb;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    color: var(--ew-portal-muted);
+    font-weight: 600;
+}
+
+.ew-proc-portal__datatable-th--sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 1.35rem !important;
+}
+
+.ew-proc-portal__datatable-th--sortable::after {
+    content: "⇅";
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    opacity: 0.35;
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__datatable-th--sortable.ew-proc-portal__datatable-th--asc::after {
+    content: "↑";
+    opacity: 1;
+}
+
+.ew-proc-portal__datatable-th--sortable.ew-proc-portal__datatable-th--desc::after {
+    content: "↓";
+    opacity: 1;
+}
+
+.ew-proc-portal__datatable-pagination .page-link,
+.ew-proc-portal__filter-pagination .page-link {
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__datatable-pagination .page-item.active .page-link,
+.ew-proc-portal__filter-pagination .page-item.active .page-link {
+    background-color: var(--ew-portal-accent);
+    border-color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__card {
+    background: #fff;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 12px;
+    box-shadow: var(--ew-portal-shadow);
+    overflow: hidden;
+}
+
+.ew-proc-portal__card-head {
+    background: var(--ew-portal-accent-soft);
+    border-bottom: 1px solid var(--ew-portal-border);
+    padding: 0.85rem 1.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__table {
+    margin-bottom: 0;
+}
+
+.ew-proc-portal__table thead th {
+    background: #fafcfb;
+    color: #1a4d38;
+    font-weight: 600;
+    border-bottom: 2px solid var(--ew-portal-accent);
+    white-space: nowrap;
+}
+
+.ew-proc-portal__table tbody tr:hover {
+    background: #f4fbf7;
+}
+
+.ew-proc-portal__badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.ew-proc-portal__badge--rfq {
+    background: #17a2b8;
+    color: #fff;
+}
+
+.ew-proc-portal__badge--rfp {
+    background: var(--ew-portal-accent);
+    color: #fff;
+}
+
+.ew-proc-portal__badge--closed {
+    background: #c0392b;
+    color: #fff;
+}
+
+.ew-proc-portal__badge--open {
+    background: #198754;
+    color: #fff;
+}
+
+.ew-proc-portal__meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 0;
+}
+
+.ew-proc-portal__meta-item {
+    background: #fff;
+    border: 1px dashed var(--ew-portal-border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+.ew-proc-portal__meta-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ew-portal-muted);
+    margin-bottom: 0.2rem;
+}
+
+.ew-proc-portal__meta-value {
+    font-weight: 600;
+    color: #1f2933;
+}
+
+.ew-proc-portal__apply-panel,
+.ew-proc-portal__detail-panel {
+    background: #fff;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 14px;
+    padding: 1.75rem 2rem;
+    box-shadow: var(--ew-portal-shadow);
+    border-top: 3px solid #f29100;
+}
+
+.ew-proc-portal__apply-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--ew-portal-border);
+}
+
+.ew-proc-portal__apply-kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #f29100;
+    margin: 0;
+}
+
+.ew-proc-portal__apply-title {
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: #15251f;
+    margin: 0 0 0.65rem;
+}
+
+.ew-proc-portal__apply-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--ew-portal-muted);
+}
+
+.ew-proc-portal__apply-meta-item {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.ew-proc-portal__apply-meta-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__apply-section + .ew-proc-portal__apply-section {
+    margin-top: 0.25rem;
+}
+
+.ew-proc-portal__apply-hint {
+    font-size: 0.875rem;
+    color: var(--ew-portal-muted);
+    margin: -0.35rem 0 0.85rem;
+}
+
+.ew-proc-portal__form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #2d3a34;
+    margin-bottom: 0.35rem;
+}
+
+.ew-proc-portal__input.form-control {
+    border-radius: 8px;
+    border-color: var(--ew-portal-border);
+    padding: 0.55rem 0.75rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ew-proc-portal__input.form-control:focus {
+    border-color: rgba(242, 145, 0, 0.65);
+    box-shadow: 0 0 0 0.2rem rgba(242, 145, 0, 0.15);
+}
+
+.ew-proc-portal__file-control.form-control {
+    padding: 0.4rem 0.5rem;
+    border-radius: 8px;
+    border-color: var(--ew-portal-border);
+    font-size: 0.875rem;
+    color: var(--ew-portal-muted);
+    background: #fafcfb;
+}
+
+.ew-proc-portal__file-control.form-control::file-selector-button {
+    margin-right: 0.75rem;
+    padding: 0.45rem 0.9rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--ew-portal-accent);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.ew-proc-portal__file-control.form-control:hover::file-selector-button {
+    background: #145a3d;
+}
+
+.ew-proc-portal__file-control.form-control::-webkit-file-upload-button {
+    margin-right: 0.75rem;
+    padding: 0.45rem 0.9rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--ew-portal-accent);
+    cursor: pointer;
+}
+
+.ew-proc-portal__apply-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ew-portal-border);
+}
+
+.ew-proc-portal__apply-submit {
+    font-weight: 600;
+    padding-left: 1.35rem;
+    padding-right: 1.35rem;
+}
+
+.ew-proc-portal__apply-ref-code {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    background: var(--ew-portal-accent-soft);
+    color: var(--ew-portal-accent);
+    border: 1px solid var(--ew-portal-border);
+}
+
+.ew-proc-portal__section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ew-portal-accent);
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid var(--ew-portal-accent-soft);
+}
+
+.ew-proc-portal__section-title--first {
+    margin-top: 0;
+}
+
+.ew-proc-portal__empty {
+    border-radius: 10px;
+    border: 1px dashed var(--ew-portal-border);
+    background: #fafcfb;
+    padding: 2rem;
+    text-align: center;
+    color: var(--ew-portal-muted);
+}
+
+.ew-proc-portal__count-pill {
+    display: inline-block;
+    min-width: 1.75rem;
+    text-align: center;
+    background: #17a2b8;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.15rem 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+/* —— RFQ card grid (portal kanban-style) —— */
+.ew-proc-portal__rfq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+    gap: 1.15rem;
+}
+
+.ew-proc-portal__rfq-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 12px;
+    padding: 1.1rem 1.15rem 1rem;
+    box-shadow: var(--ew-portal-shadow);
+    border-left: 4px solid #6c757d;
+    min-height: 100%;
+}
+
+.ew-proc-portal__rfq-card--published {
+    border-left-color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__rfq-card--closed {
+    border-left-color: #c0392b;
+}
+
+.ew-proc-portal__rfq-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.65rem;
+    margin-bottom: 0.35rem;
+}
+
+.ew-proc-portal__rfq-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #1f2933;
+    margin: 0;
+}
+
+.ew-proc-portal__rfq-card-ref {
+    font-size: 0.8125rem;
+    color: var(--ew-portal-muted);
+    margin-bottom: 0.5rem;
+}
+
+.ew-proc-portal__rfq-card-meta {
+    margin-top: 0.35rem;
+    padding: 0.55rem 0.65rem;
+    background: var(--ew-portal-accent-soft);
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    color: var(--ew-portal-muted);
+    flex: 1;
+}
+
+.ew-proc-portal__rfq-card-meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.ew-proc-portal__rfq-card-meta-row span:last-child {
+    font-weight: 600;
+    color: #1a4d38;
+    text-align: right;
+}
+
+.ew-proc-portal__rfq-card-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--ew-portal-border);
+}
+
+.ew-proc-portal__rfq-card-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+}
+
+.ew-proc-portal__rfq-card-count-label {
+    font-size: 0.8125rem;
+    color: var(--ew-portal-muted);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .ew-proc-portal__hero {
+        padding: 1.25rem 1.15rem;
+    }
+
+    .ew-proc-portal__table thead {
+        display: none;
+    }
+
+    .ew-proc-portal__table tbody tr {
+        display: block;
+        border-bottom: 1px solid var(--ew-portal-border);
+        padding: 0.75rem 0;
+    }
+
+    .ew-proc-portal__table tbody td {
+        display: flex;
+        justify-content: space-between;
+        border: none;
+        padding: 0.25rem 0;
+    }
+
+    .ew-proc-portal__table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--ew-portal-muted);
+        margin-right: 1rem;
+    }
+
+    .ew-proc-portal__table tbody td.text-end {
+        justify-content: flex-start;
+    }
+
+    .ew-proc-portal__table tbody td.text-end::before {
+        display: none;
+    }
+}
+
+/* Submissions / outline actions — EWSETA orange (light mode) */
+.ew-proc-portal .btn-outline-primary {
+    --bs-btn-color: #f29100;
+    --bs-btn-border-color: #f29100;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #f29100;
+    --bs-btn-hover-border-color: #e08300;
+    --bs-btn-active-bg: #e08300;
+    --bs-btn-active-border-color: #d97f00;
+    color: #f29100 !important;
+    border-color: #f29100 !important;
+    background-color: transparent !important;
+}
+
+.ew-proc-portal .btn-outline-primary:hover,
+.ew-proc-portal .btn-outline-primary:focus-visible,
+.ew-proc-portal .btn-outline-primary:active,
+.ew-proc-portal__table tbody tr:hover .btn-outline-primary {
+    color: #fff !important;
+    background-color: #f29100 !important;
+    border-color: #f29100 !important;
+    box-shadow: 0 4px 14px rgba(242, 145, 0, 0.35);
+}

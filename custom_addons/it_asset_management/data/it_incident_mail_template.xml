@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_template_it_incident_report" model="mail.template">
+        <field name="name">IT Incident Report: Submit to ICT Support</field>
+        <field name="model_id" ref="model_it_asset_incident_report"/>
+        <field name="subject">[Incident] {{ object.name }} — {{ object.asset_code or object.asset_description or object.reporter_name }}</field>
+        <field name="email_to">{{ object.support_email }}</field>
+        <field name="report_template_ids" eval="[(4, ref('it_asset_management.action_report_it_incident'))]"/>
+        <field name="body_html" type="html">
+<div>
+    <p>A new IT incident report has been submitted.</p>
+    <table border="0" cellpadding="4" cellspacing="0" style="border-collapse: collapse;">
+        <tr><td><strong>Reference</strong></td><td><t t-out="object.name"/></td></tr>
+        <tr><td><strong>Reporter</strong></td><td><t t-out="object.reporter_name"/></td></tr>
+        <tr><td><strong>Department</strong></td><td><t t-out="object.department_id.name or ''"/></td></tr>
+        <tr><td><strong>Discovered</strong></td><td><t t-out="object.discovered_datetime"/></td></tr>
+        <tr><td><strong>Asset Tag</strong></td><td><t t-out="object.asset_code or ''"/></td></tr>
+        <tr><td><strong>Asset</strong></td><td><t t-out="object.asset_description or ''"/></td></tr>
+        <tr><td><strong>Serial No.</strong></td><td><t t-out="object.serial_no or ''"/></td></tr>
+        <tr><td><strong>Location</strong></td><td><t t-out="object.location or ''"/></td></tr>
+        <tr><td><strong>Impact</strong></td><td><t t-out="object.impact_description or ''"/></td></tr>
+        <tr><td><strong>Data Sensitivity</strong></td><td><t t-out="object.data_sensitivity or ''"/></td></tr>
+    </table>
+    <p>
+        <a t-att-href="'/web#id=%s&amp;model=it.asset.incident.report&amp;view_type=form' % object.id">
+            Open incident report in Odoo
+        </a>
+    </p>
+    <p>The full incident report is attached as a PDF.</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+</odoo>

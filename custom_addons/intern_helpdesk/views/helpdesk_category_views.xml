@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_category_view_list" model="ir.ui.view">
+        <field name="name">helpdesk.category.list</field>
+        <field name="model">helpdesk.category</field>
+        <field name="arch" type="xml">
+            <list string="Helpdesk Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="ticket_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="helpdesk_category_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.category.form</field>
+        <field name="model">helpdesk.category</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Category">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_tickets"
+                            class="oe_stat_button" icon="fa-ticket">
+                            <field name="ticket_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Hardware"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Describe the types of issues in this category..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_category_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.category.search</field>
+        <field name="model">helpdesk.category</field>
+        <field name="arch" type="xml">
+            <search string="Helpdesk Categories">
+                <field name="name"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="helpdesk_category_action" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">helpdesk.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first helpdesk category
+            </p>
+            <p>
+                Organize tickets by Hardware, Software, Network, Email and other areas.
+            </p>
+        </field>
+    </record>
+
+</odoo>

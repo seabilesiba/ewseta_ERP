@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_sectors_dynamic" inherit_id="ewseta_web.s_ewseta_sectors" name="EWSETA Sectors Dynamic">
+    <xpath expr="//section[@class='s_ewseta_sectors']" position="replace">
+        <section class="s_ewseta_sectors" data-snippet="s_ewseta_sectors">
+            <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+            <t t-set="settings" t-value="request.env['ewseta.home.settings'].sudo().search(list(website.website_domain()), limit=1)"/>
+            <t t-set="cards" t-value="request.env['ewseta.sector.card'].sudo().search([('is_published', '=', True)] + list(website.website_domain()), order='sequence')"/>
+            <div class="container">
+                <div class="ewseta-section-header text-center mx-auto mb-5">
+                    <span class="ewseta-eyebrow" t-out="settings.sector_eyebrow if settings else 'Our Focus Areas'"/>
+                    <h2 class="ewseta-section-title" t-out="settings.sector_title if settings else 'Powering South Africa\'s Future'"/>
+                    <p class="ewseta-section-lead" t-if="settings and settings.sector_lead" t-out="settings.sector_lead"/>
+                </div>
+                <div class="row g-4">
+                    <t t-foreach="cards" t-as="card">
+                        <div class="col-lg-4 col-md-6">
+                            <div t-att-class="card._card_css_class()" t-att-style="card._background_image_style()">
+                                <div class="ewseta-sector-overlay">
+                                    <div class="ewseta-sector-icon"><i t-attf-class="fa #{card.icon}"/></div>
+                                    <h3 t-out="card.title"/>
+                                    <p t-out="card.description"/>
+                                    <a t-if="card.link_label" t-att-href="card.link_url or '#'" class="ewseta-sector-link">
+                                        <t t-out="card.link_label"/> <i class="fa fa-arrow-right"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

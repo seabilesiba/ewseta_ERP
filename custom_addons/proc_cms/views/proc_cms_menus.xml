@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- App root: opens the main site editor (proc_cms only — not under EWSETA Procurement). -->
+    <menuitem id="menu_proc_cms_root"
+              name="Website CMS"
+              action="action_proc_cms_dashboard"
+              sequence="45"
+              groups="proc_cms.group_proc_cms_manager"/>
+
+    <menuitem id="menu_proc_cms_dashboard"
+              name="Website content"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_dashboard"
+              sequence="1"/>
+
+    <menuitem id="menu_proc_cms_site"
+              name="Site &amp; branding"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_site"
+              sequence="5"/>
+
+    <menuitem id="menu_proc_cms_nav"
+              name="Navbar"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_nav_item"
+              sequence="10"/>
+
+    <menuitem id="menu_proc_cms_buttons"
+              name="Buttons"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_button"
+              sequence="20"/>
+
+    <menuitem id="menu_proc_cms_blocks"
+              name="Content blocks"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_block"
+              sequence="30"/>
+
+    <menuitem id="menu_proc_cms_cards"
+              name="Content cards"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_card"
+              sequence="40"/>
+
+    <menuitem id="menu_proc_cms_pages"
+              name="Pages"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_page"
+              sequence="50"/>
+
+    <menuitem id="menu_proc_cms_footer"
+              name="Footer links"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_footer_link"
+              sequence="60"/>
+</odoo>

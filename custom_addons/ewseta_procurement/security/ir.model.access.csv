@@ -1,0 +1,26 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_rfq_admin,RFQ admin,model_ew_rfq,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_rfq_scm,RFQ scm,model_ew_rfq,ewseta_procurement.group_scm_owner,1,1,1,1
+access_rfq_provider,RFQ provider read,model_ew_rfq,ewseta_procurement.group_service_provider,1,0,0,0
+
+access_rfq_req_admin,RFQ req admin,model_ew_rfq_requirement,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_rfq_req_scm,RFQ req scm,model_ew_rfq_requirement,ewseta_procurement.group_scm_owner,1,1,1,1
+access_rfq_req_provider,RFQ req scm,model_ew_rfq_requirement,ewseta_procurement.group_service_provider,1,0,0,0
+
+
+access_sub_admin,Submission admin,model_ew_submission,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_sub_scm_read,Submission scm read,model_ew_submission,ewseta_procurement.group_scm_owner,1,0,0,0
+access_sub_provider,Submission provider,model_ew_submission,ewseta_procurement.group_service_provider,1,1,1,1
+
+
+access_subline_admin,Submission line admin,model_ew_submission_line,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_subline_scm_read,Submission line scm read,model_ew_submission_line,ewseta_procurement.group_scm_owner,1,0,1,0
+access_subline_provider,Submission line provider,model_ew_submission_line,ewseta_procurement.group_service_provider,1,1,1,0
+
+access_submission_line_download_log_admin,access_submission_line_download_log_admin,model_ew_submission_line_download_log,base.group_system,1,1,1,1
+access_submission_line_download_log_scm,access_submission_line_download_log_scm,model_ew_submission_line_download_log,ewseta_procurement.group_scm_owner,1,0,0,0
+
+
+
+

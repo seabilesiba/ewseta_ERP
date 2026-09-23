@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ewseta_navbar_settings_view_list" model="ir.ui.view">
+        <field name="name">ewseta.navbar.settings.list</field>
+        <field name="model">ewseta.navbar.settings</field>
+        <field name="arch" type="xml">
+            <list string="Navbar Settings">
+                <field name="name"/>
+                <field name="is_active" widget="boolean_toggle"/>
+                <field name="cta_enabled" widget="boolean_toggle"/>
+                <field name="whatsapp_enabled" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ewseta_navbar_settings_view_form" model="ir.ui.view">
+        <field name="name">ewseta.navbar.settings.form</field>
+        <field name="model">ewseta.navbar.settings</field>
+        <field name="arch" type="xml">
+            <form string="Navbar Settings">
+                <sheet>
+                    <widget name="web_ribbon" title="Active" bg_color="text-bg-success" invisible="not is_active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="is_active"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
+                        </group>
+                    </group>
+                    <group string="Logo">
+                        <group>
+                            <field name="logo" widget="image" options="{'size': [220, 55]}"/>
+                            <field name="logo_filename" invisible="1"/>
+                            <field name="logo_alt"/>
+                        </group>
+                        <group>
+                            <field name="logo_width"/>
+                            <field name="logo_height"/>
+                            <field name="logo_static_url"/>
+                        </group>
+                    </group>
+                    <group string="Header Utilities">
+                        <group>
+                            <field name="search_enabled"/>
+                            <field name="header_phone_enabled"/>
+                            <field name="header_phone"/>
+                            <field name="header_phone_link"/>
+                        </group>
+                        <group string="Contact Button">
+                            <field name="cta_enabled"/>
+                            <field name="cta_label"/>
+                            <field name="cta_url"/>
+                        </group>
+                    </group>
+                    <group string="WhatsApp Floating Button">
+                        <group>
+                            <field name="whatsapp_enabled"/>
+                            <field name="whatsapp_phone"/>
+                        </group>
+                        <group>
+                            <field name="whatsapp_message"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ewseta_navbar_settings_action" model="ir.actions.act_window">
+        <field name="name">Navbar Settings</field>
+        <field name="res_model">ewseta.navbar.settings</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

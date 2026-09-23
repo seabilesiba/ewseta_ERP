@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_button_tree" model="ir.ui.view">
+        <field name="name">proc.cms.button.tree</field>
+        <field name="model">proc.cms.button</field>
+        <field name="arch" type="xml">
+            <list class="proc-cms-button-list" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="key"/>
+                <field name="label"/>
+                <field name="url"/>
+                <field name="style"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_button_form" model="ir.ui.view">
+        <field name="name">proc.cms.button.form</field>
+        <field name="model">proc.cms.button</field>
+        <field name="arch" type="xml">
+            <form string="Button" class="proc-cms-form proc-cms-button-form">
+                <header>
+                    <button name="action_open_website_content" type="object"
+                            string="All website content"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="label" placeholder="Button label on website"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">
+                            <field name="name" readonly="1" class="oe_inline"/>
+                            ·
+                            <field name="key" readonly="1" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div>
+                            <span class="proc-cms-form-hero__label">Style</span>
+                            <div class="mt-1">
+                                <field name="style" widget="badge"
+                                       decoration-success="style == 'green'"
+                                       decoration-warning="style == 'primary'"
+                                       decoration-info="style == 'ghost'"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Visible on site</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                        <div class="proc-cms-button-preview">
+                            <span class="proc-cms-form-hero__label">Preview</span>
+                            <div class="mt-1">
+                                <span class="proc-cms-button-preview__pill">
+                                    <field name="label" readonly="1" nolabel="1" class="oe_inline"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="proc-cms-form-hint">
+                        Landing-page call-to-action buttons (hero, sections). The
+                        <strong>key</strong> is fixed in code — change the label and URL here.
+                        For the orange header Contact Us button, use <strong>Navbar</strong> instead.
+                    </p>
+
+                    <div class="proc-cms-form-grid">
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Link &amp; label</div>
+                            <group>
+                                <field name="url" placeholder="/application/rfqs"/>
+                                <field name="new_window" widget="boolean_toggle"/>
+                                <field name="sequence"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            </group>
+                        </div>
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Appearance</div>
+                            <group>
+                                <field name="style"/>
+                                <field name="css_class" placeholder="btn-lg"/>
+                                <field name="css_classes_preview" readonly="1"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="proc-cms-form-card">
+                        <div class="proc-cms-form-card__head">Internal reference</div>
+                        <group>
+                            <field name="name"/>
+                            <field name="key" readonly="1"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_button" model="ir.actions.act_window">
+        <field name="name">Buttons</field>
+        <field name="res_model">proc.cms.button</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

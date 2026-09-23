@@ -1,0 +1,26 @@
+// EWSETA brand colors from official logo
+$ewseta-orange: #F8991D;
+$ewseta-blue: #00AEEF;
+$ewseta-green: #76BC43;
+$ewseta-dark: #231F20;
+
+$o-user-theme-color-palette: map-merge($o-user-theme-color-palette, (
+    'primary': $ewseta-orange,
+    'secondary': $ewseta-blue,
+    'success': $ewseta-green,
+));
+
+$o-user-color-palette: map-merge($o-user-color-palette, (
+    'menu': 1,
+    'footer': 2,
+));
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'ewseta-default',
+        'font': 'Arial',
+        'headings-font': 'Arial',
+        'header-text-color': '#F8991D',
+        'menu': 1,
+    ),
+);

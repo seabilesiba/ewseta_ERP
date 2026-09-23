@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_hero_carousel_dynamic" inherit_id="ewseta_web.s_ewseta_hero_carousel" name="EWSETA Hero Carousel Dynamic">
+    <xpath expr="//section[@class='s_ewseta_hero_carousel']" position="replace">
+        <section class="s_ewseta_hero_carousel" data-vxml="001" data-snippet="s_ewseta_hero_carousel">
+            <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+            <t t-set="welcome" t-value="request.env['ewseta.home.welcome'].sudo().search([('is_published', '=', True)] + list(website.website_domain()), limit=1)"/>
+            <t t-set="portraits" t-value="request.env['ewseta.hero.slide'].sudo().search([('is_published', '=', True), ('slide_type', '=', 'portrait'), ('website_id', 'in', [False, website.id])], order='sequence')"/>
+            <t t-set="banners" t-value="request.env['ewseta.hero.slide'].sudo().search([('is_published', '=', True), ('slide_type', 'in', ['banner', 'split']), ('website_id', 'in', [False, website.id])], order='sequence')"/>
+            <t t-set="default_circle" t-value="welcome.hero_circle_web_url if welcome and welcome.hero_circle_web_url else '/ewseta_web/static/img/hero_energy.jpg'"/>
+            <t t-set="default_small" t-value="welcome.hero_overlap_web_url if welcome and welcome.hero_overlap_web_url else '/ewseta_web/static/img/hero_water.jpg'"/>
+            <t t-set="default_featured" t-value="welcome.hero_featured_portrait_web_url if welcome and welcome.hero_featured_portrait_web_url else '/ewseta_web/static/img/hero_sustainability.jpg'"/>
+            <t t-set="featured_link" t-value="welcome.hero_featured_portrait_url or welcome.cta_url if welcome else '#'"/>
+            <div class="ewseta-hero-welcome is-loaded">
+                <div class="container py-4 py-lg-5 ewseta-hero-welcome-inner">
+                    <div class="row align-items-center g-4 g-lg-0 ewseta-hero-welcome-row">
+                        <div class="col-lg-4 ewseta-hero-welcome-text">
+                            <t t-if="welcome">
+                                <h1 class="ewseta-hero-title" t-out="welcome.title"/>
+                                <div class="ewseta-hero-text" t-if="welcome.body" t-out="welcome.body"/>
+                                <a t-if="welcome.cta_label"
+                                   t-att-href="welcome.cta_url or '#'"
+                                   class="btn btn-ewseta-primary ewseta-hero-cta"
+                                   t-out="welcome.cta_label"/>
+                            </t>
+                            <t t-else="">
+                                <h1 class="ewseta-hero-title">Welcome to EWSETA</h1>
+                                <div class="ewseta-hero-text">
+                                    <p>The Energy &amp; Water Sector Education and Training Authority (EWSETA) facilitates skills development in South Africa's energy and water sectors.</p>
+                                </div>
+                                <a href="#" class="btn btn-ewseta-primary ewseta-hero-cta">Read More...</a>
+                            </t>
+                        </div>
+                        <div class="col-lg-8 ewseta-hero-welcome-visual">
+                            <div class="ewseta-hero-visual-stage">
+                                <div class="ewseta-hero-visual-stack">
+                                    <div class="ewseta-hero-portrait-stack" t-if="portraits">
+                                        <t t-foreach="portraits" t-as="portrait">
+                                            <t t-set="portrait_url" t-value="portrait.side_image_web_url if 'side_image_web_url' in portrait._fields else (('/web/image/ewseta.hero.slide/%s/image' % portrait.id) if portrait.image else (portrait.image_url or default_circle))"/>
+                                            <t t-set="next_portrait" t-value="portraits[portrait_index + 1] if portrait_index + 1 &lt; len(portraits) else portraits[0]"/>
+                                            <t t-set="small_url" t-value="next_portrait.side_image_web_url if 'side_image_web_url' in next_portrait._fields else (('/web/image/ewseta.hero.slide/%s/image' % next_portrait.id) if next_portrait.image else (next_portrait.image_url or default_small))"/>
+                                            <button type="button"
+                                                    t-attf-class="ewseta-hero-portrait-thumb #{ 'is-active' if portrait_first else '' }"
+                                                    t-att-data-hero-image="portrait_url"
+                                                    t-att-data-hero-small-image="small_url"
+                                                    t-att-aria-label="portrait.name">
+                                                <img t-att-src="portrait_url" t-att-alt="portrait.name" loading="lazy" decoding="async"/>
+                                            </button>
+                                        </t>
+                                    </div>
+                                    <div class="ewseta-hero-rings-composition">
+                                        <span class="ewseta-hero-gold-arc" aria-hidden="true"/>
+                                        <div class="ewseta-hero-deco-rings" aria-hidden="true">
+                                            <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-1"/>
+                                            <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-2"/>
+                                            <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-3"/>
+                                            <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-4"/>
+                                        </div>
+                                        <div class="ewseta-hero-rings ewseta-hero-rings-main">
+                                            <div class="ewseta-hero-ring-bg"/>
+                                            <img t-att-src="default_circle"
+                                                 t-att-alt="welcome.title if welcome else 'EWSETA'"
+                                                 class="ewseta-hero-circle-img ewseta-hero-circle-img-main"
+                                                 fetchpriority="high" decoding="async"/>
+                                        </div>
+                                        <div class="ewseta-hero-rings ewseta-hero-rings-small">
+                                            <img t-att-src="default_small"
+                                                 alt="EWSETA sector highlight"
+                                                 class="ewseta-hero-circle-img ewseta-hero-circle-img-small"
+                                                 loading="lazy" decoding="async"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a t-att-href="featured_link or '#'"
+                                   class="ewseta-hero-featured-portrait">
+                                    <div class="ewseta-hero-rings ewseta-hero-rings-main">
+                                        <div class="ewseta-hero-ring-bg"/>
+                                        <img t-att-src="default_featured"
+                                             t-att-alt="welcome.title if welcome else 'EWSETA featured portrait'"
+                                             class="ewseta-hero-circle-img ewseta-hero-circle-img-main ewseta-hero-featured-portrait-img"
+                                             loading="lazy" decoding="async"/>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-if="banners" class="container ewseta-hero-banner-container pb-3 pb-lg-4">
+                <div id="ewsetaHeroBanner" class="ewseta-hero-banner-strip carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+                <div class="carousel-indicators ewseta-hero-banner-indicators">
+                    <t t-foreach="banners" t-as="banner">
+                        <button type="button"
+                                data-bs-target="#ewsetaHeroBanner"
+                                t-attf-data-bs-slide-to="{{ banner_index }}"
+                                t-attf-class="{{ 'active' if banner_first else '' }}"
+                                t-att-aria-current="'true' if banner_first else None"
+                                t-attf-aria-label="Banner {{ banner_index + 1 }}"/>
+                    </t>
+                </div>
+                <div class="carousel-inner">
+                    <t t-foreach="banners" t-as="banner">
+                        <t t-set="banner_url" t-value="banner.side_image_web_url if 'side_image_web_url' in banner._fields else (('/web/image/ewseta.hero.slide/%s/image' % banner.id) if banner.image else (banner.image_url or '/ewseta_web/static/img/hero_energy.jpg'))"/>
+                        <div t-attf-class="carousel-item #{ 'active' if banner_first else '' }">
+                            <a t-att-href="banner.cta_primary_url or '#'" class="ewseta-hero-banner-link">
+                                <img t-att-src="banner_url" t-att-alt="banner.name" class="ewseta-hero-banner-img"
+                                     t-att-fetchpriority="'high' if banner_first else None"
+                                     t-att-loading="'lazy' if not banner_first else None"
+                                     decoding="async"/>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+                <button class="carousel-control-prev o_not_editable o_we_no_overlay ewseta-hero-banner-control" type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide="prev">
+                    <span class="ewseta-control-icon"><i class="fa fa-chevron-left"/></span>
+                </button>
+                <button class="carousel-control-next o_not_editable o_we_no_overlay ewseta-hero-banner-control" type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide="next">
+                    <span class="ewseta-control-icon"><i class="fa fa-chevron-right"/></span>
+                </button>
+            </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

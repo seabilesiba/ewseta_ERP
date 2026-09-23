@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_programmes_dynamic" inherit_id="ewseta_web.s_ewseta_programmes" name="EWSETA Programmes Dynamic">
+    <xpath expr="//section[@class='s_ewseta_programmes']" position="replace">
+        <section class="s_ewseta_programmes" data-snippet="s_ewseta_programmes">
+            <t t-set="website" t-value="request.env['website'].get_current_website()"/>
+            <t t-set="settings" t-value="request.env['ewseta.home.settings'].sudo().search(list(website.website_domain()), limit=1)"/>
+            <t t-set="cards" t-value="request.env['ewseta.programme.card'].sudo().search([('is_published', '=', True)] + list(website.website_domain()), order='sequence')"/>
+            <div class="container">
+                <div class="ewseta-section-header text-center mx-auto mb-5">
+                    <span class="ewseta-eyebrow" t-out="settings.programme_eyebrow if settings else 'What We Offer'"/>
+                    <h2 class="ewseta-section-title" t-out="settings.programme_title if settings else 'Skills Development Programmes'"/>
+                    <p class="ewseta-section-lead" t-if="settings and settings.programme_lead" t-out="settings.programme_lead"/>
+                </div>
+                <div class="row g-4">
+                    <t t-foreach="cards" t-as="card">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="ewseta-programme-card">
+                                <div t-attf-class="ewseta-programme-icon ewseta-icon-#{card.icon_color}">
+                                    <i t-attf-class="fa #{card.icon}"/>
+                                </div>
+                                <h3 t-out="card.title"/>
+                                <div t-if="card.description" t-out="card.description"/>
+                                <a t-if="card.link_label" t-att-href="card.link_url or '#'" class="ewseta-card-link">
+                                    <t t-out="card.link_label"/> <i class="fa fa-arrow-right"/>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

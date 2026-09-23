@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ew_submission_search" model="ir.ui.view">
+        <field name="name">ew.submission.search</field>
+        <field name="model">ew.submission</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="rfq_id"/>
+                <field name="partner_id"/>
+                <field name="company_name"/>
+                <filter string="Group by RFQ" name="groupby_rfq" context="{'group_by': 'rfq_id'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="view_ew_submission_tree" model="ir.ui.view">
+        <field name="name">ew.submission.tree</field>
+        <field name="model">ew.submission</field>
+        <field name="arch" type="xml">
+            <list string="Submission" decoration-danger="state == 'closed'" decoration-success="state == 'submitted'"
+                  decoration-info="state == 'draft'">
+                <field name="name" optional="hide"/>
+                <field name="rdq_rfp_ref"/>
+                <field name="rfq_id"/>
+                <field name="partner_id" widget="many2one_avatar_user"/>
+                <field name="company_name"/>
+                <field name="contact_name"/>
+                <field name="contact_email" />
+                 <field name="submitted_at" />
+                <field name="closing_at" optional="hide" />
+                <field name="state" widget="badge"
+                       decoration-success="state == 'submitted'"
+                       decoration-danger="state == 'closed'"
+                       decoration-info="state == 'draft'"/>
+
+                <field name="rfq_state" string="RFQ Status" widget="badge"
+                       optional="hide"
+                       decoration-success="rfq_state == 'published'"
+                       decoration-danger="rfq_state == 'closed'"
+                       decoration-info="rfq_state == 'draft'"/>
+
+
+            </list>
+        </field>
+    </record>
+    <record id="view_ew_submission_form" model="ir.ui.view">
+        <field name="name">ew.submission.form</field>
+        <field name="model">ew.submission</field>
+        <field name="arch" type="xml">
+            <form string="Submission" class="ew-proc-submission-form">
+                <header>
+                    <button name="action_submit" type="object" string="Submit"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="send_mail" type="object" string="Send email"
+                            class="btn-secondary"
+                            invisible="state != 'closed'"
+                            groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title ew-proc-form-title">
+                        <h1>
+                            <field name="company_name" placeholder="Company / trading name"/>
+                        </h1>
+                        <p class="ew-proc-submission-form__subtitle text-muted mb-0">
+                            Supplier submission
+                        </p>
+                    </div>
+
+                    <div class="ew-proc-form-hero ew-proc-submission-form__hero">
+                        <div class="ew-proc-form-hero__main">
+                            <span class="ew-proc-form-label">Submission reference</span>
+                            <field name="name" class="ew-proc-form-ref" readonly="1"/>
+                        </div>
+                        <div class="ew-proc-submission-form__badges">
+                            <field name="state" string="Submission status" widget="badge"
+                                   decoration-success="state == 'submitted'"
+                                   decoration-danger="state == 'closed'"
+                                   decoration-info="state == 'draft'"/>
+                        </div>
+                    </div>
+
+                    <div class="ew-proc-form-grid">
+                        <div class="ew-proc-form-card">
+                            <div class="ew-proc-form-card__head">RFQ / RFP</div>
+                            <group colspan="2" class="ew-proc-form-card-group">
+                                <group colspan="2">
+                                    <field name="rfq_id" domain="[('is_past_closing','=', False)]"/>
+                                    <field name="rdq_rfp_ref" string="RFQ / RFP reference" readonly="1"/>
+                                    <field name="rfq_state" string="RFQ status" widget="badge"
+                                           decoration-success="rfq_state == 'published'"
+                                           decoration-danger="rfq_state == 'closed'"
+                                           decoration-info="rfq_state == 'draft'"/>
+                                    <field name="closing_at" string="Closing date &amp; time" readonly="1"
+                                           class="ew-proc-field-emphasis"/>
+                                    <field name="submitted_at" string="Submitted on" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div class="ew-proc-form-card">
+                            <div class="ew-proc-form-card__head">Contact details</div>
+                            <group colspan="2" class="ew-proc-form-card-group">
+                                <group colspan="2">
+                                    <field name="contact_name"/>
+                                    <field name="contact_phone"/>
+                                    <field name="contact_email"/>
+                                    <field name="partner_id" string="Supplier"
+                                           groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
+                                    <field name="partner_id" string="Supplier" readonly="1"
+                                           groups="ewseta_procurement.group_service_provider"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+
+                    <notebook class="ew-proc-form-notebook ew-proc-submission-form__notebook">
+                        <page string="Required documents">
+                            <p class="ew-proc-form-hint ew-proc-submission-form__doc-hint">
+                                Upload each document before submitting. Mandatory rows highlighted in red until a file is attached.
+                            </p>
+                            <div class="ew-proc-submission-docs-panel">
+                                <field name="line_ids" create="0" delete="0" nolabel="1">
+                                    <list editable="bottom" class="ew-proc-submission-doc-list"
+                                          decoration-danger="is_mandatory and not file"
+                                          decoration-muted="not is_mandatory and not file">
+                                        <field name="requirement_id" readonly="1"/>
+                                        <field name="is_mandatory" readonly="1" widget="boolean"/>
+                                        <field name="file" filename="file_filename"/>
+                                        <button name="action_preview_file"
+                                                type="object"
+                                                icon="fa-eye"
+                                                string="Preview"
+                                                invisible="not file"
+                                                class="btn btn-link"/>
+                                        <field name="attachment_id" readonly="1" optional="hide"/>
+                                    </list>
+                                </field>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+</odoo>

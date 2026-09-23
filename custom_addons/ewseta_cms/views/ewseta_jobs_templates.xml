@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="ewseta_jobs_index" inherit_id="website_hr_recruitment.index" name="EWSETA Jobs Index" priority="30">
+    <xpath expr="//div[@id='wrap']" position="attributes">
+        <attribute name="class" add="ewseta-jobs-page" separator=" "/>
+    </xpath>
+
+    <xpath expr="//section[hasclass('o_wevent_index_topbar_filters')]" position="replace"/>
+
+    <xpath expr="//div[hasclass('container') and hasclass('oe_website_jobs')]" position="before">
+        <section class="ewseta-jobs-banner">
+            <div class="container">
+                <div class="ewseta-jobs-banner-inner">
+                    <div class="ewseta-jobs-banner-brand">
+                        <span class="ewseta-jobs-banner-icon" aria-hidden="true">
+                            <i class="fa fa-briefcase"/>
+                        </span>
+                        <div class="ewseta-jobs-banner-title-wrap">
+                            <span class="ewseta-jobs-banner-eyebrow">Careers at EWSETA</span>
+                            <h1 class="ewseta-jobs-title">Current Vacancies</h1>
+                        </div>
+                    </div>
+                    <div class="ewseta-jobs-search">
+                        <t t-call="website_hr_recruitment.topbar_customizations"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </xpath>
+
+    <xpath expr="//div[@t-foreach='jobs']/div/a" position="attributes">
+        <attribute name="class">text-decoration-none ewseta-job-card-link-wrap</attribute>
+    </xpath>
+
+    <xpath expr="//div[@t-foreach='jobs']/div" position="attributes">
+        <attribute name="t-attf-class">card ewseta-job-card bg-white text-dark #{not job.website_published and 'o_jobs_unpublished'}</attribute>
+    </xpath>
+
+    <xpath expr="//div[@t-field='job.description']" position="attributes">
+        <attribute name="class" add="o_website_hr_recruitment_job_description ewseta-job-description" separator=" "/>
+    </xpath>
+</template>
+
+<template id="ewseta_jobs_sidebar" inherit_id="website_hr_recruitment.job_right_side_bar" name="EWSETA Jobs Sidebar" priority="30">
+    <xpath expr="//div[@id='jobs_grid_right']" position="replace">
+        <div class="col-lg-4" id="jobs_grid_right">
+            <aside class="ewseta-jobs-sidebar">
+                <div class="ewseta-jobs-sidebar-image">
+                    <img src="/ewseta_web/static/img/hero_energy.jpg" alt="EWSETA team" loading="lazy"/>
+                </div>
+                <div class="ewseta-jobs-sidebar-body">
+                    <span class="ewseta-eyebrow ewseta-eyebrow-green">Work with us</span>
+                    <h2 class="ewseta-jobs-sidebar-title">Build the future of energy &amp; water skills</h2>
+                    <p class="ewseta-jobs-sidebar-text">
+                        EWSETA coordinates learning programmes, grants, and sector partnerships that uplift
+                        communities and strengthen South Africa's workforce.
+                    </p>
+                    <ul class="ewseta-jobs-sidebar-contacts list-unstyled mb-0">
+                        <li>
+                            <i class="fa fa-comment fa-fw"/>
+                            <a href="/contactus">Contact us</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-envelope fa-fw"/>
+                            <a href="mailto:info@ewseta.org.za">info@ewseta.org.za</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-phone fa-fw"/>
+                            <a href="tel:+27112744700" class="o_force_ltr">+27 11 274-4700</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-map-marker fa-fw"/>
+                            <span>22 Wellington Road, Parktown, Johannesburg</span>
+                        </li>
+                    </ul>
+                    <div class="ewseta-jobs-sidebar-socials">
+                        <span class="ewseta-jobs-sidebar-socials-label">Follow EWSETA</span>
+                        <div class="ewseta-jobs-social-links">
+                            <a href="https://www.facebook.com/ewseta" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa fa-facebook"/></a>
+                            <a href="https://twitter.com/ewseta" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa fa-twitter"/></a>
+                            <a href="https://www.linkedin.com/company/ewseta" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa fa-linkedin"/></a>
+                            <a href="https://www.youtube.com/ewseta" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa fa-youtube-play"/></a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </xpath>
+</template>
+
+<template id="ewseta_jobs_detail" inherit_id="website_hr_recruitment.detail" name="EWSETA Job Detail" priority="30">
+    <xpath expr="//div[@id='wrap']" position="attributes">
+        <attribute name="class" add="ewseta-jobs-detail-page" separator=" "/>
+    </xpath>
+
+    <xpath expr="//nav[hasclass('navbar')]" position="attributes">
+        <attribute name="class" add="ewseta-jobs-detail-nav" separator=" "/>
+    </xpath>
+
+    <xpath expr="//a[hasclass('btn-primary')]" position="attributes">
+        <attribute name="class" add="btn-ewseta-primary" separator=" "/>
+    </xpath>
+</template>
+
+<template id="ewseta_jobs_apply" inherit_id="website_hr_recruitment.apply" name="EWSETA Job Apply" priority="30">
+    <xpath expr="//div[@id='wrap']" position="attributes">
+        <attribute name="class" add="ewseta-jobs-apply-page" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

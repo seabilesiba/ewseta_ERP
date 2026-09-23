@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_footer_tree" model="ir.ui.view">
+        <field name="name">proc.cms.footer.link.tree</field>
+        <field name="model">proc.cms.footer.link</field>
+        <field name="arch" type="xml">
+            <list class="proc-cms-footer-list" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="column_key" widget="badge"
+                       decoration-info="column_key == 'explore'"
+                       decoration-success="column_key == 'resources'"
+                       decoration-muted="column_key == 'legal'"/>
+                <field name="label"/>
+                <field name="url"/>
+                <field name="new_window" widget="boolean" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_footer_form" model="ir.ui.view">
+        <field name="name">proc.cms.footer.link.form</field>
+        <field name="model">proc.cms.footer.link</field>
+        <field name="arch" type="xml">
+            <form string="Footer link" class="proc-cms-form proc-cms-footer-form">
+                <header>
+                    <button name="action_open_website_content" type="object"
+                            string="All website content"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Inactive" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="label" placeholder="Link text in the footer"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">
+                            <field name="column_key" readonly="1" class="oe_inline"/>
+                            ·
+                            <field name="url" readonly="1" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div>
+                            <span class="proc-cms-form-hero__label">Footer column</span>
+                            <div class="mt-1">
+                                <field name="column_key" widget="badge"
+                                       decoration-info="column_key == 'explore'"
+                                       decoration-success="column_key == 'resources'"
+                                       decoration-muted="column_key == 'legal'"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Order in column</span>
+                            <div class="mt-1 proc-cms-footer-form__sequence">
+                                <field name="sequence" nolabel="1"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Visible on site</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                        <div class="proc-cms-footer-form__preview">
+                            <span class="proc-cms-form-hero__label">Preview</span>
+                            <div class="mt-1">
+                                <span class="proc-cms-footer-preview__link">
+                                    <field name="label" readonly="1" nolabel="1" class="oe_inline"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="proc-cms-form-hint">
+                        Links appear under the site footer in three columns:
+                        <strong>Explore</strong>, <strong>Resources</strong>, and <strong>Legal</strong>.
+                        Set a custom <strong>column heading</strong> only when you need to override the default title for that column.
+                    </p>
+
+                    <div class="proc-cms-form-grid">
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Link</div>
+                            <group>
+                                <field name="label" placeholder="Home"/>
+                                <field name="url" placeholder="/ or /application/rfqs"/>
+                                <field name="new_window" widget="boolean_toggle"/>
+                            </group>
+                        </div>
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Column</div>
+                            <group>
+                                <field name="column_key"/>
+                                <field name="column_title" placeholder="Optional — overrides default heading"/>
+                                <field name="sequence"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            </group>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_footer_link" model="ir.actions.act_window">
+        <field name="name">Footer links</field>
+        <field name="res_model">proc.cms.footer.link</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

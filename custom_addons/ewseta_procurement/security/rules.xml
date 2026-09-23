@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_rfq_admin_all" model="ir.rule">
+        <field name="name">Admin: RFQ all</field>
+        <field name="model_id" ref="model_ew_rfq"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_rfq_admin'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+
+    <record id="rule_sub_admin_all" model="ir.rule">
+        <field name="name">Admin: Submissions all</field>
+        <field name="model_id" ref="model_ew_submission"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_rfq_admin'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+
+    <record id="rule_subline_admin_all" model="ir.rule">
+        <field name="name">Admin: Submission lines all</field>
+        <field name="model_id" ref="model_ew_submission_line"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_rfq_admin'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+
+    </record>
+
+    <!-- SCM: RFQ all -->
+    <record id="rule_rfq_scm_all" model="ir.rule">
+        <field name="name">SCM: RFQ all</field>
+        <field name="model_id" ref="model_ew_rfq"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_scm_owner'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+
+    </record>
+
+    <!-- SCM: Submissions only when RFQ is unlocked (after closing) -->
+    <record id="rule_sub_scm_post_unlock" model="ir.rule">
+        <field name="name">SCM: Submissions after unlock</field>
+        <field name="model_id" ref="model_ew_submission"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_scm_owner'))]"/>
+        <field name="domain_force">[('rfq_id.unlocked','=',True)]</field>
+
+    </record>
+
+    <record id="rule_subline_scm_post_unlock" model="ir.rule">
+        <field name="name">SCM: Submission lines after unlock</field>
+        <field name="model_id" ref="model_ew_submission_line"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_scm_owner'))]"/>
+        <field name="domain_force">[('submission_id.rfq_id.unlocked','=',True)]</field>
+
+    </record>
+
+    <!-- Service Provider: published RFQs only (for applying / linking submissions) -->
+    <record id="rule_rfq_provider_published" model="ir.rule">
+        <field name="name">Provider: published RFQs</field>
+        <field name="model_id" ref="model_ew_rfq"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
+        <field name="domain_force">[('state', '=', 'published')]</field>
+    </record>
+
+    <record id="rule_rfq_req_provider_published" model="ir.rule">
+        <field name="name">Provider: requirements on published RFQs</field>
+        <field name="model_id" ref="model_ew_rfq_requirement"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
+        <field name="domain_force">[('rfq_id.state', '=', 'published')]</field>
+    </record>
+
+    <!-- Service Provider: only their own submissions and lines -->
+    <record id="rule_sub_provider_own" model="ir.rule">
+        <field name="name">Provider: own submissions</field>
+        <field name="model_id" ref="model_ew_submission"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
+        <field name="domain_force">['|', ('create_uid', '=', user.id), ('partner_id', 'in', user.partner_id.ids)]</field>
+    </record>
+
+    <record id="rule_subline_provider_own" model="ir.rule">
+        <field name="name">Provider: own submission lines</field>
+        <field name="model_id" ref="model_ew_submission_line"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
+        <field name="domain_force">['|', ('submission_id.create_uid', '=', user.id), ('submission_id.partner_id', 'in', user.partner_id.ids)]</field>
+    </record>
+
+
+    <!-- Admin sees all -->
+    <!--  <record id="rule_sub_admin_all" model="ir.rule">-->
+    <!--    <field name="name">Admin: submissions all</field>-->
+    <!--    <field name="model_id" ref="model_ew_submission"/>-->
+    <!--    <field name="domain_force">[(1,'=',1)]</field>-->
+    <!--    <field name="groups" eval="[(4, ref('ewseta_procurement.group_rfq_admin'))]"/>-->
+    <!--  </record>-->
+
+<!--     Providers: only their own submissions (any state) -->
+<!--      <record id="rule_sub_provider_own" model="ir.rule">-->
+<!--        <field name="name">Provider: own submissions</field>-->
+<!--        <field name="model_id" ref="model_ew_submission"/>-->
+<!--        <field name="domain_force">-->
+<!--          ['|', ('create_uid','=',user.id), ('partner_id','=',user.partner_id.id)]-->
+<!--        </field>-->
+<!--        <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>-->
+<!--      </record>-->
+
+</odoo>

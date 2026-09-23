@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_ewseta_tender" model="ir.sequence">
+        <field name="name">EWSETA Tender</field>
+        <field name="code">ewseta.tender</field>
+        <field name="prefix">TND/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_ewseta_rfq" model="ir.sequence">
+        <field name="name">EWSETA RFQ</field>
+        <field name="code">ewseta.rfq</field>
+        <field name="prefix">RFQ/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+
+</odoo>

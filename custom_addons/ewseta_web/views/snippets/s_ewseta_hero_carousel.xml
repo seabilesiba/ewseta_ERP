@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_ewseta_hero_carousel" name="EWSETA Hero Carousel">
+    <section class="s_ewseta_hero_carousel" data-vxml="001" data-snippet="s_ewseta_hero_carousel">
+        <div class="ewseta-hero-welcome is-loaded">
+            <div class="container py-4 py-lg-5 ewseta-hero-welcome-inner">
+                <div class="row align-items-center g-4 g-lg-0 ewseta-hero-welcome-row">
+                    <div class="col-lg-4 ewseta-hero-welcome-text">
+                        <h1 class="ewseta-hero-title">Welcome to EWSETA</h1>
+                        <div class="ewseta-hero-text">
+                            <p>The Energy &amp; Water Sector Education and Training Authority (EWSETA) facilitates skills development in South Africa's energy and water sectors. We are committed to ensuring that skills needs are identified and addressed through several initiatives, providing skills development to the industry and our stakeholders.</p>
+                        </div>
+                        <a href="#" class="btn btn-ewseta-primary ewseta-hero-cta">Read More...</a>
+                    </div>
+                    <div class="col-lg-8 ewseta-hero-welcome-visual">
+                        <div class="ewseta-hero-visual-stage">
+                            <div class="ewseta-hero-visual-stack">
+                                <div class="ewseta-hero-portrait-stack">
+                                    <button type="button"
+                                            class="ewseta-hero-portrait-thumb is-active"
+                                            data-hero-image="/ewseta_web/static/img/hero_energy.jpg"
+                                            data-hero-small-image="/ewseta_web/static/img/hero_water.jpg"
+                                            aria-label="Energy sector">
+                                        <img src="/ewseta_web/static/img/hero_energy.jpg" alt="Energy sector" loading="lazy" decoding="async"/>
+                                    </button>
+                                    <button type="button"
+                                            class="ewseta-hero-portrait-thumb"
+                                            data-hero-image="/ewseta_web/static/img/hero_water.jpg"
+                                            data-hero-small-image="/ewseta_web/static/img/hero_sustainability.jpg"
+                                            aria-label="Water sector">
+                                        <img src="/ewseta_web/static/img/hero_water.jpg" alt="Water sector" loading="lazy" decoding="async"/>
+                                    </button>
+                                    <button type="button"
+                                            class="ewseta-hero-portrait-thumb"
+                                            data-hero-image="/ewseta_web/static/img/hero_sustainability.jpg"
+                                            data-hero-small-image="/ewseta_web/static/img/hero_energy.jpg"
+                                            aria-label="Sustainability">
+                                        <img src="/ewseta_web/static/img/hero_sustainability.jpg" alt="Sustainability" loading="lazy" decoding="async"/>
+                                    </button>
+                                </div>
+                                <div class="ewseta-hero-rings-composition">
+                                    <span class="ewseta-hero-gold-arc" aria-hidden="true"/>
+                                    <div class="ewseta-hero-deco-rings" aria-hidden="true">
+                                        <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-1"/>
+                                        <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-2"/>
+                                        <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-3"/>
+                                        <span class="ewseta-hero-deco-ring ewseta-hero-deco-ring-4"/>
+                                    </div>
+                                    <div class="ewseta-hero-rings ewseta-hero-rings-main">
+                                        <div class="ewseta-hero-ring-bg"/>
+                                        <img src="/ewseta_web/static/img/hero_energy.jpg"
+                                             alt="EWSETA skills development"
+                                             class="ewseta-hero-circle-img ewseta-hero-circle-img-main"
+                                             fetchpriority="high" decoding="async"/>
+                                    </div>
+                                    <div class="ewseta-hero-rings ewseta-hero-rings-small">
+                                        <img src="/ewseta_web/static/img/hero_water.jpg"
+                                             alt="EWSETA sector highlight"
+                                             class="ewseta-hero-circle-img ewseta-hero-circle-img-small"
+                                             loading="lazy" decoding="async"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="ewseta-hero-featured-portrait">
+                                <div class="ewseta-hero-rings ewseta-hero-rings-main">
+                                    <div class="ewseta-hero-ring-bg"/>
+                                    <img src="/ewseta_web/static/img/hero_sustainability.jpg"
+                                         alt="EWSETA learner"
+                                         class="ewseta-hero-circle-img ewseta-hero-circle-img-main ewseta-hero-featured-portrait-img"
+                                         loading="lazy" decoding="async"/>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container ewseta-hero-banner-container pb-3 pb-lg-4">
+            <div id="ewsetaHeroBanner" class="ewseta-hero-banner-strip carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+            <div class="carousel-indicators ewseta-hero-banner-indicators">
+                <button type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Banner 1"/>
+                <button type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide-to="1" aria-label="Banner 2"/>
+                <button type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide-to="2" aria-label="Banner 3"/>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a href="#" class="ewseta-hero-banner-link">
+                        <img src="/ewseta_web/static/img/hero_energy.jpg" alt="Skills development programmes" class="ewseta-hero-banner-img" fetchpriority="high" decoding="async"/>
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a href="#" class="ewseta-hero-banner-link">
+                        <img src="/ewseta_web/static/img/hero_water.jpg" alt="Water sector training" class="ewseta-hero-banner-img" loading="lazy" decoding="async"/>
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a href="#" class="ewseta-hero-banner-link">
+                        <img src="/ewseta_web/static/img/hero_sustainability.jpg" alt="Hydrogen skills programme" class="ewseta-hero-banner-img" loading="lazy" decoding="async"/>
+                    </a>
+                </div>
+            </div>
+            <button class="carousel-control-prev o_not_editable o_we_no_overlay ewseta-hero-banner-control" type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide="prev">
+                <span class="ewseta-control-icon"><i class="fa fa-chevron-left"/></span>
+            </button>
+            <button class="carousel-control-next o_not_editable o_we_no_overlay ewseta-hero-banner-control" type="button" data-bs-target="#ewsetaHeroBanner" data-bs-slide="next">
+                <span class="ewseta-control-icon"><i class="fa fa-chevron-right"/></span>
+            </button>
+        </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

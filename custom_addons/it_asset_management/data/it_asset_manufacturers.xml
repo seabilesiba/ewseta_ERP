@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="manufacturer_dell" model="it.asset.manufacturer">
+        <field name="name">Dell</field>
+        <field name="code">DELL</field>
+    </record>
+    <record id="manufacturer_lenovo" model="it.asset.manufacturer">
+        <field name="name">Lenovo</field>
+        <field name="code">LENOVO</field>
+    </record>
+    <record id="manufacturer_hp" model="it.asset.manufacturer">
+        <field name="name">HP</field>
+        <field name="code">HP</field>
+    </record>
+    <record id="manufacturer_samsung" model="it.asset.manufacturer">
+        <field name="name">Samsung</field>
+        <field name="code">SAMSUNG</field>
+    </record>
+    <record id="manufacturer_huawei" model="it.asset.manufacturer">
+        <field name="name">Huawei</field>
+        <field name="code">HUAWEI</field>
+    </record>
+    <record id="manufacturer_apple" model="it.asset.manufacturer">
+        <field name="name">Apple</field>
+        <field name="code">APPLE</field>
+    </record>
+
+</odoo>

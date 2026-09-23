@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_proc_cms_site_manager,proc.cms.site manager,model_proc_cms_site,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_nav_manager,proc.cms.nav.item manager,model_proc_cms_nav_item,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_button_manager,proc.cms.button manager,model_proc_cms_button,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_card_manager,proc.cms.card manager,model_proc_cms_card,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_block_manager,proc.cms.block manager,model_proc_cms_block,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_page_manager,proc.cms.page manager,model_proc_cms_page,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_footer_manager,proc.cms.footer.link manager,model_proc_cms_footer_link,proc_cms.group_proc_cms_manager,1,1,1,1
+access_proc_cms_site_public,proc.cms.site public,model_proc_cms_site,base.group_public,1,0,0,0
+access_proc_cms_nav_public,proc.cms.nav.item public,model_proc_cms_nav_item,base.group_public,1,0,0,0
+access_proc_cms_button_public,proc.cms.button public,model_proc_cms_button,base.group_public,1,0,0,0
+access_proc_cms_card_public,proc.cms.card public,model_proc_cms_card,base.group_public,1,0,0,0
+access_proc_cms_block_public,proc.cms.block public,model_proc_cms_block,base.group_public,1,0,0,0
+access_proc_cms_page_public,proc.cms.page public,model_proc_cms_page,base.group_public,1,0,0,0
+access_proc_cms_footer_public,proc.cms.footer.link public,model_proc_cms_footer_link,base.group_public,1,0,0,0

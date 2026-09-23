@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_employee_view_form_it_asset" model="ir.ui.view">
+        <field name="name">hr.employee.form.it.asset</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_it_assets"
+                    type="object"
+                    class="o_stat_button"
+                    icon="fa-laptop"
+                    groups="it_asset_management.group_it_asset_user">
+                    <field name="it_asset_count" string="IT Assets" widget="statinfo"/>
+                </button>
+                <button name="%(it_asset_management.it_asset_incident_report_action_employee)d"
+                    type="action"
+                    class="o_stat_button"
+                    icon="fa-exclamation-triangle"
+                    groups="it_asset_management.group_it_asset_user">
+                    <field name="incident_report_count" string="Incidents" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

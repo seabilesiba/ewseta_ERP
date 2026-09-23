@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    <menuitem id="menu_ew_rfq_dashboard"-->
+    <!--              name="RFQ Overview"-->
+    <!--              parent="ewseta_procurement.menu_ew_root"-->
+    <!--              action="action_ew_rfq_dashboard"-->
+    <!--              sequence="1"/>-->
+
+    <!--    <menuitem id="menu_ew_rfq_dashboard_scm_owner"-->
+    <!--              name="RFQ Overview"-->
+    <!--              parent="ewseta_procurement.menu_ew_root"-->
+    <!--              action="action_ew_rfq_dashboard_scm_owner"-->
+    <!--              sequence="1"/>-->
+
+    <!-- Root menu for SCM & Admin -->
+    <menuitem id="menu_ew_root"
+              name="EWSETA Procurement"
+              sequence="2"
+              groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin,ewseta_procurement.group_service_provider"/>
+
+
+    <menuitem id="menu_ew_rfq_admin"
+              name="RFQs/RFPs Admin"
+              parent="menu_ew_root"
+              action="action_ew_rfq_admin"
+              sequence="2"
+              groups="ewseta_procurement.group_rfq_admin"/>
+    <!-- RFQs -->
+    <menuitem id="menu_ew_rfq"
+              name="RFQs/RFPs"
+              parent="menu_ew_root"
+              action="action_ew_rfq"
+              sequence="5"
+              groups="ewseta_procurement.group_scm_owner"/>
+
+
+    <!-- Submissions for SCM/Admin (visibility controlled by helper group) -->
+    <menuitem id="menu_ew_submission_scm"
+              name="Submissions"
+              parent="menu_ew_root"
+              action="ewseta_procurement.action_ew_submission_unlocked"
+              sequence="20"
+              groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner"/>
+
+    <!-- Provider root -->
+    <menuitem id="menu_ew_provider_root"
+              name="SP Procurement"
+              sequence="25"
+              parent="menu_ew_root"
+              groups="ewseta_procurement.group_service_provider,ewseta_procurement.group_rfq_admin"/>
+
+    <!-- Provider submissions -->
+    <menuitem id="menu_ew_submission_provider"
+              name="Service Provider Submissions"
+              parent="menu_ew_provider_root"
+              action="ewseta_procurement.action_ew_submission_provider_v2"
+              sequence="1"
+              groups="ewseta_procurement.group_service_provider,ewseta_procurement.group_rfq_admin"/>
+
+    <menuitem id="menu_ew_submission_provider_all"
+              name="All Submissions"
+              parent="menu_ew_root"
+              action="ewseta_procurement.action_ew_submission_all"
+              sequence="10"
+              groups="ewseta_procurement.group_service_provider,ewseta_procurement.group_rfq_admin"/>
+
+    <!--  <menuitem id="menu_ew_submission_kanban"-->
+    <!--            name="Submissions"-->
+    <!--            parent="ewseta_procurement.menu_ew_root"-->
+    <!--            action="ewseta_procurement.action_ew_submission_all"-->
+    <!--            sequence="40"-->
+    <!--            groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>-->
+
+
+    <!-- (Optional) Menu to open the dashboard -->
+
+
+</odoo>
+
+

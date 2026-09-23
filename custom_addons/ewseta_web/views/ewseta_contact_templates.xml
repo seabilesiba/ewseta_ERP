@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="ewseta_contactus" inherit_id="website.contactus" name="EWSETA Contact Us" priority="30">
+    <xpath expr="//div[@id='wrap']" position="replace">
+        <div id="wrap" class="oe_structure ewseta-contact-page">
+            <section class="ewseta-contact-banner">
+                <div class="container">
+                    <div class="ewseta-contact-banner-inner">
+                        <div class="ewseta-contact-banner-brand">
+                            <span class="ewseta-contact-banner-icon" aria-hidden="true">
+                                <i class="fa fa-envelope"/>
+                            </span>
+                            <div class="ewseta-contact-banner-title-wrap">
+                                <span class="ewseta-contact-banner-eyebrow">Contact EWSETA</span>
+                                <h1 class="ewseta-contact-banner-title">Get in Touch</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ewseta-contact-main">
+                <div class="container">
+                    <div class="row g-4 g-lg-5 align-items-start">
+                        <div class="col-lg-7">
+                            <div class="ewseta-contact-form-card">
+                                <span class="ewseta-eyebrow">Send a message</span>
+                                <h2 class="ewseta-contact-form-title">How can we help?</h2>
+                                <p class="ewseta-contact-form-lead">
+                                    Reach out about programmes, partnerships, vacancies, or general enquiries.
+                                    Our team will respond as soon as possible.
+                                </p>
+                                <section class="s_website_form ewseta-contact-form" data-vcss="001" data-snippet="s_website_form">
+                                    <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data"
+                                          class="o_mark_required" data-mark="*" data-model_name="mail.mail"
+                                          data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
+                                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                                            <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                <label class="s_website_form_label" for="contact1">
+                                                    <span class="s_website_form_label_content">Name</span>
+                                                    <span class="s_website_form_mark"> *</span>
+                                                </label>
+                                                <input id="contact1" type="text" class="form-control s_website_form_input" name="name" required="" data-fill-with="name"/>
+                                            </div>
+                                            <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                <label class="s_website_form_label" for="contact2">
+                                                    <span class="s_website_form_label_content">Phone Number</span>
+                                                </label>
+                                                <input id="contact2" type="tel" class="form-control s_website_form_input" name="phone" data-fill-with="phone"/>
+                                            </div>
+                                            <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
+                                                <label class="s_website_form_label" for="contact3">
+                                                    <span class="s_website_form_label_content">Email</span>
+                                                    <span class="s_website_form_mark"> *</span>
+                                                </label>
+                                                <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
+                                            </div>
+                                            <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                <label class="s_website_form_label" for="contact4">
+                                                    <span class="s_website_form_label_content">Company / Organisation</span>
+                                                </label>
+                                                <input id="contact4" type="text" class="form-control s_website_form_input" name="company" data-fill-with="commercial_company_name"/>
+                                            </div>
+                                            <div class="mb-3 col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                                <label class="s_website_form_label" for="contact5">
+                                                    <span class="s_website_form_label_content">Subject</span>
+                                                    <span class="s_website_form_mark"> *</span>
+                                                </label>
+                                                <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required=""/>
+                                            </div>
+                                            <div class="mb-3 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                                <label class="s_website_form_label" for="contact6">
+                                                    <span class="s_website_form_label_content">Your Message</span>
+                                                    <span class="s_website_form_mark"> *</span>
+                                                </label>
+                                                <textarea id="contact6" class="form-control s_website_form_input" name="description" required="" rows="6"/>
+                                            </div>
+                                            <div class="mb-3 col-12 s_website_form_field s_website_form_dnone">
+                                                <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to" value="info@ewseta.org.za"/>
+                                            </div>
+                                            <div class="mb-0 col-12 s_website_form_submit s_website_form_no_submit_label ewseta-contact-submit" data-name="Submit Button">
+                                                <a href="#" role="button" class="btn btn-ewseta-primary s_website_form_send">Send Message</a>
+                                                <span id="s_website_form_result"/>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <aside class="ewseta-contact-sidebar">
+                                <span class="ewseta-eyebrow ewseta-eyebrow-green">Head Office</span>
+                                <h2 class="ewseta-contact-sidebar-title">Energy &amp; Water SETA</h2>
+                                <p class="ewseta-contact-sidebar-text">
+                                    Visit us or contact our team for support with skills development,
+                                    stakeholder services, and sector programmes.
+                                </p>
+                                <ul class="ewseta-contact-sidebar-list list-unstyled mb-0">
+                                    <li>
+                                        <i class="fa fa-map-marker fa-fw"/>
+                                        <span>22 Wellington Road, Parktown, Johannesburg</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-phone fa-fw"/>
+                                        <a href="tel:+27112744700" class="o_force_ltr">+27 11 274-4700</a>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-envelope fa-fw"/>
+                                        <a href="mailto:info@ewseta.org.za">info@ewseta.org.za</a>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-clock-o fa-fw"/>
+                                        <span>Mon – Fri: 8:00 AM – 4:30 PM</span>
+                                    </li>
+                                </ul>
+                                <div class="ewseta-contact-sidebar-note">
+                                    <strong>Fraud Hotline:</strong>
+                                    <a href="tel:0800611205">0800 611 205</a> (Toll Free)
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ewseta-contact-map" aria-label="EWSETA head office location">
+                <div class="container ewseta-contact-map-header">
+                    <span class="ewseta-eyebrow">Find us</span>
+                    <h2 class="ewseta-contact-map-title">Visit our head office</h2>
+                    <p class="ewseta-contact-map-lead">
+                        22 Wellington Road, Parktown, Johannesburg
+                    </p>
+                </div>
+                <div class="ewseta-contact-map-frame">
+                    <iframe class="ewseta-contact-map-embed o_not_editable"
+                            title="EWSETA head office map"
+                            src="https://maps.google.com/maps?q=22+Wellington+Road,+Parktown,+Johannesburg,+South+Africa&amp;t=m&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            allowfullscreen=""/>
+                    <div class="ewseta-contact-map-caption">
+                        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=22+Wellington+Road,+Parktown,+Johannesburg,+South+Africa"
+                           target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-location-arrow fa-fw"/>
+                            Get directions
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.contactus_thanks" model="website.page">
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class" add="ewseta-contact-page ewseta-contact-thanks" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='wrap']//section" position="replace">
+            <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block">
+                <div class="container s_allow_columns">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 col-xl-7 text-center">
+                            <div class="d-inline-block mx-auto p-4">
+                                <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
+                                <h1 class="fw-bolder">Thank You!</h1>
+                                <p class="lead mb-0">Your message has been sent.</p>
+                                <p class="lead">We will get back to you shortly.</p>
+                                <a href="/" class="btn btn-ewseta-primary mt-2">Go to Homepage</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

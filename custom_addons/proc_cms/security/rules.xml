@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CMS is edited from the backend; do not use website-scoped ir.rules (they hide rows when website.ids is empty). -->
+</odoo>

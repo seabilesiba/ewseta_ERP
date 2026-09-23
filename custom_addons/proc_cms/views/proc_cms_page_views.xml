@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_proc_cms_page_tree" model="ir.ui.view">
+        <field name="name">proc.cms.page.tree</field>
+        <field name="model">proc.cms.page</field>
+        <field name="arch" type="xml">
+            <list class="proc-cms-page-list" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="slug"/>
+                <field name="page_title" optional="show"/>
+                <field name="is_published" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_proc_cms_page_form" model="ir.ui.view">
+        <field name="name">proc.cms.page.form</field>
+        <field name="model">proc.cms.page</field>
+        <field name="arch" type="xml">
+            <form string="CMS page" class="proc-cms-form proc-cms-page-form">
+                <header>
+                    <button name="action_open_website_content" type="object"
+                            string="All website content"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Unpublished" bg_color="text-bg-warning" invisible="is_published"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="is_published" invisible="1"/>
+
+                    <div class="oe_title proc-cms-form-title">
+                        <h1>
+                            <field name="page_title" placeholder="Title shown on the public page"/>
+                        </h1>
+                        <p class="proc-cms-form-title__sub">
+                            <field name="name" placeholder="Internal name" class="oe_inline"/>
+                            ·
+                            <field name="slug" placeholder="url-slug" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <div class="proc-cms-form-hero">
+                        <div class="proc-cms-page-form__url">
+                            <span class="proc-cms-form-hero__label">Public URL</span>
+                            <div class="mt-1">
+                                <span class="proc-cms-chip proc-cms-page-form__url-chip">
+                                    <span class="proc-cms-page-form__url-prefix">/proc/page/</span>
+                                    <field name="slug" nolabel="1" class="oe_inline" placeholder="your-slug"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Published</span>
+                            <div class="mt-1">
+                                <field name="is_published" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Active</span>
+                            <div class="mt-1">
+                                <field name="active" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="proc-cms-form-hero__label">Order</span>
+                            <div class="mt-1 proc-cms-page-form__sequence">
+                                <field name="sequence" nolabel="1"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="proc-cms-form-hint">
+                        Extra marketing or policy pages served at
+                        <code>/proc/page/&lt;slug&gt;</code>. Use a short slug without spaces
+                        (e.g. <code>about-procurement</code>). Home and Contact stay on their main routes.
+                    </p>
+
+                    <div class="proc-cms-form-grid">
+                        <div class="proc-cms-form-card">
+                            <div class="proc-cms-form-card__head">Page details</div>
+                            <group>
+                                <field name="name" placeholder="Internal reference in CMS"/>
+                                <field name="slug" placeholder="about-procurement"/>
+                                <field name="page_title" placeholder="Browser tab &amp; page heading"/>
+                                <field name="subtitle" placeholder="Optional tagline under the title"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            </group>
+                        </div>
+                        <div class="proc-cms-form-card proc-cms-page-form__status">
+                            <div class="proc-cms-form-card__head">Visibility</div>
+                            <group>
+                                <field name="is_published" widget="boolean_toggle"/>
+                                <field name="active" widget="boolean_toggle"/>
+                                <field name="sequence"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="proc-cms-form-card proc-cms-page-form__content">
+                        <div class="proc-cms-form-card__head">Page body</div>
+                        <field name="content" widget="html" nolabel="1" options="{'style-inline': true}"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_proc_cms_page" model="ir.actions.act_window">
+        <field name="name">CMS pages</field>
+        <field name="res_model">proc.cms.page</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
