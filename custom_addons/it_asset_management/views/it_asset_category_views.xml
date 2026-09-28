@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_equipment_category_view_form_it_asset" model="ir.ui.view">
+        <field name="name">maintenance.equipment.category.form.it.asset</field>
+        <field name="model">maintenance.equipment.category</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_category_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="class">ew-it-asset-form ew-it-asset-form--category</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                <div class="ew-it-asset-form-hero ew-it-asset-form-hero--compact">
+                    <div class="ew-it-asset-title-block oe_title">
+                        <span class="ew-it-asset-tag-eyebrow">IT category</span>
+                        <label for="name" class="ew-it-asset-name-label">Category name</label>
+                        <h1>
+                            <field name="name" placeholder="e.g. Laptops"/>
+                        </h1>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//sheet/group[1]" position="replace">
+                <div class="ew-it-asset-form-grid ew-it-asset-form-grid--single">
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-folder-open" title="Category"/> Configuration
+                        </h3>
+                        <group>
+                            <field name="technician_user_id" domain="[('share', '=', False)]"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
+                                placeholder="Visible to all"/>
+                        </group>
+                    </div>
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--maint">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-sticky-note" title="Notes"/> Notes
+                        </h3>
+                        <group>
+                            <field name="note" nolabel="1" placeholder="Internal notes about this category…"/>
+                        </group>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//group[field[@name='note']]" position="replace"/>
+        </field>
+    </record>
+
+</odoo>

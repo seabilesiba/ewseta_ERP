@@ -1,0 +1,87 @@
+/* /web/login on the procurement public site (proc_cms header/footer unchanged) */
+
+.ew-proc-login {
+    width: 100%;
+}
+
+.ew-proc-login__card {
+    background: #fff;
+    border: 1px solid #d8e3dc;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 28px rgba(26, 107, 74, 0.1);
+    max-width: 24rem;
+}
+
+.ew-proc-login__logo-wrap {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto 0.25rem;
+    text-align: center;
+}
+
+.ew-proc-login__logo-wrap--cms {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.ew-proc-login__logo {
+    display: block;
+    margin: 0 auto;
+    max-height: 4.5rem;
+    max-width: min(100%, 16rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.ew-proc-login__logo--fallback-dark {
+    display: none;
+}
+
+html.ew-proc-dark .ew-proc-login__logo--fallback-light {
+    display: none;
+}
+
+html.ew-proc-dark .ew-proc-login__logo--fallback-dark {
+    display: block;
+}
+
+/* Official CMS logo (often JPEG with white) stays readable on the dark card */
+html.ew-proc-dark .ew-proc-login__logo-wrap--cms {
+    background: #fff;
+    border-radius: 0.625rem;
+    padding: 0.45rem 0.9rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
+}
+
+html.ew-proc-dark .ew-proc-login__logo-wrap--cms .ew-proc-login__logo {
+    max-height: 3.75rem;
+}
+
+#wrapwrap main:has(.ew-proc-login) {
+    align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0 2.5rem;
+}
+
+html.ew-proc-dark .ew-proc-login__card {
+    background: #1e2420;
+    border-color: #3a4540;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+html.ew-proc-dark .ew-proc-login__card .border-bottom {
+    border-color: #3a4540 !important;
+}
+
+html.ew-proc-dark .ew-proc-login__card .text-muted {
+    color: #a8b5ad !important;
+}
+
+html.ew-proc-dark .ew-proc-login__form .form-control {
+    background: #141a17;
+    border-color: #3a4540;
+    color: #e8efe9;
+}
+

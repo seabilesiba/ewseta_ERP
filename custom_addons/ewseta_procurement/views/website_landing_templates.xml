@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- Replaces default empty homepage (/) with EWSETA procurement landing -->
-    <template id="homepage_procurement" inherit_id="website.homepage" name="EWSETA procurement homepage">
+    <template id="homepage_procurement" inherit_id="website.homepage" name="EWSETA procurement homepage" priority="100">
         <xpath expr="//div[@id='wrap']" position="replace">
             <div id="wrap" class="oe_structure ew-landing">
                 <t t-set="landing_counts" t-value="website.ewseta_procurement_landing_counts()"/>

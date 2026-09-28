@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="eol_asset_category_view_tree" model="ir.ui.view">
+        <field name="name">ew.eol.asset.category.list</field>
+        <field name="model">ew.eol.asset.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="image_128" widget="image" optional="show"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="maintenance_category_id" optional="show"/>
+                <field name="default_price"/>
+                <field name="purchase_limit_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="eol_asset_category_view_form" model="ir.ui.view">
+        <field name="name">ew.eol.asset.category.form</field>
+        <field name="model">ew.eol.asset.category</field>
+        <field name="arch" type="xml">
+            <form class="ew-eol-form">
+                <sheet>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
+                    <div class="ew-eol-form-hero mb-3">
+                        <div>
+                            <span class="ew-eol-form-label">Public catalogue</span>
+                            <div class="ew-eol-form-title">
+                                <h1><field name="name" placeholder="Category name"/></h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ew-eol-form-card">
+                        <group>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="default_price"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="purchase_limit_count"/>
+                            <field name="maintenance_category_id"/>
+                        </group>
+                    </div>
+                    <field name="description" placeholder="Shown to employees on the request form…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="eol_asset_category_action" model="ir.actions.act_window">
+        <field name="name">EOL Catalogue Categories</field>
+        <field name="res_model">ew.eol.asset.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

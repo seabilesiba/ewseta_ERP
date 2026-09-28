@@ -1,0 +1,217 @@
+/* EWSETA Procurement — mobile / small-screen layout */
+
+#wrapwrap {
+    overflow-x: clip;
+}
+
+#wrapwrap > main .container,
+#wrapwrap > main .container-fluid {
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+/* —— Landing —— */
+@media (max-width: 991.98px) {
+    .ew-landing__fullbleed {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .ew-landing__section-head,
+    .ew-landing__section-title.text-start,
+    .ew-landing__section-lead.text-start {
+        text-align: center !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ew-landing__hero {
+        min-height: calc(100svh - 3.25rem);
+        min-height: calc(100dvh - 3.25rem);
+        align-items: flex-end;
+    }
+
+    .ew-landing__hero-inner {
+        padding: 4.75rem 0 4.25rem;
+    }
+
+    .ew-landing__hero-title {
+        font-size: clamp(1.55rem, 6.8vw, 2.15rem);
+        line-height: 1.18;
+        max-width: none;
+    }
+
+    .ew-landing__hero-lead {
+        font-size: 0.98rem;
+        line-height: 1.5;
+        margin-bottom: 1.35rem;
+    }
+
+    .ew-landing__hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+    }
+
+    .ew-landing__hero-actions .btn,
+    .ew-landing__hero-actions a {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .ew-landing__scroll-hint {
+        bottom: 0.65rem;
+        font-size: 0.72rem;
+        padding: 0 0.5rem;
+    }
+
+    .ew-landing__cta {
+        border-radius: 14px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* —— Mobile header —— */
+@media (max-width: 991.98px) {
+    header.o_header_mobile .o_main_nav.container {
+        padding-left: max(0.65rem, env(safe-area-inset-left, 0px));
+        padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
+    }
+
+    header.o_header_mobile .ewseta-navbar-logo {
+        max-height: 36px;
+        max-width: min(168px, 46vw);
+    }
+
+    header.o_header_mobile .ew-proc-theme-toggle {
+        width: 2.15rem;
+        height: 2.15rem;
+        font-size: 0.95rem;
+    }
+
+    header.o_header_mobile .o_header_mobile_buttons_wrap {
+        gap: 0.35rem !important;
+    }
+}
+
+/* —— RFQ portal —— */
+@media (max-width: 767.98px) {
+    .ew-proc-portal.container {
+        padding-left: max(0.85rem, env(safe-area-inset-left, 0px));
+        padding-right: max(0.85rem, env(safe-area-inset-right, 0px));
+    }
+
+    .ew-proc-portal__hero {
+        padding: 1.15rem 1rem;
+        border-radius: 12px;
+    }
+
+    .ew-proc-portal__hero h1 {
+        font-size: clamp(1.35rem, 5.5vw, 1.75rem);
+    }
+
+    .ew-proc-portal__tabs.nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .ew-proc-portal__tabs.nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ew-proc-portal__tabs .nav-link {
+        white-space: nowrap;
+        padding: 0.55rem 0.9rem;
+        font-size: 0.875rem;
+    }
+
+    .ew-proc-portal__view-toolbar {
+        flex-wrap: wrap;
+        justify-content: space-between !important;
+        row-gap: 0.5rem;
+    }
+
+    .ew-proc-portal__view-toggle {
+        display: flex;
+        width: 100%;
+    }
+
+    .ew-proc-portal__view-toggle .btn {
+        flex: 1 1 50%;
+    }
+
+    .ew-proc-portal__rfq-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ew-proc-portal__filter-toolbar > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .ew-proc-portal__meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ew-proc-portal__apply-header,
+    .ew-proc-portal__apply-actions {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    .ew-proc-portal__apply-actions .btn {
+        width: 100%;
+    }
+}
+
+/* —— Contact —— */
+@media (max-width: 767.98px) {
+    .ew-contact__hero {
+        padding: 2.25rem 0 2rem;
+    }
+
+    .ew-contact__hero-title {
+        font-size: clamp(1.55rem, 6vw, 2rem);
+    }
+
+    .ew-contact__form-card,
+    .ew-contact__company-card {
+        padding: 1.25rem 1.1rem;
+    }
+
+    .ew-contact__quick-links {
+        flex-direction: column;
+    }
+
+    .ew-contact__quick-btn {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* —— Footer —— */
+@media (max-width: 575.98px) {
+    .ew-proc-footer__main .col-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .ew-proc-footer__social {
+        justify-content: flex-start;
+    }
+}
+
+/* —— Login —— */
+@media (max-width: 575.98px) {
+    .ew-proc-login__card {
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+}

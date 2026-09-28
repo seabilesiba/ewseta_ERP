@@ -308,7 +308,7 @@ class EwSubmissionLine(models.Model):
         tracking=True
 
     )
-    file = fields.Binary("File", attachment=True, tracking=True)
+    file = fields.Binary("File", attachment=True)
     file_filename = fields.Char("Filename")
     attachment_id = fields.Many2one("ir.attachment", string="Stored Attachment", readonly=True)
 

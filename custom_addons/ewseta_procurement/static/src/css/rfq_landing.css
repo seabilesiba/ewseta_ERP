@@ -381,11 +381,16 @@ html {
     color: #fff;
 }
 
-/* Scroll reveal */
+/* Scroll reveal — content stays visible if JS has not run (lazy assets / errors) */
 .ew-landing-reveal {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.ew-landing.ew-landing--reveal-active .ew-landing-reveal:not(.is-visible) {
     opacity: 0;
     transform: translateY(28px);
-    transition: opacity 0.65s ease, transform 0.65s ease;
 }
 
 .ew-landing-reveal.is-visible {
@@ -413,7 +418,7 @@ html {
 
 @media (max-width: 575px) {
     .ew-landing__hero-inner {
-        padding: 3.5rem 0 4.5rem;
+        padding: 4.25rem 0 4rem;
     }
 
     .ew-landing__gallery {

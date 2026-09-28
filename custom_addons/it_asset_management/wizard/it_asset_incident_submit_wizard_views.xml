@@ -5,16 +5,23 @@
         <field name="name">it.asset.incident.submit.wizard.form</field>
         <field name="model">it.asset.incident.submit.wizard</field>
         <field name="arch" type="xml">
-            <form string="Sign and Submit to ICT">
-                <group>
-                    <field name="incident_id" readonly="1"/>
-                    <field name="signer_name"/>
-                </group>
-                <group string="Signature">
-                    <field name="signature" widget="signature"
-                        options="{'full_name': 'signer_name'}"
-                        nolabel="1"/>
-                </group>
+            <form string="Sign and Submit to ICT" class="ew-it-asset-form ew-it-asset-form--wizard">
+                <div class="ew-it-asset-wizard-body">
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                        <group>
+                            <field name="incident_id" readonly="1"/>
+                            <field name="signer_name"/>
+                        </group>
+                    </div>
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--assign">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-pencil" title="Signature"/> Signature
+                        </h3>
+                        <field name="signature" widget="signature"
+                            options="{'full_name': 'signer_name'}"
+                            nolabel="1"/>
+                    </div>
+                </div>
                 <footer>
                     <button name="action_confirm" string="Sign and Submit" type="object" class="btn-primary"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>

@@ -5,7 +5,7 @@
         <field name="name">it.asset.manufacturer.list</field>
         <field name="model">it.asset.manufacturer</field>
         <field name="arch" type="xml">
-            <list string="Manufacturers">
+            <list string="Manufacturers" class="ew-it-asset-list">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="website"/>
@@ -19,23 +19,37 @@
         <field name="name">it.asset.manufacturer.form</field>
         <field name="model">it.asset.manufacturer</field>
         <field name="arch" type="xml">
-            <form string="Manufacturer">
+            <form string="Manufacturer" class="ew-it-asset-form ew-it-asset-form--manufacturer">
                 <sheet>
-                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Dell"/></h1>
+                    <div class="ew-it-asset-top-row">
+                        <div class="ew-it-asset-title-block oe_title">
+                            <span class="ew-it-asset-tag-eyebrow">Manufacturer</span>
+                            <label for="name" class="ew-it-asset-name-label">Name</label>
+                            <h1><field name="name" placeholder="e.g. Dell" nolabel="1"/></h1>
+                        </div>
+                        <div class="ew-it-asset-photo-top">
+                            <span class="ew-it-asset-tag-eyebrow">Logo</span>
+                            <field name="image_1920" widget="image" class="oe_avatar ew-it-asset-photo"
+                                options="{'preview_image': 'image_128'}"/>
+                        </div>
                     </div>
-                    <group>
-                        <group>
-                            <field name="code"/>
-                            <field name="website" widget="url"/>
-                        </group>
-                        <group>
-                            <field name="equipment_count"/>
-                            <field name="active"/>
-                        </group>
-                    </group>
+                    <div class="ew-it-asset-form-grid ew-it-asset-form-grid--single">
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-building" title="Details"/> Details
+                            </h3>
+                            <group>
+                                <group>
+                                    <field name="code"/>
+                                    <field name="website" widget="url"/>
+                                </group>
+                                <group>
+                                    <field name="equipment_count"/>
+                                    <field name="active"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
                 </sheet>
                 <chatter/>
             </form>

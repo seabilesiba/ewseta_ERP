@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="eol_request_rule_company" model="ir.rule">
+        <field name="name">EOL purchase request: multi-company</field>
+        <field name="model_id" ref="model_ew_eol_purchase_request"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="eol_request_rule_approver" model="ir.rule">
+        <field name="name">EOL purchase request: approver sees awaiting approval</field>
+        <field name="model_id" ref="model_ew_eol_purchase_request"/>
+        <field name="groups" eval="[(4, ref('group_eol_approver'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="eol_request_rule_auditor" model="ir.rule">
+        <field name="name">EOL purchase request: auditor read all</field>
+        <field name="model_id" ref="model_ew_eol_purchase_request"/>
+        <field name="groups" eval="[(4, ref('group_eol_auditor'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+</odoo>

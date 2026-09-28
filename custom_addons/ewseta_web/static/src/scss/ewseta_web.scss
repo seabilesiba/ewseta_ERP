@@ -4300,3 +4300,9 @@ $ewseta-section-fallback-duration: 3s;
         }
     }
 }
+
+// Hide any residual Odoo footer promo (templates also remove it)
+.o_brand_promotion,
+footer .o_footer_copyright a[href*="odoo.com"] {
+    display: none !important;
+}

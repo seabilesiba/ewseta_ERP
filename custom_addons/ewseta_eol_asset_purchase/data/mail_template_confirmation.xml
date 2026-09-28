@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_template_eol_confirmation" model="mail.template">
+        <field name="name">EOL Asset Purchase: Request received</field>
+        <field name="model_id" ref="model_ew_eol_purchase_request"/>
+        <field name="use_default_to" eval="False"/>
+        <field name="subject">EOL asset purchase request {{ object.name }} — verified</field>
+        <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.work_email }}</field>
+        <field name="body_html" type="html">
+<div>
+    <p>Hello <t t-out="object.employee_name"/>,</p>
+    <p>We received your end-of-life asset purchase request <strong><t t-out="object.name"/></strong>.</p>
+    <p t-if="ctx.get('email_verified')">Your email is verified. Current status: <t t-out="object.state"/>.</p>
+    <p t-else="">Status: <t t-out="object.state"/></p>
+    <p t-if="ctx.get('link_resent')">This replaces any previous private tracking link for this request.</p>
+    <p t-if="ctx.get('track_url')">
+        Track your request (keep this link private):
+        <a t-att-href="ctx.get('track_url')"><t t-out="ctx.get('track_url')"/></a>
+    </p>
+    <p t-if="not ctx.get('track_url') and ctx.get('email_verified')">
+        Ask ICT to set the site URL in Odoo settings if you need a tracking link by email.
+    </p>
+    <p>EWSETA ICT</p>
+</div>
+        </field>
+    </record>
+
+</odoo>

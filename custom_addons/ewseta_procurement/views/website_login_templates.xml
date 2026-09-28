@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Procurement site: keep website.layout header/footer; only style the login block. -->
+    <template id="proc_website_login_layout" inherit_id="website.login_layout"
+        name="EWSETA Procurement Login Layout" priority="40">
+        <xpath expr="//div[hasclass('oe_website_login_container')]" position="replace">
+            <div class="oe_website_login_container ew-proc-login">
+                <div class="container py-4 py-md-5">
+                    <div class="ew-proc-login__card mx-auto o_database_list">
+                        <div class="ew-proc-login__card-body">
+                            <div class="text-center mb-4 pb-3 border-bottom">
+                                <t t-set="cms_logo" t-value="website.proc_cms_logo_url()"/>
+                                <div t-attf-class="ew-proc-login__logo-wrap #{'ew-proc-login__logo-wrap--cms' if cms_logo else ''}">
+                                    <img t-if="cms_logo"
+                                         t-att-src="cms_logo"
+                                         alt="EW SETA"
+                                         class="ew-proc-login__logo"
+                                         loading="eager"/>
+                                    <img t-else=""
+                                         src="/ewseta_procurement/static/src/img/ewseta_logo.svg"
+                                         alt="EW SETA"
+                                         class="ew-proc-login__logo ew-proc-login__logo--fallback-light"
+                                         loading="eager"/>
+                                    <img t-if="not cms_logo"
+                                         src="/ewseta_procurement/static/src/img/ewseta_logo_dark.svg"
+                                         alt="EW SETA"
+                                         class="ew-proc-login__logo ew-proc-login__logo--fallback-dark"
+                                         loading="eager"/>
+                                </div>
+                                <h1 class="h4 mt-3 mb-1">Sign in</h1>
+                                <p class="text-muted small mb-0">EWSETA procurement workspace</p>
+                            </div>
+                            <t t-out="0"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Odoo hides the form with d-none when no saved user; user_switch often does not render on website. -->
+    <template id="proc_login_form_visible" inherit_id="web.login"
+        name="EWSETA Procurement Login Form" priority="40">
+        <xpath expr="//form[@role='form'][@data-captcha='login']" position="attributes">
+            <attribute name="t-attf-class">oe_login_form ew-proc-login__form</attribute>
+        </xpath>
+        <xpath expr="//form[@data-captcha='login']//button[hasclass('o_show_password')]" position="attributes">
+            <attribute name="class" add="o_no_wait_lazy_js" separator=" "/>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,6 +1,6 @@
 {
     "name": "Procurement Website CMS",
-    "version": "19.0.1.0.17",
+    "version": "19.0.1.0.19",
     "post_init_hook": "post_init_hook",
     "category": "Website",
     "summary": "Manage procurement website pages, cards, buttons, navbar, logo and footer",

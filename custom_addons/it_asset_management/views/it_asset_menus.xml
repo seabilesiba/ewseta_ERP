@@ -39,6 +39,13 @@
         <field name="domain">[('asset_state', '=', 'in_repair')]</field>
     </record>
 
+    <record id="it_asset_action_lost" model="ir.actions.act_window">
+        <field name="name">Lost</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('asset_state', '=', 'lost')]</field>
+    </record>
+
     <record id="it_asset_action_by_employee" model="ir.actions.act_window">
         <field name="name">By Employee</field>
         <field name="res_model">maintenance.equipment</field>
@@ -86,6 +93,12 @@
         parent="menu_it_asset_assets"
         action="it_asset_action_in_repair"
         sequence="40"/>
+
+    <menuitem id="menu_it_asset_lost"
+        name="Lost"
+        parent="menu_it_asset_assets"
+        action="it_asset_action_lost"
+        sequence="45"/>
 
     <menuitem id="menu_it_asset_by_employee"
         name="By Employee"

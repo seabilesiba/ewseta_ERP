@@ -111,9 +111,10 @@ class ProcCmsSeed(models.AbstractModel):
             {**site_vals, "website_id": website.id},
         )
 
-        # Home / Contact us stay on Odoo's default website menus; CMS adds Procurements + header CTA.
+        # Main menu links sync to website.menu; header CTA row (is_cta) drives the orange button only.
         nav_items = [
-            {"name": "Procurements", "url": "/application/rfqs", "sequence": 80, "is_cta": False},
+            {"name": "Procurements", "url": "/application/rfqs", "sequence": 50, "is_cta": False},
+            {"name": "Contact us", "url": "/contactus", "sequence": 60, "is_cta": False},
             {"name": "Contact Us", "url": "/contactus", "sequence": 5, "is_cta": True},
         ]
         for item in nav_items:
@@ -122,11 +123,23 @@ class ProcCmsSeed(models.AbstractModel):
                 ("name", "=", item["name"]),
                 ("is_cta", "=", item["is_cta"]),
             ]
-            upsert(
+            vals = {**item, "website_id": website.id, "active": True}
+            record = upsert(
                 "proc.cms.nav.item",
                 domain,
-                {**item, "website_id": website.id, "active": True},
+                vals,
             )
+            if record:
+                record.write({k: v for k, v in vals.items() if k != "website_id"})
+
+        # Legacy misconfiguration: Procurements must be a menu link, not header CTA.
+        self.env["proc.cms.nav.item"].sudo().search(
+            [
+                ("website_id", "=", website.id),
+                ("name", "=", "Procurements"),
+                ("is_cta", "=", True),
+            ]
+        ).unlink()
 
         buttons = [
             {

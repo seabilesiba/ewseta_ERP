@@ -6,6 +6,9 @@
         <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="class" add="ew-it-asset-form" separator=" "/>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_open_assignment_history"
                     type="object"
@@ -34,55 +37,138 @@
                         groups="it_asset_management.group_it_asset_manager"/>
                     <button name="action_mark_disposed" string="Dispose" type="object"
                         class="btn-secondary"
-                        invisible="asset_state == 'disposed'"
+                        invisible="asset_state in ('disposed', 'lost')"
                         groups="it_asset_management.group_it_asset_manager"/>
-                    <field name="asset_state" widget="statusbar" statusbar_visible="available,assigned,in_repair,disposed"/>
+                    <button name="action_mark_lost" string="Mark Lost" type="object"
+                        class="btn-secondary"
+                        invisible="asset_state in ('disposed', 'lost')"
+                        groups="it_asset_management.group_it_asset_manager"/>
+                    <field name="asset_state" widget="statusbar"
+                        statusbar_visible="available,assigned,in_repair,lost,disposed"/>
                 </header>
             </xpath>
-            <xpath expr="//h1" position="before">
-                <label for="asset_code"/>
-                <h2><field name="asset_code" readonly="1"/></h2>
+            <xpath expr="//div[@class='oe_title']" position="replace">
+                <div class="ew-it-asset-top-row">
+                    <div class="ew-it-asset-title-block oe_title">
+                        <span class="ew-it-asset-tag-eyebrow">Asset tag</span>
+                        <h2 class="ew-it-asset-tag-value">
+                            <field name="asset_code" readonly="1" nolabel="1"/>
+                        </h2>
+                        <label for="name" class="ew-it-asset-name-label">Device name</label>
+                        <h1>
+                            <field name="name" nolabel="1" placeholder="e.g. Dell Latitude 5420"/>
+                        </h1>
+                    </div>
+                    <div class="ew-it-asset-photo-top">
+                        <span class="ew-it-asset-tag-eyebrow">Asset photo</span>
+                        <field name="image_1920" widget="image" class="oe_avatar ew-it-asset-photo"
+                            options="{'preview_image': 'image_128'}"/>
+                    </div>
+                </div>
             </xpath>
-            <xpath expr="//group[@name='service_info_group']/group[1]" position="inside">
-                <field name="asset_type"/>
-                <field name="manufacturer_id"/>
-                <field name="location_note"/>
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="invisible">equipment_assign_to != 'employee'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="invisible">equipment_assign_to != 'department'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='equipment_assign_to']" position="attributes">
+                <attribute name="widget">radio</attribute>
+                <attribute name="options">{'horizontal': true}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='service_info_group']" position="replace">
+                <div class="ew-it-asset-form-grid">
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--assign">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-user" title="Assignment"/> Used by
+                        </h3>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="equipment_assign_to" widget="radio" options="{'horizontal': true}"/>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                            <field name="department_id"/>
+                        </group>
+                    </div>
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-laptop" title="Asset"/> Asset details
+                        </h3>
+                        <group>
+                            <field name="category_id" options="{'no_open': True}" context="{'default_company_id': company_id}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="asset_type"/>
+                            <field name="manufacturer_id"/>
+                            <field name="location_note"/>
+                        </group>
+                    </div>
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--maint">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-wrench" title="Maintenance"/> Maintenance
+                        </h3>
+                        <group>
+                            <field name="maintenance_team_id" context="{'default_company_id': company_id}"/>
+                            <field name="technician_user_id" domain="[('share', '=', False)]"/>
+                            <field name="assign_date"/>
+                            <field name="scrap_date" groups="base.group_no_one"/>
+                        </group>
+                    </div>
+                </div>
             </xpath>
             <xpath expr="//page[@name='product_information']" position="after">
                 <page string="IT Specs" name="it_specs">
-                    <group>
-                        <group string="Network">
-                            <field name="hostname"/>
-                            <field name="mac_address"/>
-                            <field name="ip_address"/>
-                        </group>
-                        <group string="System">
-                            <field name="operating_system"/>
-                            <field name="os_version"/>
-                            <field name="cpu"/>
-                            <field name="ram_gb"/>
-                            <field name="storage_gb"/>
-                        </group>
-                    </group>
-                    <group string="Software License" invisible="asset_type != 'software'">
+                    <div class="ew-it-asset-form-grid">
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--assign">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-sitemap" title="Network"/> Network
+                            </h3>
+                            <group>
+                                <field name="hostname"/>
+                                <field name="mac_address"/>
+                                <field name="ip_address"/>
+                            </group>
+                        </div>
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-microchip" title="System"/> System
+                            </h3>
+                            <group>
+                                <field name="operating_system"/>
+                                <field name="os_version"/>
+                                <field name="cpu"/>
+                                <field name="ram_gb"/>
+                                <field name="storage_gb"/>
+                            </group>
+                        </div>
+                    </div>
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--maint" invisible="asset_type != 'software'">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-key" title="License"/> Software license
+                        </h3>
                         <group>
                             <field name="license_key"/>
                             <field name="license_expiry"/>
                         </group>
-                    </group>
+                    </div>
                 </page>
                 <page string="Lifecycle" name="lifecycle">
-                    <group>
-                        <group>
-                            <field name="purchase_date"/>
-                            <field name="purchase_value"/>
-                            <field name="company_currency_id" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="disposal_date" readonly="asset_state != 'disposed'"/>
-                            <field name="disposal_reason" readonly="asset_state != 'disposed'"/>
-                        </group>
-                    </group>
+                    <div class="ew-it-asset-form-grid ew-it-asset-form-grid--single">
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-line-chart" title="Lifecycle"/> Lifecycle &amp; disposal
+                            </h3>
+                            <group>
+                                <group>
+                                    <field name="purchase_date"/>
+                                    <field name="purchase_value"/>
+                                    <field name="company_currency_id" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="disposal_date" readonly="asset_state != 'disposed'"/>
+                                    <field name="disposal_reason" readonly="asset_state != 'disposed'"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
                 </page>
                 <page string="Assignment History" name="assignment_history">
                     <field name="assignment_history_ids" readonly="1">
@@ -105,8 +191,16 @@
         <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="class" add="ew-it-asset-list" separator=" "/>
+            </xpath>
+            <xpath expr="//list/field[@name='category_id']" position="replace"/>
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="image_128" widget="image" optional="hide"/>
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="asset_code"/>
+                <field name="category_id" optional="show"/>
                 <field name="manufacturer_id" optional="show"/>
                 <field name="hostname"/>
                 <field name="asset_state" widget="badge"
@@ -126,6 +220,9 @@
         <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="class" add="ew-it-asset-kanban" separator=" "/>
+            </xpath>
             <xpath expr="//kanban" position="inside">
                 <field name="image_128"/>
                 <field name="manufacturer_id"/>
@@ -215,6 +312,7 @@
                 <filter string="Assigned" name="it_assigned" domain="[('asset_state', '=', 'assigned')]"/>
                 <filter string="In Repair" name="it_in_repair" domain="[('asset_state', '=', 'in_repair')]"/>
                 <filter string="Disposed" name="it_disposed" domain="[('asset_state', '=', 'disposed')]"/>
+                <filter string="Lost" name="it_lost" domain="[('asset_state', '=', 'lost')]"/>
             </xpath>
             <xpath expr="//group" position="inside">
                 <filter string="Asset State" name="group_asset_state" context="{'group_by': 'asset_state'}"/>

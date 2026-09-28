@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="eol_layout" name="EOL layout">
+        <t t-set="ew_eol_sticky_nav" t-value="True"/>
+        <t t-call="website.layout">
+            <div class="container ew-eol-page py-4">
+                <t t-out="0"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="eol_website_sticky_header" inherit_id="website.layout" name="EOL sticky website header">
+        <xpath expr="//div[@id='wrapwrap']" position="attributes">
+            <attribute name="t-attf-class" add="#{' ew-eol-public-wrap' if ew_eol_sticky_nav else ''}" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="eol_policy_form_section" name="EOL policies with acknowledgements">
+        <p class="ew-eol-field-hint mb-3">
+            <i class="fa fa-info-circle" aria-hidden="true"/>
+            Read each policy, then tick the acceptance box on every item before you submit.
+        </p>
+        <t t-if="not policies_ready">
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle me-1" aria-hidden="true"/>
+                Policy documents are not published yet. ICT must complete items 10–13 under
+                <strong>EOL Policies</strong> before you can submit.
+            </div>
+        </t>
+        <ul class="list-group ew-eol-policy-list mb-0">
+            <t t-foreach="policy_form_sections" t-as="sec">
+                    <li class="list-group-item ew-eol-policy-form-item">
+                        <div class="d-flex flex-column flex-md-row align-items-md-start gap-2 mb-3">
+                            <div class="flex-grow-1">
+                                <span class="badge text-bg-secondary me-2">Item <t t-esc="sec['form_item']"/></span>
+                                <t t-if="sec.get('is_published')">
+                                    <a t-att-href="sec['view_url']" class="fw-semibold text-decoration-none">
+                                        <i class="fa fa-file-text-o text-muted me-1" aria-hidden="true"/>
+                                        <t t-esc="sec['name']"/>
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <strong t-esc="sec['name']"/>
+                                </t>
+                                <t t-if="sec.get('summary')">
+                                    <div class="small text-muted mt-1" t-out="sec['summary']"/>
+                                </t>
+                            </div>
+                            <t t-if="sec.get('is_published')">
+                                <div class="d-flex flex-wrap gap-2 ew-eol-policy-actions">
+                                    <a t-att-href="sec['view_url']" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-book" aria-hidden="true"/> Read
+                                    </a>
+                                    <a t-att-href="sec['pdf_open_url']" class="btn btn-outline-secondary btn-sm"
+                                        target="_blank" rel="noopener noreferrer">
+                                        <i class="fa fa-external-link" aria-hidden="true"/> Open PDF
+                                    </a>
+                                    <a t-att-href="sec['pdf_download_url']" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa fa-download" aria-hidden="true"/> Download
+                                    </a>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <span class="badge text-bg-warning">Not published yet</span>
+                            </t>
+                        </div>
+                        <div class="form-check ew-eol-policy-ack border-top pt-3">
+                            <input class="form-check-input" type="checkbox"
+                                t-att-name="sec['field_name']"
+                                t-att-id="sec['field_name']"
+                                required="required"
+                                t-att-disabled="not policies_ready and 'disabled' or None"
+                                t-att-checked="form.get(sec['field_name']) and 'checked' or None"/>
+                            <label class="form-check-label" t-att-for="sec['field_name']">
+                                <span class="text-danger" title="Required">*</span>
+                                <t t-esc="sec['form_item']"/>.
+                                <t t-esc="sec['prefix']"/>
+                                <t t-if="sec.get('ack_url')">
+                                    <a t-att-href="sec['ack_url']" class="fw-semibold">
+                                        <t t-esc="sec['link_label']"/>
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <span class="fw-semibold" t-esc="sec['link_label']"/>
+                                </t>.
+                            </label>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+    </template>
+
+    <template id="eol_policy_documents_block" name="EOL policy documents">
+        <t t-if="policy_pages">
+            <h2 class="h5 mt-4">Programme policies</h2>
+            <p class="text-muted small">
+                Open each policy to read it, then tick every box in Section 3 before submitting.
+            </p>
+            <ul class="list-group ew-eol-policy-list mb-4">
+                <t t-foreach="policy_pages" t-as="doc">
+                    <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center gap-2">
+                        <div class="flex-grow-1">
+                            <span class="badge text-bg-secondary me-2">Item <t t-esc="doc['form_item']"/></span>
+                            <t t-if="doc.get('is_published')">
+                                <a t-att-href="doc['view_url']" class="fw-semibold text-decoration-none">
+                                    <t t-esc="doc['name']"/>
+                                </a>
+                            </t>
+                            <t t-else="">
+                                <strong t-esc="doc['name']"/>
+                            </t>
+                            <t t-if="doc.get('summary')">
+                                <div class="small text-muted mt-1" t-out="doc['summary']"/>
+                            </t>
+                        </div>
+                        <t t-if="doc.get('is_published')">
+                            <div class="d-flex flex-wrap gap-2">
+                                <a t-att-href="doc['view_url']"
+                                    class="btn btn-primary btn-sm">
+                                    Read policy
+                                </a>
+                                <a t-att-href="doc['pdf_open_url']"
+                                    class="btn btn-outline-secondary btn-sm"
+                                    target="_blank"
+                                    rel="noopener noreferrer">
+                                    Open PDF
+                                </a>
+                                <a t-att-href="doc['pdf_download_url']"
+                                    class="btn btn-outline-primary btn-sm">
+                                    Download PDF
+                                </a>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span class="badge text-bg-warning">Not published yet</span>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </t>
+    </template>
+
+    <template id="eol_policy_view" name="EOL policy page">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/employee/eol-assets">EOL programme</a></li>
+                    <li class="breadcrumb-item active" t-esc="policy.name"/>
+                </ol>
+            </nav>
+            <div class="ew-eol-policy-view ew-eol-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+                    <div>
+                        <span class="badge text-bg-secondary mb-2">Item <t t-esc="policy.form_item"/></span>
+                        <h1 class="h3 mb-0" t-esc="policy.name"/>
+                        <t t-if="policy.version">
+                            <p class="text-muted small mb-0 mt-1">Version: <t t-esc="policy.version"/></p>
+                        </t>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a t-att-href="pdf_open_url"
+                            class="btn btn-outline-secondary"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            Open PDF in new tab
+                        </a>
+                        <a t-att-href="pdf_download_url" class="btn btn-outline-primary">
+                            Download PDF
+                        </a>
+                    </div>
+                </div>
+                <div class="ew-eol-policy-body" t-out="policy_body_html"/>
+                <div class="mt-4 pt-3 border-top">
+                    <a t-att-href="return_url" class="btn btn-primary">Back to request form</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="eol_landing" name="EOL programme landing">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <h1>End-of-life IT asset purchase</h1>
+            <div class="mb-4" t-if="programme_intro" t-out="programme_intro"/>
+            <t t-call="ewseta_eol_asset_purchase.eol_policy_documents_block"/>
+            <a href="/employee/eol-assets/request" class="btn btn-primary btn-lg">Start a request</a>
+        </t>
+    </template>
+
+    <template id="eol_public_disabled" name="EOL form disabled">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <div class="alert alert-warning">
+                The employee EOL asset purchase programme is not accepting requests at this time.
+            </div>
+        </t>
+    </template>
+
+    <template id="eol_generic_error" name="EOL generic error">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <div class="alert alert-danger">
+                We could not find that request or the link has expired.
+            </div>
+        </t>
+    </template>
+
+    <template id="eol_request_form" name="EOL request form">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <header class="ew-eol-hero">
+                <div class="ew-eol-hero-icon" aria-hidden="true">
+                    <i class="fa fa-laptop"/>
+                </div>
+                <h1>Employee EOL asset purchase request</h1>
+                <div class="ew-eol-hero-lead" t-if="programme_intro" t-out="programme_intro"/>
+                <ul class="ew-eol-steps">
+                    <li><i class="fa fa-user" aria-hidden="true"/>1. Your details</li>
+                    <li><i class="fa fa-desktop" aria-hidden="true"/>2. Choose device</li>
+                    <li><i class="fa fa-check-square-o" aria-hidden="true"/>3. Accept policies</li>
+                </ul>
+            </header>
+
+            <t t-if="error">
+                <div class="alert alert-danger">
+                    <i class="fa fa-exclamation-circle me-1" aria-hidden="true"/>
+                    <t t-esc="error"/>
+                </div>
+            </t>
+
+            <form action="/employee/eol-assets/request" method="post"
+                class="o_mark_required ew-eol-request-form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <section class="ew-eol-section">
+                    <div class="ew-eol-section-header">
+                        <span class="ew-eol-section-icon" aria-hidden="true"><i class="fa fa-user"/></span>
+                        <div>
+                            <h2>Section 1: Employee information</h2>
+                            <p>Questions 1–5 · Required fields marked *</p>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fa fa-id-card" aria-hidden="true"/>1. Full name <span class="text-danger">*</span></label>
+                        <input class="form-control" name="employee_name" required="required"
+                            t-att-value="form.get('employee_name', '')"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fa fa-hashtag" aria-hidden="true"/>2. Employee ID number <span class="text-danger">*</span></label>
+                        <input class="form-control" name="employee_number" required="required"
+                            t-att-value="form.get('employee_number', '')"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fa fa-envelope" aria-hidden="true"/>3. Corporate email address <span class="text-danger">*</span></label>
+                        <input class="form-control" type="email" name="work_email" required="required"
+                            t-att-value="form.get('work_email', '')"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fa fa-building" aria-hidden="true"/>4. Department / team <span class="text-danger">*</span></label>
+                        <t t-if="departments">
+                            <select class="form-select" name="department_name" required="required">
+                                <option value="">Select…</option>
+                                <t t-foreach="departments" t-as="dept">
+                                    <option t-att-value="dept.name"
+                                        t-att-selected="form.get('department_name') == dept.name">
+                                        <t t-esc="dept.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </t>
+                        <t t-else="">
+                            <input class="form-control" name="department_name" required="required"
+                                t-att-value="form.get('department_name', '')"/>
+                        </t>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><i class="fa fa-map-marker" aria-hidden="true"/>5. Office location / primary site <span class="text-danger">*</span></label>
+                        <select class="form-select" name="site_name" required="required">
+                            <option value="">Select…</option>
+                            <t t-foreach="site_options" t-as="site">
+                                <option t-att-value="site"
+                                    t-att-selected="form.get('site_name') == site">
+                                    <t t-esc="site"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                </section>
+
+                <section class="ew-eol-section">
+                    <div class="ew-eol-section-header">
+                        <span class="ew-eol-section-icon" aria-hidden="true"><i class="fa fa-laptop"/></span>
+                        <div>
+                            <h2>Section 2: Asset selection</h2>
+                            <p>Questions 6–9 · Device and assignment details</p>
+                        </div>
+                    </div>
+                <p class="ew-eol-field-hint">6. What type of device are you requesting to purchase? <span class="text-danger">*</span></p>
+                <t t-if="not categories">
+                    <div class="alert alert-warning">No device types are configured. Contact ICT.</div>
+                </t>
+                <t t-else="">
+                    <div class="mb-3">
+                        <label class="form-label visually-hidden" for="eol_category_id">
+                            Device type
+                        </label>
+                        <select class="form-select" name="category_id" id="eol_category_id" required="required">
+                            <option value="">Select device type…</option>
+                            <t t-foreach="categories" t-as="cat">
+                                <option t-att-value="cat.id"
+                                    t-att-selected="str(form.get('category_id') or '') == str(cat.id) and 'selected' or None">
+                                    <t t-esc="cat.name"/>
+                                    —
+                                    <t t-esc="'%.2f' % cat.default_price"/>
+                                    <t t-esc="cat.currency_id.name or 'ZAR'"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </t>
+
+                <p class="text-muted small mt-3">7. Operating system preference (subject to availability)</p>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="os_preference" id="os_windows" value="windows"
+                        t-att-checked="form.get('os_preference') == 'windows' and 'checked' or None"/>
+                    <label class="form-check-label" for="os_windows">Windows</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="os_preference" id="os_macos" value="macos"
+                        t-att-checked="form.get('os_preference') == 'macos' and 'checked' or None"/>
+                    <label class="form-check-label" for="os_macos">macOS</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="os_preference" id="os_none" value="no_preference"
+                        t-att-checked="form.get('os_preference') in ('no_preference', False, None) and 'checked' or None"/>
+                    <label class="form-check-label" for="os_none">No preference</label>
+                </div>
+
+                <p class="text-muted small mt-4">8. Purchase the device currently assigned to you? <span class="text-danger">*</span></p>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="request_type" id="req_assigned" value="assigned"
+                        required="required"
+                        t-att-checked="form.get('request_type') == 'assigned' and 'checked' or None"/>
+                    <label class="form-check-label" for="req_assigned">
+                        Yes — I want to purchase my assigned corporate device (complete question 9).
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="request_type" id="req_pool" value="pool"
+                        required="required"
+                        t-att-checked="form.get('request_type', 'pool') == 'pool' and 'checked' or None"/>
+                    <label class="form-check-label" for="req_pool">
+                        No — I want to purchase any available pool device.
+                    </label>
+                </div>
+
+                <div class="ew-eol-serial-block mb-0">
+                    <label class="form-label"><i class="fa fa-barcode" aria-hidden="true"/>9. Serial number or asset tag (required if you answered Yes above)</label>
+                    <input class="form-control" name="serial_or_tag"
+                        t-att-value="form.get('serial_or_tag', '')"/>
+                </div>
+                </section>
+
+                <section class="ew-eol-section">
+                    <div class="ew-eol-section-header">
+                        <span class="ew-eol-section-icon" aria-hidden="true"><i class="fa fa-gavel"/></span>
+                        <div>
+                            <h2>Section 3: Policy acknowledgement &amp; terms</h2>
+                            <p>Items 10–13 · Programme policies</p>
+                        </div>
+                    </div>
+                <t t-set="policy_form_sections" t-value="policy_form_sections"/>
+                <t t-set="policies_ready" t-value="policies_ready"/>
+                <t t-set="form" t-value="form"/>
+                <t t-call="ewseta_eol_asset_purchase.eol_policy_form_section"/>
+                </section>
+
+                <div class="ew-eol-submit-bar">
+                    <button type="submit" class="btn btn-primary btn-lg"
+                        t-att-disabled="not policies_ready and 'disabled' or None">
+                        <i class="fa fa-paper-plane me-1" aria-hidden="true"/>Submit request
+                    </button>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="eol_verify_form" name="EOL OTP verification">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <h1>Verify your email</h1>
+            <p>Enter the verification code sent to your work email for request <strong t-esc="eol_request.name"/>.</p>
+            <t t-if="error">
+                <div class="alert alert-danger" t-esc="error"/>
+            </t>
+            <form action="/employee/eol-assets/verify" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="request_id" t-att-value="eol_request.id"/>
+                <input type="hidden" name="token" t-att-value="token"/>
+                <div class="mb-3" style="max-width:240px;">
+                    <label class="form-label">Verification code</label>
+                    <input class="form-control" name="otp" autocomplete="one-time-code" required="required"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Verify</button>
+            </form>
+        </t>
+    </template>
+
+    <template id="eol_track_status" name="EOL request status">
+        <t t-call="ewseta_eol_asset_purchase.eol_layout">
+            <div class="ew-eol-track-page">
+                <div class="ew-eol-hero ew-eol-track-hero">
+                    <div class="ew-eol-track-hero__main">
+                        <div class="ew-eol-hero-icon"><i class="fa fa-line-chart" aria-hidden="true"/></div>
+                        <h1>Request status</h1>
+                        <p class="ew-eol-hero-lead mb-0">Your private EOL purchase tracking page.</p>
+                    </div>
+                    <div class="ew-eol-track-hero__ref">
+                        <span class="ew-eol-track-kicker">Reference</span>
+                        <strong class="ew-eol-track-ref" t-esc="eol_request.name"/>
+                    </div>
+                </div>
+
+                <div class="ew-eol-section ew-eol-track-progress-card">
+                    <div class="ew-eol-section-header">
+                        <span class="ew-eol-section-icon"><i class="fa fa-road" aria-hidden="true"/></span>
+                        <div>
+                            <h2>Progress</h2>
+                            <p>Where your request is in the programme workflow</p>
+                        </div>
+                    </div>
+                    <ol class="ew-eol-track-progress" aria-label="Request progress">
+                        <t t-foreach="track['steps']" t-as="step">
+                            <li t-attf-class="ew-eol-track-progress__step ew-eol-track-progress__step--#{step['status']}">
+                                <span class="ew-eol-track-progress__dot">
+                                    <i t-attf-class="fa #{step['icon']}" aria-hidden="true"/>
+                                </span>
+                                <span class="ew-eol-track-progress__label" t-esc="step['label']"/>
+                            </li>
+                        </t>
+                    </ol>
+                    <t t-if="track.get('message')">
+                        <div t-attf-class="ew-eol-track-message alert alert-#{track['badge_class']} mb-0" role="status">
+                            <i class="fa fa-info-circle me-2" aria-hidden="true"/>
+                            <span t-esc="track['message']"/>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="ew-eol-section ew-eol-track-details-card">
+                    <div class="ew-eol-section-header">
+                        <span class="ew-eol-section-icon"><i class="fa fa-file-text-o" aria-hidden="true"/></span>
+                        <div>
+                            <h2>Request details</h2>
+                            <p>Summary of your submission</p>
+                        </div>
+                    </div>
+                    <div class="ew-eol-track-details">
+                        <div class="ew-eol-track-detail">
+                            <span class="ew-eol-track-detail__icon"><i class="fa fa-tag" aria-hidden="true"/></span>
+                            <div>
+                                <span class="ew-eol-track-detail__label">Status</span>
+                                <span t-attf-class="ew-eol-status-pill ew-eol-status-pill--#{track['badge_class']}"
+                                    t-esc="eol_request.state_label"/>
+                            </div>
+                        </div>
+                        <div class="ew-eol-track-detail">
+                            <span class="ew-eol-track-detail__icon"><i class="fa fa-laptop" aria-hidden="true"/></span>
+                            <div>
+                                <span class="ew-eol-track-detail__label">Category</span>
+                                <span class="ew-eol-track-detail__value" t-esc="eol_request.category_id.name"/>
+                            </div>
+                        </div>
+                        <t t-if="track.get('request_type_label')">
+                            <div class="ew-eol-track-detail">
+                                <span class="ew-eol-track-detail__icon"><i class="fa fa-exchange" aria-hidden="true"/></span>
+                                <div>
+                                    <span class="ew-eol-track-detail__label">Request type</span>
+                                    <span class="ew-eol-track-detail__value" t-esc="track['request_type_label']"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="eol_request.sale_price">
+                            <div class="ew-eol-track-detail">
+                                <span class="ew-eol-track-detail__icon"><i class="fa fa-money" aria-hidden="true"/></span>
+                                <div>
+                                    <span class="ew-eol-track-detail__label">Sale price</span>
+                                    <span class="ew-eol-track-detail__value ew-eol-track-price">
+                                        <span t-field="eol_request.sale_price"
+                                            t-options='{"widget": "monetary", "display_currency": eol_request.currency_id}'/>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="ew-eol-track-detail">
+                            <span class="ew-eol-track-detail__icon"><i class="fa fa-calendar" aria-hidden="true"/></span>
+                            <div>
+                                <span class="ew-eol-track-detail__label">Submitted</span>
+                                <span class="ew-eol-track-detail__value">
+                                    <span t-field="eol_request.create_date" t-options='{"widget": "datetime"}'/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ew-eol-track-privacy">
+                    <i class="fa fa-lock me-2" aria-hidden="true"/>
+                    Keep this page link private. It shows only this request.
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

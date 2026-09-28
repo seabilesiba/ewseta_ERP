@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="proc_cms_nav_eol_assets" model="proc.cms.nav.item">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="name">EOL asset purchase</field>
+        <field name="url">/employee/eol-assets/request</field>
+        <field name="sequence">70</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="proc_cms_footer_eol_assets" model="proc.cms.footer.link">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="column_key">explore</field>
+        <field name="label">EOL asset purchase</field>
+        <field name="url">/employee/eol-assets/request</field>
+        <field name="sequence">15</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <function model="proc.cms.nav.item" name="sync_all_menus"/>
+
+</odoo>

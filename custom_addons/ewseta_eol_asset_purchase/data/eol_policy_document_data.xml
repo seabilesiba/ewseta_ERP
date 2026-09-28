@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="eol_policy_document_10" model="ew.eol.policy.document">
+        <field name="name">Quantity limits policy</field>
+        <field name="form_item">10</field>
+        <field name="sequence">10</field>
+        <field name="link_label">Quantity limits policy</field>
+        <field name="prefix_text">I confirm I have read the quantity limits ({limit}).</field>
+        <field name="page_summary">Maximum devices you may purchase under the programme.</field>
+    </record>
+
+    <record id="eol_policy_document_11" model="ew.eol.policy.document">
+        <field name="name">As-is sale and no IT support</field>
+        <field name="form_item">11</field>
+        <field name="sequence">20</field>
+        <field name="link_label">As-is sale and no IT support policy</field>
+        <field name="prefix_text">I confirm I have read the</field>
+        <field name="page_summary">Hardware is sold as-is without corporate warranty or helpdesk support.</field>
+    </record>
+
+    <record id="eol_policy_document_12" model="ew.eol.policy.document">
+        <field name="name">Data and software removal</field>
+        <field name="form_item">12</field>
+        <field name="sequence">30</field>
+        <field name="link_label">Data and software removal policy</field>
+        <field name="prefix_text">I confirm I have read the</field>
+        <field name="page_summary">Corporate data and licensed software are removed before handover.</field>
+    </record>
+
+    <record id="eol_policy_document_13" model="ew.eol.policy.document">
+        <field name="name">Liability waiver and payment terms</field>
+        <field name="form_item">13</field>
+        <field name="sequence">40</field>
+        <field name="link_label">Liability waiver and payment terms</field>
+        <field name="prefix_text">I confirm I have read the</field>
+        <field name="page_summary">Waiver signature and payment are required before device release.</field>
+    </record>
+
+</odoo>

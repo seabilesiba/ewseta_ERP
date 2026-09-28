@@ -11,7 +11,16 @@
         <field name="website_id" ref="website.default_website"/>
         <field name="name">Procurements</field>
         <field name="url">/application/rfqs</field>
-        <field name="sequence">80</field>
+        <field name="sequence">50</field>
+        <field name="is_cta" eval="False"/>
+    </record>
+
+    <record id="proc_cms_nav_contact" model="proc.cms.nav.item">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="name">Contact us</field>
+        <field name="url">/contactus</field>
+        <field name="sequence">60</field>
+        <field name="is_cta" eval="False"/>
     </record>
 
     <record id="proc_cms_nav_cta" model="proc.cms.nav.item">

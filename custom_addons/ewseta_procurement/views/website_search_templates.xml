@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Bootstrap modal toggle is unreliable before lazy JS; use ew-proc-search-toggle + head script. -->
+    <template id="proc_header_search_toggle" inherit_id="website.header_search_box"
+        name="Procurement header search toggle" priority="65">
+        <xpath expr="//a[@data-bs-target='#o_search_modal']" position="replace">
+            <button type="button"
+                t-attf-class="btn rounded-circle p-1 lh-1 ew-proc-search-toggle o_no_wait_lazy_js #{_button_classes or 'bg-o-color-3'} o_not_editable"
+                aria-label="Search"
+                title="Search">
+                <i class="oi oi-search fa-stack lh-lg"/>
+            </button>
+        </xpath>
+        <xpath expr="//div[@id='o_search_modal']//div[hasclass('modal-content')]" position="before">
+            <button type="button"
+                class="btn-close ew-proc-search-close o_not_editable"
+                aria-label="Close search"/>
+        </xpath>
+    </template>
+
+</odoo>

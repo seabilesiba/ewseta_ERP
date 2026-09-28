@@ -2,14 +2,23 @@
 <odoo>
 
     <template id="proc_cms_header_logo" inherit_id="website.option_header_brand_logo" name="Proc CMS Navbar Logo" priority="50">
-        <xpath expr="//span[@t-field='website.logo']" position="replace">
-            <t t-set="cms_logo" t-value="website.proc_cms_logo_url()"/>
-            <img t-if="cms_logo"
-                 t-att-src="cms_logo"
-                 alt="EW SETA"
-                 class="img img-fluid o_website_logo ewseta-navbar-logo"
-                 loading="lazy"/>
-            <span t-else="" t-field="website.logo" t-options="{'widget': 'image', 'class': 'img img-fluid o_website_logo ewseta-navbar-logo'}"/>
+        <xpath expr="//a[@data-name='Navbar Logo']" position="replace">
+            <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
+                <t t-set="cms_logo" t-value="website.proc_cms_logo_url()"/>
+                <img t-if="cms_logo"
+                     t-att-src="cms_logo"
+                     alt="EW SETA"
+                     class="img img-fluid o_website_logo ewseta-navbar-logo"
+                     loading="lazy"/>
+                <t t-else="">
+                    <t t-set="base_options" t-value="{'widget': 'image'}"/>
+                    <span t-field="website.logo"
+                          t-options="base_options if editable else dict(base_options, width=95, height=40)"
+                          role="img"
+                          t-att-aria-label="'Logo of %s' % website.name"
+                          t-att-title="website.name"/>
+                </t>
+            </a>
         </xpath>
     </template>
 

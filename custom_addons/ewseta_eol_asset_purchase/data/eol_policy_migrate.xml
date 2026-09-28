@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <function model="ew.eol.policy.document" name="_migrate_legacy_settings_policies"/>
+
+</odoo>

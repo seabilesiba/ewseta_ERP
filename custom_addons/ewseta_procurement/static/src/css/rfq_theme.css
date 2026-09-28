@@ -52,6 +52,18 @@ html.ew-proc-dark #wrapwrap {
     color: var(--ew-dm-text);
 }
 
+html.ew-proc-dark #wrapwrap > main {
+    background-color: var(--ew-dm-bg) !important;
+    color: var(--ew-dm-text);
+}
+
+html.ew-proc-dark #wrapwrap > footer,
+html.ew-proc-dark #wrapwrap > footer .o_footer_copyright {
+    background-color: var(--ew-dm-bg-deep, var(--ew-dm-bg)) !important;
+    color: var(--ew-dm-text);
+    border-color: var(--ew-dm-border);
+}
+
 html.ew-proc-dark header .navbar,
 html.ew-proc-dark header.o_header_standard {
     background-color: var(--ew-dm-bg-elevated) !important;

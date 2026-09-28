@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+
+
+    <template id="proc_mobile_menu_toggle" inherit_id="website.template_header_mobile"
+
+        name="Procurement mobile menu toggle" priority="65">
+
+        <xpath expr="//button[@data-bs-target='#top_menu_collapse_mobile']" position="attributes">
+
+            <attribute name="class" add="ew-proc-mobile-menu-toggle o_no_wait_lazy_js" separator=" "/>
+
+            <attribute name="data-bs-toggle" remove="data-bs-toggle"/>
+
+            <attribute name="data-bs-target" remove="data-bs-target"/>
+
+        </xpath>
+
+        <xpath expr="//div[@id='top_menu_collapse_mobile']//button[@data-bs-dismiss='offcanvas']" position="attributes">
+
+            <attribute name="class" add="ew-proc-mobile-menu-close o_no_wait_lazy_js" separator=" "/>
+
+            <attribute name="data-bs-dismiss" remove="data-bs-dismiss"/>
+
+        </xpath>
+
+    </template>
+
+
+
+</odoo>
+
+

@@ -1,6 +1,6 @@
 {
     'name': 'IT Assets Management',
-    'version': '19.0.1.7.6',
+    'version': '19.0.1.9.0',
     'category': 'Human Resources/Assets',
     'summary': 'Track organizational IT hardware — assign, maintain, and audit laptops, phones, and peripherals',
     'depends': ['hr_maintenance', 'maintenance', 'hr', 'mail'],
@@ -23,10 +23,14 @@
         'views/hr_department_views.xml',
         'views/it_asset_assignment_views.xml',
         'views/it_asset_manufacturer_views.xml',
+        'views/it_asset_category_views.xml',
         'views/it_asset_menus.xml',
         'security/it_asset_incident_security.xml',
     ],
     'assets': {
+        'web.assets_backend': [
+            'it_asset_management/static/src/css/it_asset_backend.css',
+        ],
         'web.report_assets_common': [
             'it_asset_management/static/src/css/ewseta_report.css',
         ],

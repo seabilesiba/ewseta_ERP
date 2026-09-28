@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Core “Powered by Odoo” message (website, portal footer, survey, etc.) -->
+    <template id="ewseta_debrand_brand_promotion_message" inherit_id="web.brand_promotion_message"
+        name="EWSETA Remove Powered By Message" priority="999">
+        <xpath expr="." position="replace">
+            <t name="Brand Promotion Message"/>
+        </xpath>
+    </template>
+
+    <template id="ewseta_debrand_brand_promotion" inherit_id="web.brand_promotion"
+        name="EWSETA Remove Brand Promotion Block" priority="999">
+        <xpath expr="." position="replace">
+            <t name="Brand Promotion"/>
+        </xpath>
+    </template>
+
+    <!-- Public footer: drop the right-hand promo column entirely -->
+    <template id="ewseta_debrand_footer_promo_col" inherit_id="web.frontend_layout"
+        name="EWSETA Footer Promo Column" priority="999">
+        <xpath expr="//t[@t-call='web.brand_promotion']/.." position="replace"/>
+    </template>
+
+    <!-- Portal record sidebar -->
+    <template id="ewseta_debrand_portal_sidebar" inherit_id="portal.portal_record_sidebar"
+        name="EWSETA Remove Portal Powered By" priority="999">
+        <xpath expr="//div[@id='sidebar_content']/div[hasclass('text-muted')]" position="replace"/>
+    </template>
+
+    <!-- Website HTML generator meta -->
+    <template id="ewseta_debrand_meta_generator" inherit_id="website.layout"
+        name="EWSETA Remove Generator Meta" priority="999">
+        <xpath expr="//meta[@name='generator']" position="replace"/>
+    </template>
+
+</odoo>

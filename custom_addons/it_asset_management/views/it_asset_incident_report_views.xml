@@ -5,7 +5,7 @@
         <field name="name">it.asset.incident.report.list</field>
         <field name="model">it.asset.incident.report</field>
         <field name="arch" type="xml">
-            <list string="Incident Reports">
+            <list string="Incident Reports" class="ew-it-asset-list ew-it-asset-list--incident">
                 <field name="name"/>
                 <field name="reporter_name"/>
                 <field name="department_id"/>
@@ -28,7 +28,7 @@
         <field name="name">it.asset.incident.report.form</field>
         <field name="model">it.asset.incident.report</field>
         <field name="arch" type="xml">
-            <form string="IT Incident Report">
+            <form string="IT Incident Report" class="ew-it-asset-form ew-it-asset-form--incident">
                 <header>
                     <button name="action_submit" string="Sign &amp; Submit to ICT" type="object"
                         class="btn-primary" invisible="state != 'draft'"/>
@@ -52,23 +52,35 @@
                         statusbar_visible="draft,submitted,manager_approved,it_approved,resolved,closed"/>
                 </header>
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name" readonly="1"/></h1>
+                    <div class="ew-it-asset-form-hero">
+                        <div class="ew-it-asset-title-block">
+                            <span class="ew-it-asset-tag-eyebrow">Incident report</span>
+                            <h1><field name="name" readonly="1" nolabel="1"/></h1>
+                        </div>
                     </div>
-                    <group>
-                        <group>
-                            <field name="discovered_datetime" readonly="state != 'draft'"/>
-                            <field name="is_resolved" readonly="state != 'draft'"/>
-                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
-                        </group>
-                        <group>
-                            <field name="location" readonly="state != 'draft'"/>
-                            <field name="asset_action" readonly="state not in ('draft', 'manager_approved')"
-                                invisible="not equipment_id"/>
-                        </group>
-                    </group>
-                    <notebook>
+                    <div class="ew-it-asset-form-grid">
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-info-circle" title="Overview"/> Overview
+                            </h3>
+                            <group>
+                                <field name="discovered_datetime" readonly="state != 'draft'"/>
+                                <field name="is_resolved" readonly="state != 'draft'"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            </group>
+                        </div>
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--assign">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-map-marker" title="Location"/> Location &amp; asset action
+                            </h3>
+                            <group>
+                                <field name="location" readonly="state != 'draft'"/>
+                                <field name="asset_action" readonly="state not in ('draft', 'manager_approved')"
+                                    invisible="not equipment_id"/>
+                            </group>
+                        </div>
+                    </div>
+                    <notebook class="ew-it-asset-notebook">
                         <page string="Contact" name="contact">
                             <group>
                                 <group>
@@ -214,7 +226,7 @@
         <field name="name">it.asset.incident.report.kanban</field>
         <field name="model">it.asset.incident.report</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state" class="o_kanban_small_column">
+            <kanban default_group_by="state" class="o_kanban_small_column ew-it-asset-kanban ew-it-asset-kanban--incident">
                 <field name="name"/>
                 <field name="reporter_name"/>
                 <field name="asset_code"/>

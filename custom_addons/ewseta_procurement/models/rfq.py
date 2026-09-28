@@ -11,7 +11,7 @@ class EwRfq(models.Model):
     reference = fields.Char("Reference", required=True, default='New', tracking=True)
     type = fields.Selection([("rfq", "RFQ"), ("rfp", "RFP")], default="rfq", required=True)
     description = fields.Html()
-    rfq_document = fields.Binary(string="RFQ Document", tracking=True)
+    rfq_document = fields.Binary(string="RFQ Document")
     requirement_ids = fields.One2many("ew.rfq.requirement", "rfq_id", string="Required Documents")
     closing_at = fields.Datetime("Closing Date & Time", required=True, tracking=True)
     unlocked = fields.Boolean("Unlocked", default=False)

@@ -66,12 +66,15 @@ class ProcCmsNavItem(models.Model):
 
     def _main_menu(self):
         self.ensure_one()
+        website = self.website_id
+        if website.menu_id:
+            return website.menu_id
         main = self.env.ref("website.main_menu", raise_if_not_found=False)
         if not main:
             return self.env["website.menu"]
         return self.env["website.menu"].search(
             [
-                ("website_id", "=", self.website_id.id),
+                ("website_id", "=", website.id),
                 ("url", "=", main.url),
                 ("name", "=", main.name),
             ],

@@ -5,7 +5,7 @@
         <field name="name">it.asset.assignment.history.list</field>
         <field name="model">it.asset.assignment.history</field>
         <field name="arch" type="xml">
-            <list string="Assignment History">
+            <list string="Assignment History" class="ew-it-asset-list">
                 <field name="equipment_id"/>
                 <field name="assign_date"/>
                 <field name="return_date"/>
@@ -22,24 +22,42 @@
         <field name="name">it.asset.assignment.history.form</field>
         <field name="model">it.asset.assignment.history</field>
         <field name="arch" type="xml">
-            <form string="Assignment History">
+            <form string="Assignment History" class="ew-it-asset-form ew-it-asset-form--history">
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="equipment_id"/>
-                            <field name="assign_date"/>
-                            <field name="return_date"/>
-                        </group>
-                        <group>
-                            <field name="employee_id"/>
-                            <field name="department_id"/>
-                            <field name="assigned_by"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="notes"/>
-                    </group>
+                    <div class="ew-it-asset-form-hero ew-it-asset-form-hero--compact">
+                        <div class="ew-it-asset-title-block">
+                            <span class="ew-it-asset-tag-eyebrow">Assignment record</span>
+                            <h1><field name="equipment_id" nolabel="1"/></h1>
+                        </div>
+                    </div>
+                    <div class="ew-it-asset-form-grid">
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--details">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-calendar" title="Dates"/> Dates
+                            </h3>
+                            <group>
+                                <field name="assign_date"/>
+                                <field name="return_date"/>
+                            </group>
+                        </div>
+                        <div class="ew-it-asset-form-card ew-it-asset-form-card--assign">
+                            <h3 class="ew-it-asset-form-card__title">
+                                <i class="fa fa-user" title="Assignee"/> Assignee
+                            </h3>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="department_id"/>
+                                <field name="assigned_by"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </div>
+                    </div>
+                    <div class="ew-it-asset-form-card ew-it-asset-form-card--maint">
+                        <h3 class="ew-it-asset-form-card__title">
+                            <i class="fa fa-comment" title="Notes"/> Notes
+                        </h3>
+                        <field name="notes" nolabel="1" placeholder="Optional notes about this assignment…"/>
+                    </div>
                 </sheet>
                 <chatter/>
             </form>

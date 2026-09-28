@@ -233,6 +233,14 @@ class MaintenanceEquipment(models.Model):
             'disposal_date': fields.Date.context_today(self),
         })
 
+    def action_mark_lost(self):
+        self.write({
+            'asset_state': 'lost',
+            'employee_id': False,
+            'department_id': False,
+            'equipment_assign_to': 'other',
+        })
+
     def action_open_assignment_history(self):
         self.ensure_one()
         return {

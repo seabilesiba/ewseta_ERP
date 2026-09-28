@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="res.groups.privilege" id="res_groups_privilege_eol_asset">
+        <field name="name">EOL Asset Sales</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <record id="group_eol_employee" model="res.groups">
+        <field name="name">EOL Employee (Portal)</field>
+        <field name="sequence">5</field>
+        <field name="privilege_id" ref="res_groups_privilege_eol_asset"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="group_eol_approver" model="res.groups">
+        <field name="name">EOL Approver</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_eol_asset"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_eol_asset_manager" model="res.groups">
+        <field name="name">EOL Asset Manager</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_eol_asset"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_eol_approver')),
+            (4, ref('it_asset_management.group_it_asset_manager')),
+        ]"/>
+    </record>
+
+    <record id="group_eol_auditor" model="res.groups">
+        <field name="name">EOL Auditor (Read-only)</field>
+        <field name="sequence">30</field>
+        <field name="privilege_id" ref="res_groups_privilege_eol_asset"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+</odoo>

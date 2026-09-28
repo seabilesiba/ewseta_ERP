@@ -15,6 +15,15 @@ class Website(models.Model):
         self.sudo().search([]).write({"favicon": data})
         return True
 
+    @api.model
+    def ewseta_restore_procurement_public_menus(self):
+        """Undo ewseta_web menu takeover; re-sync proc_cms navigation."""
+        from odoo.addons.ewseta_procurement.hooks import _cleanup_ewseta_web_top_menus
+
+        _cleanup_ewseta_web_top_menus(self.env)
+        self.env["proc.cms.seed"].seed_all_websites()
+        return True
+
     def ewseta_procurement_landing_counts(self):
         """Open/closed RFQ counts for the public homepage template."""
         rfq = self.env["ew.rfq"].sudo()

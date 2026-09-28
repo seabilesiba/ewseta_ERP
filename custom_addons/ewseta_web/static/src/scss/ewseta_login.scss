@@ -1,0 +1,202 @@
+// EWSETA /web/login — matches public site palette
+$ewseta-orange: #f8991d;
+$ewseta-orange-dark: #e8850f;
+$ewseta-blue: #00aeef;
+$ewseta-green: #76bc43;
+$ewseta-dark: #231f20;
+
+body.ewseta-login-page,
+#wrapwrap main:has(.ewseta-login-shell) {
+    background: linear-gradient(
+        145deg,
+        $ewseta-dark 0%,
+        #3a3536 22%,
+        rgba($ewseta-orange, 0.92) 52%,
+        rgba($ewseta-blue, 0.88) 100%
+    ) !important;
+}
+
+body.ewseta-login-page {
+    min-height: 100vh;
+
+    #wrapwrap {
+        background: transparent;
+        min-height: 100vh;
+    }
+
+    main {
+        align-items: center;
+        display: flex;
+        min-height: 100vh;
+        padding: 0;
+    }
+}
+
+#wrapwrap main:has(.ewseta-login-shell) {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 1.5rem 0 2.5rem;
+}
+
+.ewseta-login-shell {
+    position: relative;
+    width: 100%;
+}
+
+.ewseta-login__pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0, transparent 40%);
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+}
+
+.ewseta-login__container {
+    position: relative;
+    z-index: 2;
+}
+
+.ewseta-login__card {
+    background: #fff;
+    border-radius: 1.15rem;
+    box-shadow: 0 20px 50px rgba($ewseta-dark, 0.22);
+    max-width: 26rem;
+    position: relative;
+
+    &::before {
+        background: linear-gradient(90deg, $ewseta-orange 0%, $ewseta-blue 55%, $ewseta-green 100%);
+        border-radius: 1.15rem 1.15rem 0 0;
+        content: "";
+        height: 4px;
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+    }
+}
+
+.ewseta-login__card-body {
+    isolation: isolate;
+    padding: 2rem 1.75rem 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.ewseta-login__logo {
+    max-height: 72px;
+    max-width: 100%;
+    object-fit: contain;
+    width: auto;
+}
+
+.ewseta-login__title {
+    color: $ewseta-dark;
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0.35rem 0 0.25rem;
+}
+
+.ewseta-login__lead {
+    color: rgba($ewseta-dark, 0.62);
+    font-size: 0.92rem;
+    margin-bottom: 0;
+}
+
+.ewseta-login__brand {
+    border-bottom: 1px solid rgba($ewseta-dark, 0.08);
+    margin-bottom: 1.35rem;
+    padding-bottom: 1.25rem;
+}
+
+.ewseta-login__form {
+    pointer-events: auto;
+    position: relative;
+    z-index: 3;
+
+    .ewseta-login__label {
+        color: $ewseta-dark;
+        font-size: 0.82rem;
+        font-weight: 650;
+        letter-spacing: 0.02em;
+    }
+
+    .ewseta-login__input,
+    .form-control {
+        border-color: rgba($ewseta-dark, 0.14);
+        border-radius: 0.65rem;
+        padding: 0.55rem 0.75rem;
+
+        &:focus {
+            border-color: rgba($ewseta-orange, 0.65);
+            box-shadow: 0 0 0 0.2rem rgba($ewseta-orange, 0.18);
+        }
+    }
+
+    .input-group .btn {
+        border-color: rgba($ewseta-dark, 0.14);
+        border-radius: 0 0.65rem 0.65rem 0;
+    }
+
+    .alert {
+        border-radius: 0.65rem;
+        font-size: 0.88rem;
+    }
+}
+
+.ewseta-login__submit {
+    border-radius: 50px !important;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 650;
+    padding: 0.7rem 1rem !important;
+    pointer-events: auto;
+    position: relative;
+    width: 100%;
+    z-index: 4;
+
+    &.disabled,
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+        pointer-events: none;
+    }
+}
+
+body.ewseta-login-page .oe_login_form .s_turnstile {
+    margin-bottom: 0.75rem;
+    min-height: 1px;
+    position: relative;
+    z-index: 3;
+}
+
+.ewseta-login__footer {
+    border-top: 1px dashed rgba($ewseta-dark, 0.12);
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+}
+
+.ewseta-login__footer-link {
+    color: rgba($ewseta-dark, 0.55);
+    text-decoration: none;
+
+    &:hover {
+        color: $ewseta-blue;
+    }
+}
+
+.ewseta-login__copyright {
+    color: rgba(255, 255, 255, 0.88);
+    text-shadow: 0 1px 2px rgba($ewseta-dark, 0.35);
+}
+
+@media (max-width: 575.98px) {
+    .ewseta-login__card-body {
+        padding: 1.5rem 1.25rem 1.25rem;
+    }
+}

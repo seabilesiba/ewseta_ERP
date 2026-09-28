@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_template_eol_otp" model="mail.template">
+        <field name="name">EOL Asset Purchase: Email verification code</field>
+        <field name="model_id" ref="model_ew_eol_public_verification"/>
+        <field name="subject">Your EWSETA EOL asset purchase verification code</field>
+        <field name="email_from">{{ (object.request_id.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html" type="html">
+<div>
+    <p>Hello,</p>
+    <p>Use this one-time verification code to continue your end-of-life asset purchase request
+       <strong><t t-out="object.request_id.name"/></strong>:</p>
+    <p style="font-size:24px;letter-spacing:4px;"><strong><t t-out="ctx.get('otp_plain') or '******'"/></strong></p>
+    <p>This code expires shortly. If you did not start this request, ignore this email.</p>
+    <p>EWSETA ICT</p>
+</div>
+        </field>
+    </record>
+
+</odoo>

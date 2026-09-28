@@ -6,7 +6,7 @@
     'name': 'EWSETA Website',
 
     # The version of the module, following Odoo best practices.
-    'version': '19.0.1.9.42',
+    'version': '19.0.1.9.48',
 
     # Category under which module will be grouped in Odoo.
     'category': 'Website/Website',
@@ -21,7 +21,7 @@ Includes branded header, footer, navigation, and homepage snippets.
     """,
 
     # Dependencies: This module requires Odoo's 'website' and 'html_builder' modules.
-    'depends': ['website', 'html_builder'],
+    'depends': ['website', 'html_builder', 'portal'],
 
     # List of data files loaded at module install/update/uninstall.
     'data': [
@@ -29,6 +29,8 @@ Includes branded header, footer, navigation, and homepage snippets.
         'data/generate_primary_template.xml',
         # Generic website template(s)
         'views/website_templates.xml',
+        'views/ewseta_debrand_templates.xml',
+        'views/ewseta_login_templates.xml',
         'views/ewseta_contact_templates.xml',
         # Custom homepage sections/snippets
         'views/snippets/s_ewseta_hero_carousel.xml',
@@ -50,6 +52,7 @@ Includes branded header, footer, navigation, and homepage snippets.
         'web.assets_frontend': [
             # Main SCSS file with all customized styles for EWSETA
             ('after', 'website/static/src/scss/website.scss', 'ewseta_web/static/src/scss/ewseta_web.scss'),
+            ('after', 'ewseta_web/static/src/scss/ewseta_web.scss', 'ewseta_web/static/src/scss/ewseta_login.scss'),
             ('after', 'ewseta_web/static/src/scss/ewseta_web.scss', 'ewseta_web/static/src/scss/ewseta_dark_mode.scss'),
             # JS for carousel functionality or effects
             'ewseta_web/static/src/js/ewseta_hero_carousel.js',

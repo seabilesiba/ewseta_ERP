@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_eol" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.eol</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="EOL Asset Sales" name="ewseta_eol_asset_purchase"
+                    groups="ewseta_eol_asset_purchase.group_eol_asset_manager">
+                    <block title="Public programme">
+                        <setting string="Public form enabled">
+                            <field name="eol_public_form_enabled"/>
+                        </setting>
+                        <setting string="Programme introduction">
+                            <field name="eol_programme_intro" widget="html" colspan="2"/>
+                        </setting>
+                        <setting string="Corporate email domain">
+                            <field name="eol_corporate_email_domain" placeholder="ewseta.org.za"/>
+                        </setting>
+                        <setting string="Acknowledgement policy version">
+                            <field name="eol_ack_policy_version"/>
+                        </setting>
+                        <setting string="Office location options">
+                            <field name="eol_site_options" placeholder="Office A|Office B|Remote"/>
+                        </setting>
+                        <setting string="Quantity limit text ({limit} placeholder)">
+                            <field name="eol_quantity_limit_ack_text"/>
+                        </setting>
+                        <setting string="Section 3 policy documents">
+                            <div class="text-muted">
+                                Upload and edit items 10–13 under
+                                <strong>IT Assets → EOL Configuration → EOL Policies</strong>.
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Verification and limits">
+                        <setting string="OTP validity (minutes)">
+                            <field name="eol_otp_ttl_minutes"/>
+                        </setting>
+                        <setting string="OTP max attempts">
+                            <field name="eol_otp_max_attempts"/>
+                        </setting>
+                        <setting string="Submissions per email / hour">
+                            <field name="eol_rate_limit_per_hour"/>
+                        </setting>
+                        <setting string="Tracking link validity (days)">
+                            <field name="eol_tracking_token_days"/>
+                        </setting>
+                        <setting string="Purchase limit period (days)">
+                            <field name="eol_purchase_limit_period_days"/>
+                        </setting>
+                        <setting string="Default purchase limit count">
+                            <field name="eol_purchase_limit_count"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_eol_configuration" model="ir.actions.act_window">
+        <field name="name">EOL Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'ewseta_eol_asset_purchase', 'bin_size': False}</field>
+    </record>
+
+</odoo>

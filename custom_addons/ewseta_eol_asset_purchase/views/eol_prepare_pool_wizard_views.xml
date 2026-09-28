@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="eol_prepare_pool_wizard_view_form" model="ir.ui.view">
+        <field name="name">ew.eol.prepare.pool.wizard.form</field>
+        <field name="model">ew.eol.prepare.pool.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Prepare for EOL pool" class="ew-eol-form ew-eol-wizard-form">
+                <div class="ew-eol-form-hero">
+                    <div>
+                        <span class="ew-eol-form-label">ICT release</span>
+                        <h2 class="ew-eol-form-title mb-0">Prepare for EOL pool</h2>
+                    </div>
+                </div>
+                <group>
+                    <field name="equipment_id"/>
+                </group>
+                <div class="ew-eol-form-card ew-eol-form-card--checklist ew-eol-wizard-checklist">
+                    <h3 class="ew-eol-form-card__title">
+                        <i class="fa fa-shield" title="Checklist"/> Deprovisioning checklist
+                    </h3>
+                    <group>
+                        <field name="deprov_user_profiles"/>
+                        <field name="deprov_licenses"/>
+                        <field name="deprov_antivirus"/>
+                        <field name="deprov_vpn"/>
+                        <field name="deprov_monitoring"/>
+                        <field name="deprov_email"/>
+                        <field name="deprov_certificates"/>
+                        <field name="deprov_other_apps"/>
+                    </group>
+                </div>
+                <group>
+                    <field name="notes" placeholder="Optional handover / wipe notes"/>
+                    <field name="set_eol_sale_eligible"/>
+                    <field name="clear_network_identity"/>
+                </group>
+                <footer>
+                    <button name="action_apply" string="Release to EOL pool"
+                        type="object" class="btn-primary"
+                        confirm="This unassigns the device, marks Asset State Available, and records ICT deprovisioning. Continue?"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

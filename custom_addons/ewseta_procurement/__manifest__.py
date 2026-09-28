@@ -1,6 +1,6 @@
 {
     "name": "EWSETA Procurement",
-    "version": "19.0.1.0.54",
+    "version": "19.0.1.0.83",
     "post_init_hook": "post_init_hook",
     "depends": ["base", "mail", "website", "proc_cms"],
     "data": [
@@ -17,14 +17,20 @@
         "views/rfq_views.xml",
         "views/submission_views.xml",
         "views/website_header_templates.xml",
+        "views/website_user_dropdown_templates.xml",
+        "views/website_search_templates.xml",
+        "views/website_mobile_menu_templates.xml",
+        "views/website_editor_nav_templates.xml",
         "views/website_footer_templates.xml",
         "views/website_theme_templates.xml",
         "views/website_landing_templates.xml",
         "views/website_contact_templates.xml",
+        "views/website_login_templates.xml",
         "views/website_rfq_templates.xml",
         "views/actions.xml",
         "views/menu.xml",
         "data/proc_cms_menu_cleanup.xml",
+        "data/proc_cms_menu_restore.xml",
     ],
 
     "installable": True,
@@ -33,8 +39,15 @@
         "web.assets_backend": [
             "ewseta_procurement/static/src/css/rfq_backend.css",
         ],
+        "web.assets_frontend_minimal": [
+            "ewseta_procurement/static/src/js/rfq_theme.js",
+            "ewseta_procurement/static/src/js/rfq_landing.js",
+            "ewseta_procurement/static/src/js/rfq_portal_views.js",
+            "ewseta_procurement/static/src/js/rfq_login_password.js",
+        ],
         "web.assets_frontend": [
             "ewseta_procurement/static/src/css/rfq_theme.css",
+            "ewseta_procurement/static/src/css/rfq_login.css",
             "ewseta_procurement/static/src/css/rfq_website_header.css",
             "ewseta_procurement/static/src/css/rfq_portal.css",
             "ewseta_procurement/static/src/css/rfq_landing.css",
@@ -42,10 +55,8 @@
             "ewseta_procurement/static/src/css/rfq_footer.css",
             "ewseta_procurement/static/src/css/rfq_hover_animations.css",
             "ewseta_procurement/static/src/css/rfq_website_brand.css",
-            "ewseta_procurement/static/src/js/rfq_portal_views.js",
+            "ewseta_procurement/static/src/css/rfq_responsive.css",
             "ewseta_procurement/static/src/js/rfq_portal_datatable.js",
-            "ewseta_procurement/static/src/js/rfq_landing.js",
-            "ewseta_procurement/static/src/js/rfq_theme.js",
         ],
     },
 }

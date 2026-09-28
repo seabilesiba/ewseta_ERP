@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="eol_policy_document_view_list" model="ir.ui.view">
+        <field name="name">ew.eol.policy.document.list</field>
+        <field name="model">ew.eol.policy.document</field>
+        <field name="arch" type="xml">
+            <list class="ew-eol-policy-doc-list" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="form_item"/>
+                <field name="name"/>
+                <field name="link_label"/>
+                <field name="version"/>
+                <field name="has_document" widget="boolean"/>
+                <field name="has_policy_body" widget="boolean"/>
+                <field name="is_published" widget="boolean"
+                    decoration-success="is_published"
+                    decoration-warning="not is_published"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="eol_policy_document_view_form" model="ir.ui.view">
+        <field name="name">ew.eol.policy.document.form</field>
+        <field name="model">ew.eol.policy.document</field>
+        <field name="arch" type="xml">
+            <form string="EOL Policy" class="ew-eol-form ew-eol-policy-form">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="has_document" invisible="1"/>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="ew-eol-form-hero">
+                        <div>
+                            <span class="ew-eol-form-label">Section 3 policy</span>
+                            <div class="ew-eol-form-title">
+                                <h1><field name="name" placeholder="Policy title"/></h1>
+                            </div>
+                            <field name="form_item" class="ew-eol-policy-form-item-badge"/>
+                        </div>
+                        <div class="ew-eol-form-hero-meta ew-eol-policy-form-meta">
+                            <span class="ew-eol-form-label">Publication</span>
+                            <div class="ew-eol-policy-form-badges">
+                                <field name="is_published" widget="boolean" readonly="1"/>
+                                <label for="is_published" class="ew-eol-policy-form-published-label">Ready on portal</label>
+                            </div>
+                            <span class="ew-eol-form-label mt-2">Version</span>
+                            <div class="ew-eol-form-price ew-eol-policy-form-version">
+                                <field name="version" nolabel="1" placeholder="e.g. v2026-01"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ew-eol-form-grid">
+                        <div class="ew-eol-form-card ew-eol-form-card--status">
+                            <h3 class="ew-eol-form-card__title">
+                                <i class="fa fa-list-ol" title="Identification"/> Identification
+                            </h3>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                                <field name="has_document" readonly="1"/>
+                                <field name="has_policy_body" readonly="1"/>
+                            </group>
+                        </div>
+                        <div class="ew-eol-form-card ew-eol-form-card--ack">
+                            <h3 class="ew-eol-form-card__title">
+                                <i class="fa fa-link" title="Portal"/> Employee form link
+                            </h3>
+                            <group>
+                                <field name="link_label"/>
+                                <field name="prefix_text" placeholder="Item 10: use {limit} for quantity text"/>
+                                <field name="document_filename" invisible="1"/>
+                                <field name="document" filename="document_filename"/>
+                                <field name="ack_field_name" readonly="1"/>
+                            </group>
+                            <p class="ew-eol-form-hint">
+                                Upload a PDF (optional if policy text below is complete) and set the link title shown on the public request form.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="ew-eol-form-card ew-eol-form-card--eol-sale ew-eol-policy-form-card--summary">
+                        <h3 class="ew-eol-form-card__title">
+                            <i class="fa fa-file-text-o" title="Summary"/> Public page summary
+                        </h3>
+                        <field name="page_summary" nolabel="1" colspan="2"
+                            placeholder="Short teaser on the landing and request pages…"/>
+                    </div>
+                    <div class="ew-eol-form-card ew-eol-form-card--checklist ew-eol-policy-form-card--body">
+                        <h3 class="ew-eol-form-card__title">
+                            <i class="fa fa-globe" title="Public policy"/> Policy text (public policy page)
+                        </h3>
+                        <field name="policy_body" widget="html" nolabel="1" colspan="2"
+                            class="ew-eol-policy-form-html"
+                            placeholder="Full policy wording. Item 10: use {limit} for quantity limit text."/>
+                        <p class="ew-eol-form-hint">
+                            Employees see this on the dedicated policy page. Item 10 can include <code>{limit}</code> for the configured quantity limit.
+                        </p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="eol_policy_document_action" model="ir.actions.act_window">
+        <field name="name">EOL Policies</field>
+        <field name="res_model">ew.eol.policy.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload the four Section 3 policy documents (form items 10–13).
+            </p>
+            <p>
+                Each record controls the download link and acknowledgement text on the public employee form.
+            </p>
+        </field>
+    </record>
+
+</odoo>

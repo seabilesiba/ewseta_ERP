@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eol_policy_user,ew.eol.policy.document user,model_ew_eol_policy_document,base.group_user,1,0,0,0
+access_eol_policy_manager,ew.eol.policy.document manager,model_ew_eol_policy_document,ewseta_eol_asset_purchase.group_eol_asset_manager,1,1,1,1
+access_eol_policy_auditor,ew.eol.policy.document auditor,model_ew_eol_policy_document,ewseta_eol_asset_purchase.group_eol_auditor,1,0,0,0
+access_eol_category_user,ew.eol.asset.category user,model_ew_eol_asset_category,base.group_user,1,0,0,0
+access_eol_category_manager,ew.eol.asset.category manager,model_ew_eol_asset_category,ewseta_eol_asset_purchase.group_eol_asset_manager,1,1,1,1
+access_eol_request_user,ew.eol.purchase.request user,model_ew_eol_purchase_request,base.group_user,1,0,0,0
+access_eol_request_approver,ew.eol.purchase.request approver,model_ew_eol_purchase_request,ewseta_eol_asset_purchase.group_eol_approver,1,1,0,0
+access_eol_request_manager,ew.eol.purchase.request manager,model_ew_eol_purchase_request,ewseta_eol_asset_purchase.group_eol_asset_manager,1,1,1,1
+access_eol_request_it_manager,ew.eol.purchase.request it manager,model_ew_eol_purchase_request,it_asset_management.group_it_asset_manager,1,1,0,0
+access_eol_request_auditor,ew.eol.purchase.request auditor,model_ew_eol_purchase_request,ewseta_eol_asset_purchase.group_eol_auditor,1,0,0,0
+access_eol_verification_manager,ew.eol.public.verification manager,model_ew_eol_public_verification,ewseta_eol_asset_purchase.group_eol_asset_manager,1,1,1,0
+access_eol_approval_approver,ew.eol.approval.line approver,model_ew_eol_approval_line,ewseta_eol_asset_purchase.group_eol_approver,1,1,1,0
+access_eol_approval_manager,ew.eol.approval.line manager,model_ew_eol_approval_line,ewseta_eol_asset_purchase.group_eol_asset_manager,1,1,1,1
+access_eol_prepare_pool_wizard_manager,ew.eol.prepare.pool.wizard manager,model_ew_eol_prepare_pool_wizard,ewseta_eol_asset_purchase.group_eol_asset_manager,1,1,1,1
+access_eol_prepare_pool_wizard_it,ew.eol.prepare.pool.wizard it manager,model_ew_eol_prepare_pool_wizard,it_asset_management.group_it_asset_manager,1,1,1,1

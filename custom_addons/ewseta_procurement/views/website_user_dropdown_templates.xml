@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- No data-bs-toggle: Bootstrap + website header effects fight each other on this site. -->
+    <template id="proc_portal_user_dropdown" inherit_id="portal.user_dropdown"
+        name="Procurement portal user dropdown" priority="60">
+        <xpath expr="//a[@data-bs-toggle='dropdown']" position="replace">
+            <button type="button" role="button" aria-expanded="false"
+                t-attf-class="dropdown-toggle ew-proc-user-toggle o_no_wait_lazy_js #{_link_class}">
+                <t t-if="_avatar">
+                    <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
+                    <img t-att-src="avatar_source" t-attf-class="rounded-circle object-fit-cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                </t>
+                <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
+                    <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
+                </div>
+                <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+            </button>
+        </xpath>
+        <!-- portal.user_dropdown uses t-attf-class; static class add is ignored at render time. -->
+        <xpath expr="//div[@role='menu']" position="attributes">
+            <attribute name="t-attf-class">dropdown-menu js_usermenu ew-proc-user-menu #{_dropdown_menu_class}</attribute>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_eol_root"
+        name="EOL Asset Sales"
+        parent="it_asset_management.menu_it_asset_root"
+        sequence="15"
+        groups="ewseta_eol_asset_purchase.group_eol_approver,ewseta_eol_asset_purchase.group_eol_asset_manager,ewseta_eol_asset_purchase.group_eol_auditor"/>
+
+    <menuitem id="menu_eol_requests"
+        name="Purchase Requests"
+        parent="menu_eol_root"
+        action="eol_purchase_request_action"
+        sequence="10"/>
+
+    <menuitem id="menu_eol_configuration"
+        name="EOL Configuration"
+        parent="it_asset_management.menu_it_asset_configuration"
+        sequence="25"
+        groups="ewseta_eol_asset_purchase.group_eol_asset_manager"/>
+
+    <menuitem id="menu_eol_categories"
+        name="Public Catalogue"
+        parent="menu_eol_configuration"
+        action="eol_asset_category_action"
+        sequence="10"/>
+
+    <menuitem id="menu_eol_policies"
+        name="EOL Policies"
+        parent="menu_eol_configuration"
+        action="eol_policy_document_action"
+        sequence="15"/>
+
+    <menuitem id="menu_eol_settings"
+        name="EOL Programme Settings"
+        parent="menu_eol_configuration"
+        action="action_eol_configuration"
+        sequence="20"/>
+
+</odoo>

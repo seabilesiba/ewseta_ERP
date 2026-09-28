@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="proc_editor_apps_dropdown" inherit_id="website.layout"
+        name="Procurement editor apps dropdown" priority="66">
+        <xpath expr="//a[hasclass('o_frontend_to_backend_apps_btn')]" position="attributes">
+            <attribute name="class" add="ew-proc-editor-apps-toggle o_no_wait_lazy_js" separator=" "/>
+            <attribute name="data-bs-toggle" remove="data-bs-toggle"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_frontend_to_backend_apps_menu')]" position="attributes">
+            <attribute name="class" add="ew-proc-editor-apps-menu" separator=" "/>
+        </xpath>
+    </template>
+
+</odoo>

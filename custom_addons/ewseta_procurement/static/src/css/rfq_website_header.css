@@ -1,4 +1,30 @@
 /* EWSETA procurement site — navbar logo + Contact Us CTA */
+
+/* Light mode: mint navbar + teal bottom stripe (brand swatch) */
+html:not(.ew-proc-dark) #wrapwrap > header#top {
+    background-color: var(--ew-proc-nav-bg, #eaf4f2) !important;
+    border-bottom: 3px solid var(--ew-proc-nav-border, #5d8e9d) !important;
+    box-shadow: none;
+}
+
+html:not(.ew-proc-dark) #wrapwrap > header#top .navbar,
+html:not(.ew-proc-dark) #wrapwrap > header#top .o_main_nav,
+html:not(.ew-proc-dark) #wrapwrap > header#top .o_header_mobile,
+html:not(.ew-proc-dark) #wrapwrap > header#top.o_header_affixed,
+html:not(.ew-proc-dark) #wrapwrap > header#top.o_header_is_scrolled {
+    background-color: var(--ew-proc-nav-bg, #eaf4f2) !important;
+}
+
+html:not(.ew-proc-dark) header .navbar .nav-link:not(.active),
+html:not(.ew-proc-dark) header .navbar .navbar-brand,
+html:not(.ew-proc-dark) header .navbar .o_nav-link_secondary {
+    color: #2a4a52 !important;
+}
+
+html:not(.ew-proc-dark) header .navbar .nav-link.active {
+    color: #f29100 !important;
+}
+
 .ewseta-navbar-logo {
     max-height: 44px;
     max-width: min(220px, 55vw);
@@ -27,4 +53,182 @@ header .btn.ewseta-nav-cta.btn-primary:focus {
     background-color: #d97f00;
     border-color: #d97f00;
     color: #fff;
+}
+
+#wrapwrap > header#top {
+    position: relative;
+    z-index: 1040;
+}
+
+#wrapwrap > header#top .o_no_autohide_item {
+    position: static;
+}
+
+#wrapwrap > header#top .ew-proc-user-toggle {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+#o_search_modal.show {
+    display: block !important;
+    z-index: 1060;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#o_search_modal.show .modal-dialog {
+    position: relative;
+}
+
+/* Above the white search bar, on the dimmed overlay — not on the submit button */
+#o_search_modal .ew-proc-search-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 3;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
+#o_search_modal .ew-proc-search-close:hover {
+    opacity: 1;
+}
+
+#ew-proc-search-backdrop,
+.ew-proc-search-backdrop {
+    z-index: 1055;
+}
+
+/* Visual dim only — must not capture taps (see ew-proc-mobile-critical in layout head). */
+.ew-proc-mobile-backdrop {
+    z-index: 1035;
+    pointer-events: none;
+}
+
+body.ew-proc-mobile-menu-open #wrapwrap > header#top {
+    z-index: 1070;
+}
+
+/* Offcanvas panel must stay off-screen until opened (Bootstrap CSS can load late). */
+@media (max-width: 991.98px) {
+    #top_menu_collapse_mobile.offcanvas {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(100vw, 22rem);
+        max-width: 100%;
+        z-index: 1065;
+        visibility: hidden;
+        transform: translateX(100%);
+        transition: transform 0.25s ease-in-out, visibility 0.25s;
+        background-color: #fff;
+        pointer-events: none;
+        overflow-y: auto;
+    }
+
+    #top_menu_collapse_mobile.offcanvas.show {
+        visibility: visible;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+}
+
+@media (min-width: 992px) {
+    #top_menu_collapse_mobile.offcanvas {
+        display: none !important;
+    }
+}
+
+html.ew-proc-dark #top_menu_collapse_mobile.offcanvas {
+    background-color: #1e2420;
+    color: #e8ece9;
+}
+
+.o_frontend_to_backend_buttons {
+    position: relative;
+}
+
+.o_frontend_to_backend_apps_menu.ew-proc-editor-apps-menu--open {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1070;
+    min-width: 12rem;
+}
+
+header .ew-proc-user-menu.ew-proc-user-menu--open {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
+    display: block !important;
+    padding: 0.35rem 0;
+}
+
+html.ew-proc-dark header .ew-proc-user-menu.ew-proc-user-menu--open {
+    background: #1e2420;
+    border-color: #3a4540;
+}
+
+/* Mobile drawer: keep user menu in-flow (dropup); desktop uses fixed positioning via JS */
+@media (max-width: 991.98px) {
+    #top_menu_collapse_mobile .ew-proc-user-menu.ew-proc-user-menu--open,
+    #top_menu_collapse_mobile .ew-proc-user-menu.show {
+        position: static !important;
+        inset: auto !important;
+        transform: none !important;
+        float: none;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-top: 0.35rem;
+        background: #fff !important;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+        box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.08);
+    }
+
+    #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item {
+        color: #15251f !important;
+        opacity: 1 !important;
+        font-size: 1rem;
+        line-height: 1.4;
+        padding: 0.75rem 1rem;
+        white-space: normal;
+    }
+
+    #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item i {
+        color: #f29100 !important;
+    }
+
+    #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item:hover,
+    #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item:focus {
+        background: #f0faf5;
+        color: #15251f !important;
+    }
+
+    html.ew-proc-dark #top_menu_collapse_mobile .ew-proc-user-menu.ew-proc-user-menu--open,
+    html.ew-proc-dark #top_menu_collapse_mobile .ew-proc-user-menu.show {
+        background: #1e2420 !important;
+        border-color: #3a4540;
+    }
+
+    html.ew-proc-dark #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item {
+        color: #e8ece9 !important;
+    }
+
+    html.ew-proc-dark #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item:hover,
+    html.ew-proc-dark #top_menu_collapse_mobile .ew-proc-user-menu .dropdown-item:focus {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff !important;
+    }
+}
+
+header .ew-proc-user-menu.ew-proc-user-menu--open .dropdown-item {
+    color: #15251f;
+}
+
+html.ew-proc-dark header .ew-proc-user-menu.ew-proc-user-menu--open .dropdown-item {
+    color: #e8ece9;
 }

@@ -4,15 +4,449 @@
     <!-- Apply saved theme before first paint; default is light (no class). -->
     <template id="ewseta_proc_theme_init" inherit_id="website.layout" name="EWSETA Procurement Theme Init" priority="30">
         <xpath expr="//head" position="inside">
+            <style id="ew-proc-mobile-critical">
+                @media (max-width: 991.98px) {
+                    .ew-proc-mobile-backdrop {
+                        position: fixed;
+                        inset: 0;
+                        z-index: 1035;
+                        pointer-events: none;
+                        background-color: rgba(0, 0, 0, 0.5);
+                    }
+                    body.ew-proc-mobile-menu-open #wrapwrap &gt; header#top {
+                        z-index: 1080;
+                    }
+                    #top_menu_collapse_mobile.offcanvas.show {
+                        pointer-events: auto;
+                        z-index: 1085;
+                    }
+                }
+            </style>
             <script id="ew-proc-theme-init" type="text/javascript">
                 (function () {
-                    try {
-                        if (localStorage.getItem('ew-proc-theme') === 'dark') {
-                            document.documentElement.classList.add('ew-proc-dark');
-                            document.documentElement.dataset.ewProcTheme = 'dark';
-                            document.documentElement.style.colorScheme = 'dark';
+                    var STORAGE = 'ew-proc-theme';
+                    var CLASS = 'ew-proc-dark';
+                    function apply(theme) {
+                        var html = document.documentElement;
+                        var isDark = theme === 'dark';
+                        if (isDark) {
+                            html.classList.add(CLASS);
+                        } else {
+                            html.classList.remove(CLASS);
                         }
+                        html.dataset.ewProcTheme = isDark ? 'dark' : 'light';
+                        html.style.colorScheme = isDark ? 'dark' : 'light';
+                    }
+                    try {
+                        apply(localStorage.getItem(STORAGE) === 'dark' ? 'dark' : 'light');
                     } catch (e) {}
+                })();
+            </script>
+            <script id="ew-proc-user-menu" type="text/javascript">
+                (function () {
+                    function clearMenuPosition(menu) {
+                        if (!menu) {
+                            return;
+                        }
+                        menu.style.position = '';
+                        menu.style.top = '';
+                        menu.style.left = '';
+                        menu.style.right = '';
+                        menu.style.bottom = '';
+                        menu.style.minWidth = '';
+                        menu.style.width = '';
+                        menu.style.zIndex = '';
+                        menu.style.transform = '';
+                    }
+                    function closeAll() {
+                        document.querySelectorAll('header .ew-proc-user-menu').forEach(function (menu) {
+                            menu.classList.remove('show', 'ew-proc-user-menu--open');
+                            menu.style.display = '';
+                            clearMenuPosition(menu);
+                            var btn = menu.parentElement &amp;&amp; menu.parentElement.querySelector('.ew-proc-user-toggle');
+                            if (btn) {
+                                btn.setAttribute('aria-expanded', 'false');
+                                btn.classList.remove('show');
+                            }
+                        });
+                    }
+                    function placeMenu(btn, menu) {
+                        clearMenuPosition(menu);
+                        if (menu.closest('#top_menu_collapse_mobile')) {
+                            return;
+                        }
+                        var rect = btn.getBoundingClientRect();
+                        menu.style.position = 'fixed';
+                        menu.style.top = Math.round(rect.bottom + 4) + 'px';
+                        menu.style.left = 'auto';
+                        menu.style.right = Math.max(8, Math.round(window.innerWidth - rect.right)) + 'px';
+                        menu.style.minWidth = '12rem';
+                        menu.style.zIndex = '2000';
+                    }
+                    function bind() {
+                        document.querySelectorAll('header .ew-proc-user-toggle').forEach(function (btn) {
+                            if (btn.dataset.ewProcBound) {
+                                return;
+                            }
+                            btn.dataset.ewProcBound = '1';
+                            var parent = btn.parentElement;
+                            var menu = parent &amp;&amp; (
+                                parent.querySelector('.ew-proc-user-menu') ||
+                                parent.querySelector('.js_usermenu')
+                            );
+                            if (!menu) {
+                                return;
+                            }
+                            btn.addEventListener('click', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                var open = menu.classList.contains('ew-proc-user-menu--open');
+                                closeAll();
+                                if (!open) {
+                                    menu.classList.add('show', 'ew-proc-user-menu--open');
+                                    btn.classList.add('show');
+                                    btn.setAttribute('aria-expanded', 'true');
+                                    menu.style.display = 'block';
+                                    placeMenu(btn, menu);
+                                }
+                            });
+                        });
+                    }
+                    document.addEventListener('click', function (ev) {
+                        if (ev.target.closest('header .o_no_autohide_item')) {
+                            return;
+                        }
+                        closeAll();
+                    });
+                    window.addEventListener('resize', closeAll);
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', bind);
+                    } else {
+                        bind();
+                    }
+                    window.addEventListener('load', bind);
+                })();
+            </script>
+            <script id="ew-proc-search-modal" type="text/javascript">
+                (function () {
+                    function ensureSearchModalBlock() {
+                        var modal = document.getElementById('o_search_modal');
+                        if (!modal) {
+                            return null;
+                        }
+                        if (!document.getElementById('o_search_modal_block') &amp;&amp; modal.closest('header#top')) {
+                            var mainEl = document.querySelector('main');
+                            if (mainEl) {
+                                var block = document.createElement('div');
+                                block.id = 'o_search_modal_block';
+                                block.appendChild(modal);
+                                mainEl.appendChild(block);
+                            }
+                        }
+                        return modal;
+                    }
+                    function isSearchOpen() {
+                        var modal = document.getElementById('o_search_modal');
+                        return modal &amp;&amp; modal.classList.contains('show');
+                    }
+                    function closeSearchModal() {
+                        var modal = document.getElementById('o_search_modal');
+                        if (!modal) {
+                            return;
+                        }
+                        modal.classList.remove('show');
+                        modal.style.display = '';
+                        modal.setAttribute('aria-hidden', 'true');
+                        document.body.classList.remove('modal-open');
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
+                        var backdrop = document.getElementById('ew-proc-search-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                    }
+                    function openSearchModal() {
+                        var modal = ensureSearchModalBlock();
+                        if (!modal) {
+                            return;
+                        }
+                        closeSearchModal();
+                        modal.classList.add('show');
+                        modal.style.display = 'block';
+                        modal.removeAttribute('aria-hidden');
+                        document.body.classList.add('modal-open');
+                        var backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show ew-proc-search-backdrop';
+                        backdrop.id = 'ew-proc-search-backdrop';
+                        backdrop.addEventListener('click', closeSearchModal);
+                        document.body.appendChild(backdrop);
+                        var input = modal.querySelector('.search-query');
+                        if (input) {
+                            window.setTimeout(function () {
+                                input.focus();
+                            }, 0);
+                        }
+                    }
+                    function bindModalDismiss() {
+                        var modal = document.getElementById('o_search_modal');
+                        if (!modal || modal.dataset.ewProcModalDismissBound) {
+                            return;
+                        }
+                        modal.dataset.ewProcModalDismissBound = '1';
+                        modal.addEventListener('click', function (ev) {
+                            if (!isSearchOpen()) {
+                                return;
+                            }
+                            if (!ev.target.closest('.modal-dialog')) {
+                                closeSearchModal();
+                            }
+                        });
+                    }
+                    function bindSearchToggle() {
+                        document.querySelectorAll('.ew-proc-search-toggle').forEach(function (btn) {
+                            if (btn.dataset.ewProcSearchBound) {
+                                return;
+                            }
+                            btn.dataset.ewProcSearchBound = '1';
+                            btn.addEventListener('click', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                if (isSearchOpen()) {
+                                    closeSearchModal();
+                                } else {
+                                    openSearchModal();
+                                }
+                            });
+                        });
+                        document.querySelectorAll('.ew-proc-search-close').forEach(function (btn) {
+                            if (btn.dataset.ewProcSearchCloseBound) {
+                                return;
+                            }
+                            btn.dataset.ewProcSearchCloseBound = '1';
+                            btn.addEventListener('click', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                closeSearchModal();
+                            });
+                        });
+                    }
+                    document.addEventListener('keydown', function (ev) {
+                        if (ev.key === 'Escape' &amp;&amp; isSearchOpen()) {
+                            ev.preventDefault();
+                            closeSearchModal();
+                        }
+                    });
+                    function initSearch() {
+                        ensureSearchModalBlock();
+                        bindModalDismiss();
+                        bindSearchToggle();
+                    }
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', initSearch);
+                    } else {
+                        initSearch();
+                    }
+                    window.addEventListener('load', initSearch);
+                })();
+            </script>
+            <script id="ew-proc-mobile-menu" type="text/javascript">
+                (function () {
+                    function mobilePanel() {
+                        return document.getElementById('top_menu_collapse_mobile');
+                    }
+                    function isMobileMenuOpen() {
+                        var panel = mobilePanel();
+                        return panel &amp;&amp; panel.classList.contains('show');
+                    }
+                    function closeMobileMenu() {
+                        var panel = mobilePanel();
+                        if (panel) {
+                            panel.classList.remove('show');
+                            panel.setAttribute('aria-hidden', 'true');
+                            panel.removeAttribute('aria-modal');
+                        }
+                        document.body.classList.remove('overflow-hidden', 'modal-open', 'ew-proc-mobile-menu-open');
+                        var hdr = document.querySelector('#wrapwrap &gt; header#top');
+                        if (hdr) {
+                            hdr.style.zIndex = '';
+                        }
+                        var backdrop = document.getElementById('ew-proc-mobile-backdrop');
+                        if (backdrop) {
+                            backdrop.remove();
+                        }
+                        document.querySelectorAll('.ew-proc-mobile-menu-toggle, button[aria-controls="top_menu_collapse_mobile"]').forEach(function (btn) {
+                            btn.setAttribute('aria-expanded', 'false');
+                        });
+                    }
+                    function followMenuLink(link) {
+                        var href = link.getAttribute('href');
+                        if (!href || href === '#') {
+                            return;
+                        }
+                        closeMobileMenu();
+                        if (link.target === '_blank') {
+                            window.open(link.href, '_blank', 'noopener');
+                            return;
+                        }
+                        window.location.assign(link.href);
+                    }
+                    function openMobileMenu() {
+                        var panel = mobilePanel();
+                        if (!panel) {
+                            return;
+                        }
+                        closeMobileMenu();
+                        panel.classList.add('show');
+                        panel.removeAttribute('aria-hidden');
+                        panel.setAttribute('aria-modal', 'true');
+                        document.body.classList.add('overflow-hidden', 'ew-proc-mobile-menu-open');
+                        var hdr = document.querySelector('#wrapwrap &gt; header#top');
+                        if (hdr) {
+                            hdr.style.zIndex = '1080';
+                        }
+                        var backdrop = document.createElement('div');
+                        backdrop.className = 'offcanvas-backdrop fade show ew-proc-mobile-backdrop';
+                        backdrop.id = 'ew-proc-mobile-backdrop';
+                        backdrop.setAttribute('aria-hidden', 'true');
+                        document.body.appendChild(backdrop);
+                        document.querySelectorAll('.ew-proc-mobile-menu-toggle, button[aria-controls="top_menu_collapse_mobile"]').forEach(function (btn) {
+                            btn.setAttribute('aria-expanded', 'true');
+                        });
+                    }
+                    function handleOutsidePointer(ev) {
+                        if (!isMobileMenuOpen()) {
+                            return;
+                        }
+                        var panel = mobilePanel();
+                        if (!panel || panel.contains(ev.target)) {
+                            return;
+                        }
+                        if (ev.target.closest('.ew-proc-mobile-menu-toggle, button[aria-controls="top_menu_collapse_mobile"]')) {
+                            return;
+                        }
+                        closeMobileMenu();
+                    }
+                    function mobileToggleButtons() {
+                        return document.querySelectorAll('.ew-proc-mobile-menu-toggle, button[aria-controls="top_menu_collapse_mobile"]');
+                    }
+                    function bindMobileMenu() {
+                        mobileToggleButtons().forEach(function (btn) {
+                            if (btn.dataset.ewProcMobileBound) {
+                                return;
+                            }
+                            btn.dataset.ewProcMobileBound = '1';
+                            btn.addEventListener('click', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                if (isMobileMenuOpen()) {
+                                    closeMobileMenu();
+                                } else {
+                                    openMobileMenu();
+                                }
+                            });
+                        });
+                        document.querySelectorAll('.ew-proc-mobile-menu-close').forEach(function (btn) {
+                            if (btn.dataset.ewProcMobileCloseBound) {
+                                return;
+                            }
+                            btn.dataset.ewProcMobileCloseBound = '1';
+                            btn.addEventListener('click', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                closeMobileMenu();
+                            });
+                        });
+                        var panel = mobilePanel();
+                        if (panel &amp;&amp; !panel.dataset.ewProcMobileNavBound) {
+                            panel.dataset.ewProcMobileNavBound = '1';
+                            panel.addEventListener('click', function (ev) {
+                                var link = ev.target.closest('a[href]');
+                                if (!link || !panel.contains(link)) {
+                                    return;
+                                }
+                                var href = link.getAttribute('href');
+                                if (!href || href === '#') {
+                                    return;
+                                }
+                                ev.preventDefault();
+                                ev.stopImmediatePropagation();
+                                followMenuLink(link);
+                            }, true);
+                        }
+                    }
+                    document.addEventListener('mousedown', handleOutsidePointer, true);
+                    document.addEventListener('touchstart', handleOutsidePointer, true);
+                    document.addEventListener('keydown', function (ev) {
+                        if (ev.key === 'Escape' &amp;&amp; isMobileMenuOpen()) {
+                            ev.preventDefault();
+                            closeMobileMenu();
+                        }
+                    });
+                    function initMobileMenu() {
+                        closeMobileMenu();
+                        bindMobileMenu();
+                    }
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', initMobileMenu);
+                    } else {
+                        initMobileMenu();
+                    }
+                    window.addEventListener('load', initMobileMenu);
+                })();
+            </script>
+            <script id="ew-proc-editor-apps" type="text/javascript">
+                (function () {
+                    function closeEditorAppsMenu() {
+                        document.querySelectorAll('.ew-proc-editor-apps-menu--open').forEach(function (menu) {
+                            menu.classList.remove('show', 'ew-proc-editor-apps-menu--open');
+                        });
+                        document.querySelectorAll('.ew-proc-editor-apps-toggle').forEach(function (btn) {
+                            btn.setAttribute('aria-expanded', 'false');
+                        });
+                    }
+                    function bindEditorApps() {
+                        document.querySelectorAll('.ew-proc-editor-apps-toggle').forEach(function (btn) {
+                            if (btn.dataset.ewProcEditorAppsBound) {
+                                return;
+                            }
+                            btn.dataset.ewProcEditorAppsBound = '1';
+                            btn.addEventListener('click', function (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                var wrap = btn.parentElement;
+                                var menu = wrap &amp;&amp; wrap.querySelector('.o_frontend_to_backend_apps_menu');
+                                if (!menu) {
+                                    return;
+                                }
+                                var open = menu.classList.contains('ew-proc-editor-apps-menu--open');
+                                closeEditorAppsMenu();
+                                if (!open) {
+                                    menu.classList.add('show', 'ew-proc-editor-apps-menu--open');
+                                    btn.setAttribute('aria-expanded', 'true');
+                                }
+                            });
+                        });
+                    }
+                    document.addEventListener('click', function (ev) {
+                        if (ev.target.closest('.o_frontend_to_backend_buttons')) {
+                            return;
+                        }
+                        closeEditorAppsMenu();
+                    });
+                    document.addEventListener('keydown', function (ev) {
+                        if (ev.key === 'Escape') {
+                            closeEditorAppsMenu();
+                        }
+                    });
+                    function initEditorApps() {
+                        bindEditorApps();
+                    }
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', initEditorApps);
+                    } else {
+                        initEditorApps();
+                    }
+                    window.addEventListener('load', initEditorApps);
                 })();
             </script>
         </xpath>

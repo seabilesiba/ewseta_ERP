@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- With website installed, login uses website.layout + oe_website_login_container (not web.frontend_layout). -->
+    <template id="ewseta_website_login_layout" inherit_id="website.login_layout"
+        name="EWSETA Website Login Shell" priority="55">
+        <xpath expr="//div[hasclass('oe_website_login_container')]" position="replace">
+            <div class="oe_website_login_container ewseta-login-shell">
+                <div class="ewseta-login__pattern" aria-hidden="true"/>
+                <div class="container ewseta-login__container py-4 py-md-5">
+                    <div class="ewseta-login__card mx-auto o_database_list">
+                        <div class="ewseta-login__card-body">
+                            <div class="ewseta-login__brand text-center">
+                                <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"
+                                    alt="Organization logo"
+                                    class="ewseta-login__logo"/>
+                                <span class="ewseta-eyebrow d-block mt-3">Staff sign-in</span>
+                                <h1 class="ewseta-login__title">Welcome back</h1>
+                                <p class="ewseta-login__lead">Sign in to the EWSETA workspace</p>
+                            </div>
+                            <t t-out="0"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="ewseta_login_form" inherit_id="web.login" name="EWSETA Login Form" priority="50">
+        <!-- Always show the form on /web/login (Odoo hides it with d-none when login is empty). -->
+        <xpath expr="//form[@role='form'][@data-captcha='login']" position="attributes">
+            <attribute name="t-attf-class">oe_login_form ewseta-login__form</attribute>
+        </xpath>
+        <xpath expr="//form[@data-captcha='login']//label[@for='login']" position="replace">
+            <label for="login" class="form-label ewseta-login__label">Email or username</label>
+        </xpath>
+        <xpath expr="//form[@data-captcha='login']//label[@for='password']" position="replace">
+            <label for="password" class="form-label ewseta-login__label">Password</label>
+        </xpath>
+        <xpath expr="//form[@data-captcha='login']//button[@type='submit' and hasclass('btn-primary')]" position="attributes">
+            <attribute name="class" add="btn-ewseta-primary ewseta-login__submit" separator=" "/>
+        </xpath>
+        <xpath expr="//form[@data-captcha='login']//input[@name='login']" position="attributes">
+            <attribute name="placeholder">you@ewseta.org.za</attribute>
+            <attribute name="class" add="ewseta-login__input" separator=" "/>
+        </xpath>
+        <xpath expr="//form[@data-captcha='login']//input[@name='password']" position="attributes">
+            <attribute name="class" add="ewseta-login__input" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="ewseta_login_successful" inherit_id="web.login_successful" name="EWSETA Login Successful" priority="50">
+        <xpath expr="//a[hasclass('btn-primary')]" position="attributes">
+            <attribute name="class" add="btn-ewseta-primary" separator=" "/>
+        </xpath>
+    </template>
+
+</odoo>

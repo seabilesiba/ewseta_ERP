@@ -1,0 +1,301 @@
+/* EWSETA EOL Asset Purchase — backend (IT Assets + EOL requests) */
+
+:root {
+    --ew-eol-orange: #f7941d;
+    --ew-eol-orange-dark: #e8850f;
+    --ew-eol-blue: #00aeef;
+    --ew-eol-green: #8dc63f;
+    --ew-eol-dark: #231f20;
+    --ew-eol-accent-soft: rgba(247, 148, 29, 0.1);
+    --ew-eol-blue-soft: rgba(0, 174, 239, 0.1);
+    --ew-eol-border: #e8e4df;
+    --ew-eol-muted: #5c636a;
+    --ew-eol-shadow: 0 2px 10px rgba(35, 31, 32, 0.06);
+}
+
+/* —— Shared form shell —— */
+.ew-eol-form .o_form_sheet,
+.ew-eol-it-asset-form .o_form_sheet {
+    border-top: 3px solid var(--ew-eol-orange);
+    border-radius: 0 0 12px 12px;
+    padding-top: 1.25rem;
+    background: linear-gradient(180deg, #fffbf7 0%, #ffffff 140px);
+}
+
+.ew-eol-form-hero {
+    align-items: center;
+    background: linear-gradient(
+        105deg,
+        rgba(35, 31, 32, 0.04) 0%,
+        var(--ew-eol-accent-soft) 45%,
+        var(--ew-eol-blue-soft) 100%
+    );
+    border: 1px solid var(--ew-eol-border);
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin: 0.5rem 0 1.25rem;
+    padding: 1rem 1.15rem;
+}
+
+.ew-eol-form-label {
+    color: var(--ew-eol-muted);
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+}
+
+.ew-eol-form-title h1,
+.ew-eol-form-title h2 {
+    color: var(--ew-eol-dark);
+    font-size: 1.55rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.ew-eol-form-hero-meta {
+    text-align: right;
+}
+
+.ew-eol-form-price {
+    color: var(--ew-eol-orange-dark);
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.ew-eol-form-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 992px) {
+    .ew-eol-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ew-eol-form-card {
+    background: #fff;
+    border: 1px solid var(--ew-eol-border);
+    border-radius: 10px;
+    box-shadow: var(--ew-eol-shadow);
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem 0.65rem;
+}
+
+.ew-eol-form-card--status {
+    border-left: 4px solid var(--ew-eol-blue);
+}
+
+.ew-eol-form-card--eol-sale {
+    border-left: 4px solid var(--ew-eol-orange);
+}
+
+.ew-eol-form-card--ack {
+    border-left: 4px solid var(--ew-eol-green);
+}
+
+.ew-eol-form-card--checklist {
+    border-left: 4px solid var(--ew-eol-orange);
+}
+
+.ew-eol-form-card__title {
+    align-items: center;
+    border-bottom: 1px dashed var(--ew-eol-border);
+    color: var(--ew-eol-dark);
+    display: flex;
+    font-size: 0.95rem;
+    font-weight: 650;
+    gap: 0.45rem;
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.55rem;
+}
+
+.ew-eol-form-card__title .fa {
+    color: var(--ew-eol-orange);
+}
+
+.ew-eol-form-card--status .ew-eol-form-card__title .fa {
+    color: var(--ew-eol-blue);
+}
+
+.ew-eol-form-card > .o_group,
+.ew-eol-form-card .o_inner_group {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.ew-eol-form-hint {
+    color: var(--ew-eol-muted);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin: 0.5rem 0 0;
+}
+
+.ew-eol-notebook .nav-link.active {
+    border-bottom-color: var(--ew-eol-orange) !important;
+    color: var(--ew-eol-orange-dark) !important;
+    font-weight: 600;
+}
+
+/* IT asset EOL header actions */
+.ew-eol-it-asset-form header .btn-primary {
+    background-color: var(--ew-eol-orange);
+    border-color: var(--ew-eol-orange-dark);
+}
+
+.ew-eol-it-asset-form header .btn-primary:hover {
+    background-color: var(--ew-eol-orange-dark);
+    border-color: #d67a0c;
+}
+
+.ew-eol-it-asset-form .oe_stat_button .o_stat_info {
+    max-width: 5rem;
+}
+
+/* —— Lists —— */
+.ew-eol-request-list thead {
+    background: var(--ew-eol-accent-soft);
+}
+
+.ew-eol-request-list thead th {
+    border-bottom: 2px solid var(--ew-eol-orange);
+    color: #5a3d12;
+    font-weight: 600;
+}
+
+.ew-eol-request-list tbody tr:hover {
+    background-color: #fff9f2;
+}
+
+.ew-eol-it-asset-list thead th {
+    border-bottom-color: var(--ew-eol-blue);
+}
+
+/* —— Wizard —— */
+.ew-eol-wizard-form .modal-body,
+.ew-eol-wizard-form .o_form_sheet {
+    background: #fffdf9;
+}
+
+.ew-eol-wizard-form .ew-eol-wizard-checklist .o_field_boolean {
+    margin-bottom: 0.35rem;
+}
+
+/* —— Public track page —— */
+.ew-eol-status-card {
+    background: var(--ew-eol-surface, #fff);
+    border: 1px solid var(--ew-eol-border, #e8e4df);
+    border-radius: 0.75rem;
+    box-shadow: var(--ew-eol-shadow);
+    padding: 1.25rem 1.35rem;
+}
+
+.ew-eol-status-card dl {
+    margin-bottom: 0;
+}
+
+.ew-eol-status-card dt {
+    color: var(--ew-eol-muted, #6c757d);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.ew-eol-status-card dd {
+    color: var(--ew-eol-dark, #231f20);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.85rem;
+}
+
+.ew-eol-status-pill {
+    background: var(--ew-eol-accent-soft);
+    border-radius: 2rem;
+    color: var(--ew-eol-orange-dark);
+    display: inline-block;
+    font-size: 0.95rem;
+    padding: 0.35rem 0.9rem;
+}
+
+/* —— EOL policy documents (Configuration) —— */
+.ew-eol-policy-doc-list .o_list_table thead {
+    background: var(--ew-eol-accent-soft);
+}
+
+.ew-eol-policy-doc-list .o_list_table thead th {
+    border-bottom: 2px solid var(--ew-eol-green);
+    color: #3d5a1f;
+    font-weight: 600;
+}
+
+.ew-eol-policy-doc-list .o_list_table tbody tr:hover {
+    background-color: #f8fcf3;
+}
+
+.ew-eol-policy-form .ew-eol-form-hero {
+    align-items: flex-start;
+}
+
+.ew-eol-policy-form-meta {
+    min-width: 10rem;
+}
+
+.ew-eol-policy-form-badges {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+    justify-content: flex-end;
+}
+
+.ew-eol-policy-form-published-label {
+    color: var(--ew-eol-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.ew-eol-policy-form-version .o_input {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.ew-eol-policy-form-item-badge .o_field_widget {
+    color: var(--ew-eol-blue);
+    font-size: 0.88rem;
+    font-weight: 650;
+    margin-top: 0.35rem;
+}
+
+.ew-eol-policy-form-card--summary {
+    border-left-color: var(--ew-eol-orange);
+}
+
+.ew-eol-policy-form-card--body {
+    border-left-color: var(--ew-eol-green);
+}
+
+.ew-eol-policy-form-card--body .ew-eol-form-card__title .fa {
+    color: var(--ew-eol-green);
+}
+
+.ew-eol-policy-form-html .odoo-editor-editable,
+.ew-eol-policy-form-card--body .o_field_html .odoo-editor-editable {
+    min-height: 14rem;
+}
+
+.ew-eol-policy-form .ew-eol-form-hint code {
+    background: var(--ew-eol-accent-soft);
+    border-radius: 4px;
+    font-size: 0.82rem;
+    padding: 0.1rem 0.35rem;
+}

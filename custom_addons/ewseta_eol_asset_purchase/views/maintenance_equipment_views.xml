@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="maintenance_equipment_view_form_eol" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.eol</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="it_asset_management.maintenance_equipment_view_form_it_asset"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="class" add="ew-eol-it-asset-form" separator=" "/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_eol_purchase_requests"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    groups="it_asset_management.group_it_asset_user,ewseta_eol_asset_purchase.group_eol_asset_manager">
+                    <field name="eol_request_count" string="EOL" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//header/button[@name='action_return_asset']" position="after">
+                <button name="action_open_eol_prepare_pool_wizard"
+                    string="Prepare for EOL pool"
+                    type="object"
+                    class="btn-primary"
+                    invisible="asset_state in ('disposed', 'lost') or sale_availability in ('reserved', 'sold') or active_eol_request_id or eol_deprovision_done"
+                    groups="it_asset_management.group_it_asset_manager,ewseta_eol_asset_purchase.group_eol_asset_manager"/>
+                <button name="action_confirm_eol_deprovision_manual"
+                    string="Confirm deprovisioning (manual checklist)"
+                    type="object"
+                    class="btn-secondary"
+                    invisible="asset_state in ('disposed', 'lost') or sale_availability in ('reserved', 'sold') or active_eol_request_id or eol_deprovision_done or not eol_deprov_user_profiles or not eol_deprov_licenses or not eol_deprov_antivirus or not eol_deprov_vpn or not eol_deprov_monitoring or not eol_deprov_email or not eol_deprov_certificates or not eol_deprov_other_apps"
+                    confirm="Unassign the device (if needed), mark Asset State Available, and record ICT deprovisioning?"
+                    groups="it_asset_management.group_it_asset_manager,ewseta_eol_asset_purchase.group_eol_asset_manager"/>
+            </xpath>
+            <xpath expr="//page[@name='lifecycle']" position="after">
+                <page string="EOL programme" name="eol_programme"
+                    groups="it_asset_management.group_it_asset_user,ewseta_eol_asset_purchase.group_eol_asset_manager">
+                    <div class="ew-eol-form-card ew-eol-form-card--eol-sale">
+                        <h3 class="ew-eol-form-card__title">
+                            <i class="fa fa-shopping-cart" title="EOL"/> End-of-life sale
+                        </h3>
+                        <group>
+                            <group>
+                                <field name="eol_sale_eligible"/>
+                                <field name="eol_pool_eligible" readonly="1"/>
+                                <field name="sale_availability" widget="badge"/>
+                                <field name="eol_sale_price"/>
+                            </group>
+                            <group>
+                                <field name="eol_handover_received" readonly="1"/>
+                                <field name="eol_last_received_request_id" readonly="1"/>
+                                <field name="active_eol_request_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <p class="ew-eol-form-hint">
+                            Pool devices must be ICT-deprovisioned and unassigned. Assigned employees buy via the public
+                            “my assigned device” path.
+                        </p>
+                    </div>
+                </page>
+                <page string="EOL deprovisioning" name="eol_deprovision"
+                    groups="it_asset_management.group_it_asset_manager,ewseta_eol_asset_purchase.group_eol_asset_manager">
+                    <div class="ew-eol-form-card ew-eol-form-card--checklist">
+                        <h3 class="ew-eol-form-card__title">
+                            <i class="fa fa-shield" title="ICT"/> ICT checklist (on device)
+                        </h3>
+                        <group>
+                            <group>
+                                <field name="eol_deprov_user_profiles" readonly="eol_deprovision_done"/>
+                                <field name="eol_deprov_licenses" readonly="eol_deprovision_done"/>
+                                <field name="eol_deprov_antivirus" readonly="eol_deprovision_done"/>
+                                <field name="eol_deprov_vpn" readonly="eol_deprovision_done"/>
+                            </group>
+                            <group>
+                                <field name="eol_deprov_monitoring" readonly="eol_deprovision_done"/>
+                                <field name="eol_deprov_email" readonly="eol_deprovision_done"/>
+                                <field name="eol_deprov_certificates" readonly="eol_deprovision_done"/>
+                                <field name="eol_deprov_other_apps" readonly="eol_deprovision_done"/>
+                            </group>
+                        </group>
+                    </div>
+                    <div class="ew-eol-form-card ew-eol-form-card--status">
+                        <h3 class="ew-eol-form-card__title">
+                            <i class="fa fa-check-circle" title="Status"/> Deprovisioning status
+                        </h3>
+                        <group>
+                            <field name="eol_deprovision_done" readonly="1"/>
+                            <field name="eol_deprovision_date" readonly="1"/>
+                            <field name="eol_deprovision_user_id" readonly="1"/>
+                            <field name="eol_deprovision_notes" readonly="eol_deprovision_done"/>
+                        </group>
+                        <p class="ew-eol-form-hint">
+                            Use <strong>Prepare for EOL pool</strong> in the header, or tick every item and click
+                            <strong>Confirm deprovisioning (manual checklist)</strong>.
+                        </p>
+                    </div>
+                </page>
+                <page string="EOL purchases" name="eol_purchases"
+                    groups="it_asset_management.group_it_asset_user,ewseta_eol_asset_purchase.group_eol_asset_manager">
+                    <field name="eol_request_ids" readonly="1">
+                        <list class="ew-eol-request-list">
+                            <field name="name"/>
+                            <field name="employee_name"/>
+                            <field name="state" widget="badge"/>
+                            <field name="sale_price" widget="monetary"/>
+                            <field name="create_date"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_tree_eol" model="ir.ui.view">
+        <field name="name">maintenance.equipment.list.eol</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='name']" position="after">
+                <field name="eol_deprovision_done" optional="hide"/>
+                <field name="eol_sale_eligible" optional="hide"/>
+                <field name="eol_pool_eligible" optional="hide"/>
+                <field name="sale_availability" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_tree_it_asset_eol" model="ir.ui.view">
+        <field name="name">maintenance.equipment.list.it.asset.eol</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="it_asset_management.maintenance_equipment_view_tree_it_asset"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="class" add="ew-eol-it-asset-list" separator=" "/>
+            </xpath>
+            <xpath expr="//field[@name='asset_state']" position="after">
+                <field name="sale_availability" optional="show" widget="badge"
+                    decoration-success="sale_availability == 'available'"
+                    decoration-warning="sale_availability == 'reserved'"
+                    decoration-info="sale_availability == 'sold'"
+                    decoration-muted="sale_availability in ('withdrawn', 'on_hold')"/>
+                <field name="eol_handover_received" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_search_it_asset_eol" model="ir.ui.view">
+        <field name="name">maintenance.equipment.search.it.asset.eol</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="it_asset_management.maintenance_equipment_view_search_it_asset"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='it_disposed']" position="after">
+                <separator/>
+                <filter string="EOL in pool" name="eol_in_pool"
+                    domain="[('eol_deprovision_done', '=', True), ('eol_sale_eligible', '=', True), ('sale_availability', '=', 'available'), ('asset_state', '=', 'available'), ('employee_id', '=', False)]"/>
+                <filter string="EOL reserved" name="eol_reserved"
+                    domain="[('sale_availability', '=', 'reserved')]"/>
+                <filter string="EOL received (sold)" name="eol_handover_sold"
+                    domain="[('sale_availability', '=', 'sold')]"/>
+            </xpath>
+            <xpath expr="//field[@name='asset_state']" position="after">
+                <field name="sale_availability"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="it_asset_action_eol_handover" model="ir.actions.act_window">
+        <field name="name">EOL received (handover)</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('sale_availability', '=', 'sold')]</field>
+        <field name="context">{'search_default_eol_handover_sold': 1}</field>
+    </record>
+
+    <menuitem id="menu_it_asset_eol_handover"
+        name="EOL received (handover)"
+        parent="it_asset_management.menu_it_asset_assets"
+        action="it_asset_action_eol_handover"
+        sequence="35"
+        groups="it_asset_management.group_it_asset_user"/>
+
+</odoo>

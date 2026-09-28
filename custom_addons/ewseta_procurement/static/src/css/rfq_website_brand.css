@@ -1,6 +1,8 @@
 /* EWSETA — replace Odoo default purple primary on the public website */
 
 #wrapwrap {
+    --ew-proc-nav-bg: #eaf4f2;
+    --ew-proc-nav-border: #5d8e9d;
     --ew-brand-orange: #f29100;
     --ew-brand-green: #1a6b4a;
     --bs-primary: #f29100;
