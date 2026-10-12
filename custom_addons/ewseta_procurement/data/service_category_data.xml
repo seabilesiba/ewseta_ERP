@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="service_category_energy" model="ew.service.category">
+        <field name="name">Energy services</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="service_category_water" model="ew.service.category">
+        <field name="name">Water services</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="service_category_training" model="ew.service.category">
+        <field name="name">Training &amp; skills development</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="service_category_consulting" model="ew.service.category">
+        <field name="name">Consulting &amp; advisory</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="service_category_construction" model="ew.service.category">
+        <field name="name">Construction &amp; infrastructure</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="service_category_ict" model="ew.service.category">
+        <field name="name">ICT &amp; systems</field>
+        <field name="sequence">60</field>
+    </record>
+</odoo>

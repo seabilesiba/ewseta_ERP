@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="action_server_provider_apply_rfq" model="ir.actions.server">
+        <field name="name">Apply for RFQ/RFP</field>
+        <field name="model_id" ref="model_ew_submission"/>
+        <field name="state">code</field>
+        <field name="code">action = env["ew.submission"].action_open_provider_application_from_rfq()</field>
+    </record>
+
+    <record id="view_ew_rfq_provider_tree" model="ir.ui.view">
+
+        <field name="name">ew.rfq.list.provider</field>
+
+        <field name="model">ew.rfq</field>
+
+        <field name="priority">40</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Transversal RFQs/RFPs" create="0" edit="0" delete="0"
+
+                  default_order="closing_at asc">
+
+                <field name="reference"/>
+
+                <field name="name"/>
+
+                <field name="type"/>
+
+                <field name="closing_at"/>
+
+                <field name="state" widget="badge"
+
+                       decoration-success="state == 'published'"
+
+                       decoration-danger="state == 'closed'"/>
+
+                <button name="%(ewseta_procurement.action_server_provider_apply_rfq)d"
+
+                        type="action"
+
+                        string="Apply"
+
+                        class="btn-primary"
+
+                        invisible="state != 'published'"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+
+    <record id="view_ew_rfq_provider_form" model="ir.ui.view">
+
+        <field name="name">ew.rfq.form.provider</field>
+
+        <field name="model">ew.rfq</field>
+
+        <field name="priority">40</field>
+
+        <field name="arch" type="xml">
+
+            <form string="RFQ/RFP" create="0" edit="0" delete="0" class="ew-proc-rfq-form">
+
+                <header>
+
+                    <button name="%(ewseta_procurement.action_server_provider_apply_rfq)d"
+
+                            type="action"
+
+                            string="Apply / open application"
+
+                            class="btn-primary"
+
+                            invisible="state != 'published'"/>
+
+                    <button name="action_provider_open_briefing_register"
+
+                            type="object"
+
+                            string="Sign briefing register"
+
+                            class="btn-secondary"
+
+                            invisible="not briefing_session or state not in ('published', 'closed')"/>
+
+                    <field name="briefing_session" invisible="1"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="published,closed"/>
+
+                </header>
+
+                <sheet>
+
+                    <div class="oe_title ew-proc-form-title">
+
+                        <h1>
+
+                            <field name="name" readonly="1"/>
+
+                        </h1>
+
+                    </div>
+
+                    <div class="ew-proc-form-hero ew-proc-form-hero--after-title">
+
+                        <div class="ew-proc-form-hero__main">
+
+                            <span class="ew-proc-form-label">Reference</span>
+
+                            <field name="reference" class="ew-proc-form-ref" readonly="1"/>
+
+                        </div>
+
+                        <div class="ew-proc-form-hero__type">
+
+                            <field name="type" widget="badge" readonly="1"
+
+                                   decoration-info="type == 'rfq'"
+
+                                   decoration-success="type == 'rfp'"/>
+
+                        </div>
+
+                    </div>
+
+                    <div class="ew-proc-form-layout">
+
+                        <div class="ew-proc-form-grid">
+
+                            <div class="ew-proc-form-card">
+
+                                <div class="ew-proc-form-card__head">Schedule</div>
+
+                                <group colspan="2" class="ew-proc-form-card-group">
+
+                                    <field name="opening_at" string="Opens on" readonly="1"/>
+
+                                    <field name="closing_at" string="Closing date &amp; time" readonly="1"
+
+                                           class="ew-proc-field-emphasis"/>
+
+                                </group>
+
+                            </div>
+
+                            <div class="ew-proc-form-card" invisible="not briefing_session">
+
+                                <div class="ew-proc-form-card__head">Briefing session</div>
+
+                                <group colspan="2" class="ew-proc-form-card-group">
+
+                                    <field name="briefing_mode" readonly="1"/>
+
+                                    <field name="briefing_at" readonly="1"/>
+
+                                    <field name="briefing_end_at" readonly="1"/>
+
+                                    <field name="briefing_compulsory" readonly="1"/>
+
+                                </group>
+
+                                <p class="ew-proc-form-hint mb-0">
+
+                                    During the session, use <strong>Sign briefing register</strong> above
+                                    (after your application is submitted). Virtual join links are sent by email
+                                    when the session starts.
+
+                                </p>
+
+                            </div>
+
+                            <div class="ew-proc-form-card">
+
+                                <div class="ew-proc-form-card__head">Opportunity</div>
+
+                                <group colspan="2" class="ew-proc-form-card-group">
+
+                                    <field name="publication_type" readonly="1"/>
+
+                                    <field name="service_category_id" readonly="1"/>
+
+                                    <field name="province_ids" widget="many2many_tags" readonly="1"/>
+
+                                </group>
+
+                            </div>
+
+                        </div>
+
+                        <div class="ew-proc-form-stack ew-proc-form-stack--full">
+
+                            <div class="ew-proc-form-card ew-proc-form-card--full ew-proc-form-card--notes"
+
+                                 invisible="not supplier_note">
+
+                                <div class="ew-proc-form-card__head">Supplier instructions</div>
+
+                                <field name="supplier_note" readonly="1" nolabel="1"/>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <notebook class="ew-proc-form-notebook">
+
+                        <page string="Required documents">
+
+                            <p class="ew-proc-form-hint mb-2">
+
+                                You will upload these files on your application form after you click
+
+                                <strong>Apply</strong>.
+
+                            </p>
+
+                            <field name="requirement_ids" readonly="1">
+
+                                <list>
+
+                                    <field name="name"/>
+
+                                    <field name="is_mandatory" string="Mandatory"/>
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                        <page string="Description">
+
+                            <field name="description" widget="html" readonly="1" nolabel="1"/>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+
+</odoo>
+

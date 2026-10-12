@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class EolAssetCategory(models.Model):
@@ -35,3 +35,33 @@ class EolAssetCategory(models.Model):
         'unique(code)',
         'Category code must be unique.',
     )
+
+    def _pool_stock_domain(self):
+        """Equipment that can be reserved for a public pool request in this catalogue category."""
+        self.ensure_one()
+        domain = [
+            ('eol_deprovision_done', '=', True),
+            ('eol_sale_eligible', '=', True),
+            ('sale_availability', '=', 'available'),
+            ('asset_state', '=', 'available'),
+            ('employee_id', '=', False),
+            ('department_id', '=', False),
+        ]
+        if self.maintenance_category_id:
+            domain.append(('category_id', '=', self.maintenance_category_id.id))
+        return domain
+
+    def has_available_pool_stock(self):
+        self.ensure_one()
+        return bool(
+            self.env['maintenance.equipment'].sudo().search_count(
+                self._pool_stock_domain(),
+                limit=1,
+            )
+        )
+
+    @api.model
+    def search_for_public_website(self):
+        """Catalogue rows shown on the public request form (pool-ready stock only)."""
+        categories = self.sudo().search([('active', '=', True)], order='sequence, name')
+        return categories.filtered(lambda cat: cat.has_available_pool_stock())

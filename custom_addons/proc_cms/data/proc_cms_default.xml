@@ -7,28 +7,21 @@
         <field name="copyright_suffix">| All rights reserved</field>
     </record>
 
-    <record id="proc_cms_nav_procurements" model="proc.cms.nav.item">
-        <field name="website_id" ref="website.default_website"/>
-        <field name="name">Procurements</field>
-        <field name="url">/application/rfqs</field>
-        <field name="sequence">50</field>
-        <field name="is_cta" eval="False"/>
-    </record>
-
-    <record id="proc_cms_nav_contact" model="proc.cms.nav.item">
-        <field name="website_id" ref="website.default_website"/>
-        <field name="name">Contact us</field>
-        <field name="url">/contactus</field>
-        <field name="sequence">60</field>
-        <field name="is_cta" eval="False"/>
-    </record>
-
     <record id="proc_cms_nav_cta" model="proc.cms.nav.item">
         <field name="website_id" ref="website.default_website"/>
-        <field name="name">Contact Us</field>
-        <field name="url">/contactus</field>
+        <field name="name">Procurement</field>
+        <field name="url">/application/rfqs</field>
         <field name="sequence">5</field>
         <field name="is_cta" eval="True"/>
+    </record>
+
+    <record id="proc_cms_nav_eol_request" model="proc.cms.nav.item">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="name">EOL asset purchase</field>
+        <field name="url">/employee/eol-assets/request</field>
+        <field name="sequence">30</field>
+        <field name="is_cta" eval="False"/>
+        <field name="active" eval="True"/>
     </record>
 
     <record id="proc_cms_btn_hero_primary" model="proc.cms.button">
@@ -163,11 +156,45 @@
         <field name="sequence">2</field>
     </record>
 
+    <record id="proc_cms_footer_eol" model="proc.cms.footer.link">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="column_key">explore</field>
+        <field name="label">EOL asset purchase</field>
+        <field name="url">/employee/eol-assets/request</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="proc_cms_block_rfq_apply_privacy" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">rfq_apply_privacy_policy</field>
+        <field name="name">RFQ application — privacy checkbox</field>
+        <field name="page_key">global</field>
+        <field name="body">&lt;p&gt;I confirm that I have read and accept the &lt;a href="/application/rfq-policy" target="_blank" rel="noopener noreferrer"&gt;RFQ privacy policy&lt;/a&gt;.&lt;/p&gt;</field>
+    </record>
+
+    <record id="proc_cms_block_rfq_policy_intro" model="proc.cms.block">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="code">rfq_policy_intro</field>
+        <field name="name">RFQ policy page intro</field>
+        <field name="page_key">rfq_policy</field>
+        <field name="eyebrow">Policy</field>
+        <field name="title">RFQ &amp; RFP procurement policy</field>
+        <field name="lead">Review EWSETA’s procurement policies and supporting documents before you prepare or submit an application.</field>
+    </record>
+
+    <record id="proc_cms_footer_policy" model="proc.cms.footer.link">
+        <field name="website_id" ref="website.default_website"/>
+        <field name="column_key">explore</field>
+        <field name="label">RFQ policy</field>
+        <field name="url">/application/rfq-policy</field>
+        <field name="sequence">4</field>
+    </record>
+
     <record id="proc_cms_footer_contact" model="proc.cms.footer.link">
         <field name="website_id" ref="website.default_website"/>
         <field name="label">Contact us</field>
         <field name="url">/contactus</field>
-        <field name="sequence">3</field>
+        <field name="sequence">5</field>
     </record>
 
 </odoo>

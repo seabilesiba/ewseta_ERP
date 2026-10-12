@@ -425,16 +425,7 @@ class EolPurchaseRequest(models.Model):
                 raise UserError(_('No eligible assigned device matches the serial or asset tag provided.'))
             self._validate_equipment_for_eol_request(equipment)
             return equipment
-        cat = self.category_id.maintenance_category_id
-        domain = [
-            ('eol_sale_eligible', '=', True),
-            ('sale_availability', '=', 'available'),
-            ('asset_state', '=', 'available'),
-            ('employee_id', '=', False),
-            ('department_id', '=', False),
-        ]
-        if cat:
-            domain.append(('category_id', '=', cat.id))
+        domain = self.category_id._pool_stock_domain()
         equipment = Equipment.search(domain, order='id asc', limit=1)
         if not equipment:
             raise UserError(_('No eligible equipment is available in this category pool.'))
@@ -585,6 +576,9 @@ class EolPurchaseRequest(models.Model):
         self.ensure_one()
         if self.state not in ('pending_verification',):
             raise UserError(_('This request cannot be verified in its current state.'))
+        verification = self.verification_id
+        if verification and verification.state == 'verified':
+            return self._after_email_verified()
         return self.action_verify_otp(otp_plain)
 
     def _send_confirmation_mail(self, track_token=None, email_verified=False):

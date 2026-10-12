@@ -296,7 +296,9 @@
                     </div>
                 <p class="ew-eol-field-hint">6. What type of device are you requesting to purchase? <span class="text-danger">*</span></p>
                 <t t-if="not categories">
-                    <div class="alert alert-warning">No device types are configured. Contact ICT.</div>
+                    <div class="alert alert-warning">
+                        No device types are available right now (ICT must mark pool assets as EOL-deprovisioned and available for sale). Contact ICT.
+                    </div>
                 </t>
                 <t t-else="">
                     <div class="mb-3">

@@ -33,9 +33,7 @@ class WebsiteEolAssetPurchase(http.Controller):
         return Markup(raw)
 
     def _categories(self):
-        return request.env['ew.eol.asset.category'].sudo().search([
-            ('active', '=', True),
-        ], order='sequence, name')
+        return request.env['ew.eol.asset.category'].sudo().search_for_public_website()
 
     def _request_form_render(self, form=None, error=None):
         Request = request.env['ew.eol.purchase.request'].sudo()
@@ -115,6 +113,14 @@ class WebsiteEolAssetPurchase(http.Controller):
             category_id = 0
         if not category_id:
             return self._request_form_render(form, _('Please select a device type.'))
+        category = request.env['ew.eol.asset.category'].sudo().browse(category_id).exists()
+        if not category or not category.active:
+            return self._request_form_render(form, _('Please select a valid device type.'))
+        if form['request_type'] == 'pool' and not category.has_available_pool_stock():
+            return self._request_form_render(form, _(
+                'No pool devices are currently available for this type. '
+                'Choose another device type or contact ICT.'
+            ))
         if form['request_type'] not in ('assigned', 'pool'):
             return self._request_form_render(form, _generic_error())
         if not Request.eol_public_policies_ready():
@@ -189,12 +195,14 @@ class WebsiteEolAssetPurchase(http.Controller):
         if not req or not token or not req.validate_tracking_token(token):
             return request.render('ewseta_eol_asset_purchase.eol_generic_error', {})
         try:
-            req.action_public_verify_and_continue(otp)
-        except UserError:
+            with request.env.cr.savepoint():
+                req.action_public_verify_and_continue(otp)
+        except UserError as exc:
+            message = exc.args[0] if exc.args else _generic_error()
             return request.render('ewseta_eol_asset_purchase.eol_verify_form', {
                 'eol_request': req,
                 'token': token,
-                'error': _generic_error(),
+                'error': message,
             })
         req._send_confirmation_mail(token, email_verified=True)
         return request.redirect(f'/employee/eol-assets/track/{token}')

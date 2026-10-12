@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <function model="ew.rfq" name="_deactivate_legacy_reference_sequence"/>
+        <function model="ew.rfq" name="_fix_stale_references"/>
+    </data>
+</odoo>

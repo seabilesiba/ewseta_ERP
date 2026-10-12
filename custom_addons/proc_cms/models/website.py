@@ -12,6 +12,14 @@ class Website(models.Model):
             .search([("website_id", "=", self.id), ("active", "=", True)], limit=1)
         )
 
+    def proc_cms_home_process_flow_style(self):
+        """Return 'cards' or 'banner' for the homepage process section."""
+        self.ensure_one()
+        site = self.proc_cms_site()
+        if site and site.home_process_flow_style:
+            return site.home_process_flow_style
+        return "cards"
+
     def proc_cms_logo_url(self):
         self.ensure_one()
         site = self.proc_cms_site()
@@ -40,6 +48,21 @@ class Website(models.Model):
                     ("active", "=", True),
                 ],
                 limit=1,
+            )
+        )
+
+    def proc_cms_policy_documents(self):
+        self.ensure_one()
+        return (
+            self.env["proc.cms.policy.document"]
+            .sudo()
+            .search(
+                [
+                    ("website_id", "=", self.id),
+                    ("active", "=", True),
+                    ("is_published", "=", True),
+                ],
+                order="sequence, id",
             )
         )
 
@@ -122,13 +145,13 @@ class Website(models.Model):
         self.ensure_one()
         src = self._proc_cms_header_cta_source()
         if not src:
-            return "Contact Us"
+            return "Procurement"
         return src.name if src._name == "proc.cms.nav.item" else src.label
 
     def proc_cms_header_cta_url(self):
         self.ensure_one()
         src = self._proc_cms_header_cta_source()
-        return (src.url if src else None) or "/contactus"
+        return (src.url if src else None) or "/application/rfqs"
 
     def proc_cms_header_cta_new_window(self):
         self.ensure_one()

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="res.users" name="_ew_strip_website_groups_from_sp_only_users"/>
+    <function model="res.users" name="_ew_strip_website_from_procurement_restricted_users"/>
+</odoo>

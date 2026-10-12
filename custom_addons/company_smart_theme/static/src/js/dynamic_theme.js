@@ -121,6 +121,9 @@ function buildThemeCss(baseColor, isDark = isDarkMode()) {
     const inputBg = isDark ? mixWithBlack(baseColor, 0.70) : "#ffffff";
     const inputText = isDark ? "#f3f4f6" : "#1f2937";
     const inputBorder = isDark ? mixWithBlack(baseColor, 0.55) : "#d1d5db";
+    const dangerColor = isDark ? "#f87171" : "#dc3545";
+    const dangerSoft = rgbaFromHex(dangerColor, isDark ? 0.28 : 0.22);
+    const invalidInputBg = isDark ? rgbaFromHex("#ef4444", 0.14) : mixWithWhite("#dc3545", 0.9);
     const textMuted = isDark ? "#9ca3af" : "#6b7280";
     const textHeading = isDark ? "#f9fafb" : "#111827";
     const textLabel = isDark ? "#d1d5db" : "#4b5563";
@@ -491,6 +494,47 @@ function buildThemeCss(baseColor, isDark = isDarkMode()) {
 
         .o_form_view .o_statusbar_buttons {
             background: transparent !important;
+            flex: 0 1 auto !important;
+            flex-shrink: 0 !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+            z-index: 2 !important;
+        }
+
+        .o_form_view .o_form_statusbar {
+            flex-wrap: wrap !important;
+            gap: 0.5rem !important;
+            overflow: visible !important;
+        }
+
+        .o_form_view .o_form_statusbar .o_statusbar_buttons .btn,
+        .o_form_view .o_form_statusbar .o_statusbar_buttons button {
+            flex-shrink: 0 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            background-color: ${baseColor} !important;
+            color: ${navText} !important;
+            border-color: ${borderColor} !important;
+        }
+
+        .o_form_view .o_form_statusbar .o_statusbar_buttons .btn:hover,
+        .o_form_view .o_form_statusbar .o_statusbar_buttons .btn:focus {
+            background-color: ${borderColor} !important;
+            color: ${navText} !important;
+            border-color: ${borderColor} !important;
+        }
+
+        .o_form_view div[name="auth"] .btn,
+        .o_form_view .ew-user-signup-link .o_field_widget,
+        .o_form_view .ew-user-signup-link .o_field_copyurl {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .o_form_view div[name="auth"] .btn-primary {
+            background-color: ${baseColor} !important;
+            color: ${navText} !important;
+            border-color: ${borderColor} !important;
         }
 
         .o_form_view .o_field_statusbar > .o_statusbar_status > .o_arrow_button {
@@ -585,11 +629,50 @@ function buildThemeCss(baseColor, isDark = isDarkMode()) {
             box-shadow: none !important;
         }
 
-        .o_field_widget input.o_input:focus,
-        .o_field_widget .o_input_dropdown:focus-within,
-        .o_field_widget textarea.o_input:focus {
+        .o_field_widget:not(.o_field_invalid) input.o_input:focus,
+        .o_field_widget:not(.o_field_invalid) .o_input_dropdown:focus-within,
+        .o_field_widget:not(.o_field_invalid) textarea.o_input:focus {
             border-color: ${baseColor} !important;
             box-shadow: 0 0 0 2px ${accentSoft} !important;
+        }
+
+        /* Required / invalid — Odoo uses CSS vars; theme input rules must not hide them */
+        .o_form_view .o_field_widget.o_required_modifier:not(.o_field_invalid) input.o_input,
+        .o_form_view .o_field_widget.o_required_modifier:not(.o_field_invalid) textarea.o_input,
+        .o_form_view .o_field_widget.o_required_modifier:not(.o_field_invalid) select.o_input,
+        .o_form_view .o_field_widget.o_required_modifier:not(.o_field_invalid) .o_input_dropdown,
+        .o_form_view .o_field_widget.o_required_modifier:not(.o_field_invalid) .o_field_many2one_selection input {
+            border-color: ${baseColor} !important;
+        }
+
+        .o_form_view .o_field_widget.o_field_invalid input.o_input,
+        .o_form_view .o_field_widget.o_field_invalid textarea.o_input,
+        .o_form_view .o_field_widget.o_field_invalid select.o_input,
+        .o_form_view .o_field_widget.o_field_invalid .o_input_dropdown,
+        .o_form_view .o_field_widget.o_field_invalid .o_field_many2one_selection input,
+        .o_list_view .o_data_cell.o_invalid_cell .o_input {
+            border-color: ${dangerColor} !important;
+            background-color: ${invalidInputBg} !important;
+        }
+
+        .o_form_view .o_field_widget.o_field_invalid .o_form_label,
+        .o_form_view .o_field_invalid.o_form_label,
+        .o_form_view label.o_form_label.o_field_invalid {
+            color: ${dangerColor} !important;
+        }
+
+        .o_form_view .o_field_widget.o_field_invalid input.o_input:focus,
+        .o_form_view .o_field_widget.o_field_invalid textarea.o_input:focus,
+        .o_form_view .o_field_widget.o_field_invalid .o_input_dropdown:focus-within,
+        .o_form_view .o_field_widget.o_field_invalid .o_field_many2one_selection input:focus {
+            border-color: ${dangerColor} !important;
+            box-shadow: 0 0 0 2px ${dangerSoft} !important;
+        }
+
+        .o_form_view .nav-tabs .nav-link.o_page_invalid {
+            color: ${dangerColor} !important;
+            border-bottom-color: ${dangerColor} !important;
+            background-color: ${invalidInputBg} !important;
         }
 
         .o_field_widget input.o_input::placeholder,

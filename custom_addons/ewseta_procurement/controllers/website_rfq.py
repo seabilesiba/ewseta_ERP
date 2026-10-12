@@ -1,9 +1,13 @@
 import base64
+import mimetypes
 import os
+
+from urllib.parse import quote
 
 from werkzeug.utils import secure_filename
 
 from odoo import http, fields, _
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
@@ -35,6 +39,110 @@ def _validate_upload(storage, label):
 class WebsiteRFQ(http.Controller):
     """Public RFQ listing and submission (no login required)."""
 
+    @staticmethod
+    def _public_portal_rfq_or_not_found(rfq):
+        """Transversal RFQs must not be exposed on the anonymous public website."""
+        rfq = rfq.sudo().exists() if rfq else rfq
+        if not rfq or not rfq.assert_public_portal_access():
+            return None
+        return rfq
+
+    @staticmethod
+    def _form_checkbox_accepted(value):
+        if isinstance(value, (list, tuple)):
+            value = value[-1] if value else None
+        return value in ("on", "true", "1", "yes", True)
+
+    @staticmethod
+    def _portal_token_from_request(token=None, **kw):
+        token = (token or kw.get('token') or '').strip()
+        if token:
+            return token
+        stash = request.session.get('ew_proc_submission_thanks') or {}
+        return (stash.get('token') or '').strip()
+
+    @staticmethod
+    def _briefing_submission_from_token(rfq_id, token):
+        """Resolve application for briefing register (token must match this RFQ)."""
+        token = (token or '').strip()
+        if not token:
+            return request.env['ew.submission'].browse()
+        submission = request.env['ew.submission'].sudo().find_by_tracking_token(token)
+        if (
+            not submission
+            or submission.rfq_id.id != rfq_id
+            or submission.state not in ('submitted', 'closed')
+        ):
+            return request.env['ew.submission'].browse()
+        return submission
+
+    @classmethod
+    def _briefing_submission_for_register(cls, rfq_id, token):
+        """Token link, or logged-in transversal applicant without token in the URL."""
+        submission = cls._briefing_submission_from_token(rfq_id, token)
+        if submission:
+            return submission, (token or '').strip() or submission.track_token
+        rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
+        if not rfq or rfq.publication_type != 'transversal':
+            return request.env['ew.submission'].browse(), token
+        user = request.env.user
+        if not user or user._is_public():
+            return request.env['ew.submission'].browse(), token
+        submission = request.env['ew.submission'].sudo().search([
+            ('rfq_id', '=', rfq_id),
+            ('partner_id', '=', user.partner_id.id),
+            ('state', 'in', ('submitted', 'closed')),
+        ], limit=1)
+        if not submission:
+            return request.env['ew.submission'].browse(), token
+        track_token = submission._issue_tracking_token()
+        return submission, track_token
+
+    @staticmethod
+    def _portal_values_from_submission(submission):
+        return {
+            'company_name': submission.company_name or '',
+            'contact_name': submission.contact_name or '',
+            'contact_email': submission.contact_email or '',
+            'contact_phone': submission.contact_phone or '',
+        }
+
+    @classmethod
+    def _portal_briefing_register_url(cls, rfq, token=None):
+        """Attendance register link when session is live and application is known."""
+        if not rfq or rfq.portal_briefing_registration_state() != "open":
+            return ""
+        token = (token or cls._portal_token_from_request() or "").strip()
+        submission = cls._briefing_submission_from_token(rfq.id, token)
+        if not submission:
+            stash = request.session.get("ew_proc_submission_thanks") or {}
+            submission = request.env["ew.submission"].portal_resolve_submission(
+                stash.get("token"),
+                trusted_submission_id=stash.get("submission_id"),
+            )
+            if submission and submission.rfq_id.id != rfq.id:
+                submission = request.env["ew.submission"].browse()
+        if not submission:
+            return ""
+        url = rfq.portal_briefing_register_url_for_submission(submission)
+        return url or ""
+
+    def _render_rfq_apply_form(self, rfq, errors, values, extra=None):
+        rfq._portal_trigger_briefing_start_emails_if_due()
+        mand = rfq.requirement_ids.filtered(lambda r: r.is_mandatory)
+        opti = rfq.requirement_ids.filtered(lambda r: not r.is_mandatory)
+        ctx = {
+            'rfq': rfq,
+            'req_mand': mand,
+            'req_opt': opti,
+            'errors': errors,
+            'values': values,
+            'briefing_register_url': self._portal_briefing_register_url(rfq),
+        }
+        if extra:
+            ctx.update(extra)
+        return request.render('ewseta_procurement.rfq_apply_form', ctx)
+
     @http.route(
         ['/application/procurement', '/application'],
         type='http',
@@ -45,6 +153,66 @@ class WebsiteRFQ(http.Controller):
     def procurement_landing_redirect(self, **kw):
         """Legacy URLs → website homepage (procurement landing)."""
         return request.redirect('/')
+
+    @staticmethod
+    def _rfq_portal_document_visible(rfq):
+        if not rfq or not rfq.assert_public_portal_access():
+            return False
+        if not rfq.portal_has_rfq_document():
+            return False
+        return rfq.state in ("published", "closed")
+
+    @staticmethod
+    def _policy_document_portal_visible(doc):
+        if not doc:
+            return False
+        if doc.website_id and request.website and doc.website_id != request.website:
+            return False
+        return doc.portal_is_visible()
+
+    @http.route(
+        ['/application/rfq-policy'],
+        type='http',
+        auth='public',
+        website=True,
+        methods=['GET'],
+        sitemap=True,
+    )
+    def rfq_policy_public_page(self, **kw):
+        return request.render('ewseta_procurement.rfq_policy_public_page', {})
+
+    @http.route(
+        ['/application/rfq-policy/document/<int:doc_id>'],
+        type='http',
+        auth='public',
+        website=True,
+        methods=['GET'],
+        sitemap=False,
+    )
+    def rfq_policy_public_document(self, doc_id, download=None, **kw):
+        doc = request.env['proc.cms.policy.document'].sudo().browse(doc_id).exists()
+        if not self._policy_document_portal_visible(doc):
+            return request.not_found()
+
+        filename = secure_filename(doc.portal_file_label()) or 'policy-document.pdf'
+        ext = os.path.splitext(filename)[1].lower()
+        is_pdf = ext == '.pdf'
+        force_download = download in ('1', 'true', 'yes') or not is_pdf
+
+        content = base64.b64decode(doc.file)
+        content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+
+        headers = [
+            ('Content-Type', content_type),
+            ('Content-Length', len(content)),
+            ('X-Content-Type-Options', 'nosniff'),
+        ]
+        disposition = 'attachment' if force_download else 'inline'
+        headers.append((
+            'Content-Disposition',
+            f'{disposition}; filename="{filename}"',
+        ))
+        return request.make_response(content, headers=headers)
 
     @staticmethod
     def _rfq_is_closed(rfq, now):
@@ -66,11 +234,13 @@ class WebsiteRFQ(http.Controller):
         # 🔹 Open RFQs: published and still before closing time
         open_rfqs = RFQ.search([
             ('state', '=', 'published'),
+            ('publication_type', '=', 'public'),
             ('closing_at', '>', now),
         ], order='closing_at asc, create_date desc')
 
         # 🔹 Closed RFQs: either explicitly closed OR published but past closing time
         closed_rfqs = RFQ.search([
+            ('publication_type', '=', 'public'),
             '|',
             ('state', '=', 'closed'),
             '&',
@@ -99,8 +269,9 @@ class WebsiteRFQ(http.Controller):
         """Closed RFQ/RFP: public summary and list of received submissions."""
         now = fields.Datetime.now()
         rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
+        rfq = self._public_portal_rfq_or_not_found(rfq)
         if not rfq:
-            return request.render('ewseta_procurement.rfq_closed_or_missing', {'rfq': rfq})
+            return request.not_found()
 
         if not self._rfq_is_closed(rfq, now):
             return request.redirect(f'/application/rfqs/{rfq_id}/apply')
@@ -118,21 +289,20 @@ class WebsiteRFQ(http.Controller):
     @http.route(['/application/rfqs/<int:rfq_id>/apply'], type='http', auth='public', website=True, sitemap=False, methods=['GET'])
     def rfq_apply_form(self, rfq_id, **kw):
         RFQ = request.env['ew.rfq'].sudo()
-        rfq = RFQ.browse(rfq_id).exists()
+        rfq = self._public_portal_rfq_or_not_found(RFQ.browse(rfq_id))
         now = fields.Datetime.now()
         if not rfq or rfq.state != 'published' or not rfq.closing_at or rfq.closing_at <= now:
-            return request.render('ewseta_procurement.rfq_closed_or_missing', {'rfq': rfq})
+            return request.not_found() if not rfq else request.render(
+                'ewseta_procurement.rfq_closed_or_missing', {'rfq': rfq}
+            )
 
-        mand = rfq.requirement_ids.filtered(lambda r: r.is_mandatory)
-        opti = rfq.requirement_ids.filtered(lambda r: not r.is_mandatory)
-
-        return request.render('ewseta_procurement.rfq_apply_form', {
-            'rfq': rfq,
-            'req_mand': mand,
-            'req_opt': opti,
-            'errors': {},
-            'values': {},
-        })
+        token = self._portal_token_from_request(**kw)
+        return self._render_rfq_apply_form(
+            rfq,
+            {},
+            {},
+            extra={'briefing_register_url': self._portal_briefing_register_url(rfq, token)},
+        )
 
     @http.route(['/application/rfqs/<int:rfq_id>/apply/submit'], type='http', auth='public',
                 website=True, csrf=True, methods=['POST'])
@@ -140,7 +310,9 @@ class WebsiteRFQ(http.Controller):
         env = request.env
         RFQ = env['ew.rfq'].sudo()
         now = fields.Datetime.now()
-        rfq = RFQ.browse(rfq_id).exists()
+        rfq = self._public_portal_rfq_or_not_found(RFQ.browse(rfq_id))
+        if not rfq:
+            return request.not_found()
 
         # # PRIVATE RFQ VALIDATION
         # if rfq.is_private:
@@ -166,12 +338,25 @@ class WebsiteRFQ(http.Controller):
         contact_name  = (post.get('contact_name') or '').strip()
         contact_phone = (post.get('contact_phone') or '').strip()
         contact_email = (post.get('contact_email') or '').strip()
+        privacy_accepted = self._form_checkbox_accepted(post.get('accept_privacy_policy'))
+
+        form_values = {
+            'company_name': company_name,
+            'contact_name': contact_name,
+            'contact_phone': contact_phone,
+            'contact_email': contact_email,
+            'accept_privacy_policy': privacy_accepted,
+        }
 
         errors = {}
         if not company_name:
             errors['company_name'] = _("Company name is required.")
         if not contact_email:
             errors['contact_email'] = _("Email is required.")
+        if not privacy_accepted:
+            errors['privacy_policy'] = _(
+                "You must accept the RFQ privacy policy before you can submit your application."
+            )
 
         files = request.httprequest.files
         missing_docs = []
@@ -191,20 +376,7 @@ class WebsiteRFQ(http.Controller):
             errors['files'] = (errors.get('files', '') + ' ' if errors.get('files') else '') + ' '.join(upload_errors)
 
         if errors:
-            mand = rfq.requirement_ids.filtered(lambda r: r.is_mandatory)
-            opti = rfq.requirement_ids.filtered(lambda r: not r.is_mandatory)
-            return request.render('ewseta_procurement.rfq_apply_form', {
-                'rfq': rfq,
-                'req_mand': mand,
-                'req_opt': opti,
-                'errors': errors,
-                'values': {
-                    'company_name': company_name,
-                    'contact_name': contact_name,
-                    'contact_phone': contact_phone,
-                    'contact_email': contact_email,
-                },
-            })
+            return self._render_rfq_apply_form(rfq, errors, form_values)
 
         # -------------------------------
         #  CREATE OR REUSE PARTNER
@@ -226,24 +398,16 @@ class WebsiteRFQ(http.Controller):
             ('partner_id', '=', partner.id),
         ], limit=1)
         if existing_submission:
-            mand = rfq.requirement_ids.filtered(lambda r: r.is_mandatory)
-            opti = rfq.requirement_ids.filtered(lambda r: not r.is_mandatory)
-            return request.render('ewseta_procurement.rfq_apply_form', {
-                'rfq': rfq,
-                'req_mand': mand,
-                'req_opt': opti,
-                'errors': {'duplicate': _("You have already submitted an application for this RFQ.")},
-                'values': {
-                    'company_name': company_name,
-                    'contact_name': contact_name,
-                    'contact_phone': contact_phone,
-                    'contact_email': contact_email,
-                },
-            })
+            return self._render_rfq_apply_form(
+                rfq,
+                {'duplicate': _("You have already submitted an application for this RFQ.")},
+                form_values,
+            )
 
         # -------------------------------
         #  CREATE SUBMISSION
         # -------------------------------
+        accepted_at = fields.Datetime.now()
         submission = env['ew.submission'].sudo().create({
             'rfq_id': rfq.id,
             'partner_id': partner.id,
@@ -252,14 +416,13 @@ class WebsiteRFQ(http.Controller):
             'contact_phone': contact_phone,
             'contact_email': contact_email,
             'state': 'submitted',
+            'submitted_at': accepted_at,
+            'privacy_policy_accepted': True,
+            'privacy_policy_accepted_at': accepted_at,
         })
 
-        # Send email template (audit trail will show it)
-        template = env.ref("ewseta_procurement.mail_tmpl_submission_sender", raise_if_not_found=False)
-        if template:
-            template.sudo().send_mail(submission.id, force_send=True)
             submission.sudo().message_post(
-                body=_("RFQ submission email sent automatically."),
+            body=_("Application submitted via the website (SCM is notified when the RFQ closes)."),
                 subtype_xmlid="mail.mt_note",
             )
 
@@ -285,13 +448,312 @@ class WebsiteRFQ(http.Controller):
                     'file_filename': filename,
                 })
 
-        # -------------------------------
-        #  REDIRECT TO THANK YOU PAGE
-        # -------------------------------
-        return request.redirect(f"/application/rfqs/{rfq.id}/apply/thanks?sub={submission.id}")
+        track_token = submission._issue_tracking_token()
+        request.env.flush_all()
+        request.session['ew_proc_submission_thanks'] = {
+            'submission_id': submission.id,
+            'token': track_token,
+        }
+        submission._send_portal_application_received(track_token)
+
+        safe_token = quote(track_token, safe='')
+        return request.redirect(
+            f'/application/submissions/thanks/{safe_token}'
+        )
+
+    @http.route(
+        [
+            '/application/submissions/thanks',
+            '/application/submissions/thanks/<string:token>',
+        ],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+        methods=['GET'],
+    )
+    def submission_apply_thanks(self, token=None, **kw):
+        token = self._portal_token_from_request(token, **kw)
+        stash = request.session.get('ew_proc_submission_thanks') or {}
+        submission = request.env['ew.submission'].portal_resolve_submission(
+            token,
+            trusted_submission_id=stash.get('submission_id'),
+        )
+        track_token = token if submission else None
+        rfq = submission.rfq_id if submission else request.env['ew.rfq'].browse()
+        if rfq:
+            rfq._portal_trigger_briefing_start_emails_if_due()
+        briefing_register_url = ""
+        if rfq and submission:
+            briefing_register_url = rfq.portal_briefing_register_url_for_submission(submission) or ""
+        return request.render('ewseta_procurement.rfq_apply_thanks', {
+            'submission': submission,
+            'rfq': rfq,
+            'track_token': track_token,
+            'track_url': submission._portal_track_url(track_token) if submission and track_token else '',
+            'briefing_register_url': briefing_register_url,
+        })
+
+    @http.route(
+        ['/application/submissions/track/<string:token>'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+        methods=['GET'],
+    )
+    def submission_public_track(self, token, **kw):
+        submission = request.env['ew.submission'].find_by_tracking_token(token)
+        if not submission:
+            return request.render('ewseta_procurement.submission_track_missing', {})
+        rfq = submission.rfq_id
+        rfq._portal_trigger_briefing_start_emails_if_due()
+        reference = submission.portal_track_reference_rows()
+        briefing_register_url = rfq.portal_briefing_register_url_for_submission(submission) or ""
+        return request.render('ewseta_procurement.submission_public_track', {
+            'submission': submission,
+            'rfq': rfq,
+            'track_token': token,
+            'track_url': submission._portal_track_url(token),
+            'supplier_rows': reference['supplier'],
+            'application_rows': reference['application'],
+            'briefing_register_url': briefing_register_url,
+        })
+
+    @http.route(
+        ['/application/submissions/file/<int:line_id>'],
+        type='http',
+        auth='public',
+        website=True,
+        methods=['GET'],
+        sitemap=False,
+    )
+    def submission_public_file(self, line_id, token=None, download=None, **kw):
+        """Download or inline-view a submitted document (token required)."""
+        submission = request.env['ew.submission'].find_by_tracking_token(token or '')
+        line = request.env['ew.submission.line'].sudo().browse(line_id).exists()
+        if (
+            not submission
+            or not line
+            or line.submission_id.id != submission.id
+        ):
+            return request.not_found()
+
+        raw_b64 = line.file
+        if not raw_b64 and line.attachment_id:
+            raw_b64 = line.attachment_id.datas
+        if not raw_b64:
+            return request.not_found()
+
+        filename = secure_filename(line.file_filename or 'document') or 'document'
+        ext = os.path.splitext(filename)[1].lower()
+        is_pdf = ext == '.pdf'
+        force_download = download in ('1', 'true', 'yes') or not is_pdf
+
+        content = base64.b64decode(raw_b64)
+        content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+
+        headers = [
+            ('Content-Type', content_type),
+            ('Content-Length', len(content)),
+            ('X-Content-Type-Options', 'nosniff'),
+        ]
+        disposition = 'attachment' if force_download else 'inline'
+        headers.append((
+            'Content-Disposition',
+            f'{disposition}; filename="{filename}"',
+        ))
+        return request.make_response(content, headers=headers)
+
+    @http.route(
+        ['/application/rfqs/<int:rfq_id>/document'],
+        type='http',
+        auth='public',
+        website=True,
+        methods=['GET'],
+        sitemap=False,
+    )
+    def rfq_public_document(self, rfq_id, download=None, **kw):
+        """Download or view the RFQ/RFP document uploaded by SCM (published/closed only)."""
+        rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
+        if not self._rfq_portal_document_visible(rfq):
+            return request.not_found()
+
+        document, doc_filename = rfq._portal_procurement_document()
+        default_name = 'RFP-document.pdf' if rfq.type == 'rfp' else 'RFQ-document.pdf'
+        filename = secure_filename(doc_filename or default_name) or default_name
+        ext = os.path.splitext(filename)[1].lower()
+        is_pdf = ext == '.pdf'
+        force_download = download in ('1', 'true', 'yes') or not is_pdf
+
+        content = base64.b64decode(document)
+        content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+
+        headers = [
+            ('Content-Type', content_type),
+            ('Content-Length', len(content)),
+            ('X-Content-Type-Options', 'nosniff'),
+        ]
+        disposition = 'attachment' if force_download else 'inline'
+        headers.append((
+            'Content-Disposition',
+            f'{disposition}; filename="{filename}"',
+        ))
+        return request.make_response(content, headers=headers)
+
+    @http.route(
+        ['/application/rfqs/<int:rfq_id>/briefing/register'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+        methods=['GET'],
+    )
+    def briefing_register_form(self, rfq_id, token=None, **kw):
+        rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
+        token = self._portal_token_from_request(token, **kw)
+        submission, token = self._briefing_submission_for_register(rfq_id, token)
+        if not submission:
+            if rfq and rfq.briefing_session and rfq.publication_type == 'transversal':
+                return request.render('ewseta_procurement.briefing_register_closed', {
+                    'rfq': rfq,
+                    'registration_state': 'no_application',
+                })
+            return request.render('ewseta_procurement.briefing_register_invalid_link', {
+                'rfq': rfq,
+            })
+        if rfq:
+            rfq._portal_trigger_briefing_start_emails_if_due()
+        if not rfq or not rfq.briefing_session or not rfq.portal_briefing_rfq_eligible():
+            return request.render('ewseta_procurement.briefing_register_closed', {
+                'rfq': rfq,
+                'registration_state': 'unavailable',
+            })
+        registration_state = rfq.portal_briefing_registration_state()
+        if registration_state != 'open':
+            return request.render('ewseta_procurement.briefing_register_closed', {
+                'rfq': rfq,
+                'registration_state': registration_state,
+            })
+        return request.render('ewseta_procurement.briefing_register_form', {
+            'rfq': rfq,
+            'errors': {},
+            'values': self._portal_values_from_submission(submission),
+            'registration_state': registration_state,
+            'track_token': token,
+            'submission': submission,
+        })
+
+    @http.route(
+        ['/application/rfqs/<int:rfq_id>/briefing/register/submit'],
+        type='http',
+        auth='public',
+        website=True,
+        csrf=True,
+        methods=['POST'],
+    )
+    def briefing_register_submit(self, rfq_id, **post):
+        rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
+        Attendance = request.env['ew.rfq.briefing.attendance']
+        token = (post.get('token') or '').strip()
+        submission = self._briefing_submission_from_token(rfq_id, token)
+        if not submission:
+            return request.render('ewseta_procurement.briefing_register_invalid_link', {
+                'rfq': rfq,
+            })
+
+        company_name = (submission.company_name or '').strip()
+        contact_email = (submission.contact_email or '').strip()
+        contact_name = (post.get('contact_name') or submission.contact_name or '').strip()
+        contact_phone = (post.get('contact_phone') or submission.contact_phone or '').strip()
+
+        errors = {}
+        if not company_name:
+            errors['company_name'] = _("Company name is required.")
+        if not contact_email:
+            errors['contact_email'] = _("Email is required.")
+
+        values = {
+            'company_name': company_name,
+            'contact_name': contact_name,
+            'contact_phone': contact_phone,
+            'contact_email': contact_email,
+        }
+        form_ctx = {
+            'rfq': rfq,
+            'errors': errors,
+            'values': values,
+            'track_token': token,
+            'submission': submission,
+        }
+
+        if errors or not rfq:
+            return request.render('ewseta_procurement.briefing_register_form', form_ctx)
+
+        try:
+            attendance = Attendance.portal_register(rfq, values)
+        except ValidationError as err:
+            errors['form'] = str(err.args[0])
+            form_ctx['errors'] = errors
+            return request.render('ewseta_procurement.briefing_register_form', form_ctx)
+
+        request.session['ew_proc_briefing_registered'] = {
+            'rfq_id': rfq.id,
+            'attendance_id': attendance.id,
+        }
+        proof_url = attendance._portal_proof_url()
+        if proof_url:
+            return request.redirect(proof_url)
+        return request.redirect(f'/application/rfqs/{rfq.id}/briefing/thanks')
+
+    @http.route(
+        ['/application/briefing/attendance/<string:token>'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+        methods=['GET'],
+    )
+    def briefing_attendance_proof(self, token, **kw):
+        attendance = request.env['ew.rfq.briefing.attendance'].find_by_proof_token(token)
+        if not attendance:
+            return request.render('ewseta_procurement.briefing_attendance_missing', {})
+        rfq = attendance.rfq_id
+        return request.render('ewseta_procurement.briefing_attendance_proof', {
+            'attendance': attendance,
+            'rfq': rfq,
+            'proof_url': attendance._portal_proof_url(),
+        })
+
+    @http.route(
+        ['/application/rfqs/<int:rfq_id>/briefing/thanks'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+        methods=['GET'],
+    )
+    def briefing_register_thanks(self, rfq_id, **kw):
+        rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
+        stash = request.session.get('ew_proc_briefing_registered') or {}
+        attendance = request.env['ew.rfq.briefing.attendance'].browse()
+        if stash.get('rfq_id') == rfq_id and stash.get('attendance_id'):
+            attendance = request.env['ew.rfq.briefing.attendance'].sudo().browse(
+                int(stash['attendance_id'])
+            ).exists()
+        return request.render('ewseta_procurement.briefing_register_thanks', {
+            'rfq': rfq,
+            'attendance': attendance,
+        })
 
     @http.route(['/application/rfqs/<int:rfq_id>/apply/thanks'], type='http', auth='public', website=True, sitemap=False)
     def rfq_apply_thanks(self, rfq_id, **kw):
+        """Legacy thank-you URL; prefer /application/submissions/thanks?token=."""
+        token = kw.get('token')
+        if token:
+            return request.redirect(
+                f'/application/submissions/thanks/{quote(token, safe="")}'
+            )
         rfq = request.env['ew.rfq'].sudo().browse(rfq_id).exists()
         sub = None
         if kw.get('sub'):
@@ -299,5 +761,7 @@ class WebsiteRFQ(http.Controller):
         return request.render('ewseta_procurement.rfq_apply_thanks', {
             'rfq': rfq,
             'submission': sub,
+            'track_token': None,
+            'track_url': '',
         })
 

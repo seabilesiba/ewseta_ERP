@@ -57,6 +57,11 @@
                             class="btn-secondary"
                             invisible="state != 'closed'"
                             groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
+                    <button name="action_resend_portal_track_link" type="object"
+                            string="Resend proof link"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"
+                            groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,closed"/>
                 </header>
                 <sheet>
@@ -87,7 +92,13 @@
                             <div class="ew-proc-form-card__head">RFQ / RFP</div>
                             <group colspan="2" class="ew-proc-form-card-group">
                                 <group colspan="2">
-                                    <field name="rfq_id" domain="[('is_past_closing','=', False)]"/>
+                                    <field name="rfq_id"
+                                           domain="[('state', '=', 'published'), ('is_past_closing', '=', False), ('provider_may_apply', '=', True)]"
+                                           readonly="state != 'draft'"
+                                           groups="ewseta_procurement.group_service_provider"/>
+                                    <field name="rfq_id"
+                                           domain="[('state', '=', 'published'), ('is_past_closing', '=', False), ('provider_may_apply', '=', True)]"
+                                           groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
                                     <field name="rdq_rfp_ref" string="RFQ / RFP reference" readonly="1"/>
                                     <field name="rfq_state" string="RFQ status" widget="badge"
                                            decoration-success="rfq_state == 'published'"
@@ -96,6 +107,8 @@
                                     <field name="closing_at" string="Closing date &amp; time" readonly="1"
                                            class="ew-proc-field-emphasis"/>
                                     <field name="submitted_at" string="Submitted on" readonly="1"/>
+                                    <field name="privacy_policy_accepted" readonly="1"/>
+                                    <field name="privacy_policy_accepted_at" readonly="1"/>
                                 </group>
                             </group>
                         </div>
@@ -103,9 +116,20 @@
                             <div class="ew-proc-form-card__head">Contact details</div>
                             <group colspan="2" class="ew-proc-form-card-group">
                                 <group colspan="2">
-                                    <field name="contact_name"/>
-                                    <field name="contact_phone"/>
-                                    <field name="contact_email"/>
+                                    <field name="company_name" string="Company name"
+                                           readonly="state != 'draft'"
+                                           groups="ewseta_procurement.group_service_provider"/>
+                                    <field name="contact_name" string="Contact person"
+                                           readonly="state != 'draft'"/>
+                                    <field name="contact_phone" readonly="state != 'draft'"/>
+                                    <field name="contact_email" readonly="state != 'draft'"/>
+                                    <field name="privacy_policy_accepted"
+                                           widget="boolean_toggle"
+                                           readonly="state != 'draft'"
+                                           groups="ewseta_procurement.group_service_provider"/>
+                                    <field name="privacy_policy_accepted"
+                                           readonly="1"
+                                           groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
                                     <field name="partner_id" string="Supplier"
                                            groups="ewseta_procurement.group_scm_owner,ewseta_procurement.group_rfq_admin"/>
                                     <field name="partner_id" string="Supplier" readonly="1"
@@ -121,19 +145,23 @@
                                 Upload each document before submitting. Mandatory rows highlighted in red until a file is attached.
                             </p>
                             <div class="ew-proc-submission-docs-panel">
-                                <field name="line_ids" create="0" delete="0" nolabel="1">
-                                    <list editable="bottom" class="ew-proc-submission-doc-list"
+                                <field name="line_ids" create="0" delete="0" nolabel="1"
+                                       readonly="state != 'draft'">
+                                    <list editable="bottom" create="false" delete="false"
+                                          class="ew-proc-submission-doc-list"
                                           decoration-danger="is_mandatory and not file"
                                           decoration-muted="not is_mandatory and not file">
-                                        <field name="requirement_id" readonly="1"/>
+                                        <field name="name" string="Requirement" readonly="1"/>
+                                        <field name="requirement_id" column_invisible="1"/>
                                         <field name="is_mandatory" readonly="1" widget="boolean"/>
-                                        <field name="file" filename="file_filename"/>
+                                        <field name="file" filename="file_filename"
+                                               readonly="parent.state != 'draft'"/>
                                         <button name="action_preview_file"
                                                 type="object"
                                                 icon="fa-eye"
                                                 string="Preview"
                                                 invisible="not file"
-                                                class="btn btn-link"/>
+                                                class="btn btn-link ew-submission-doc-preview-btn"/>
                                         <field name="attachment_id" readonly="1" optional="hide"/>
                                     </list>
                                 </field>

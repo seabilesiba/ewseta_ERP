@@ -1,6 +1,15 @@
+import hashlib
+import secrets
+from datetime import timedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError, AccessError
+from odoo.tools.misc import format_datetime
 from werkzeug.urls import url_quote
+
+
+def _hash_submission_track_token(raw, pepper=''):
+    return hashlib.sha256(f'{pepper}{raw}'.encode('utf-8')).hexdigest()
 
 
 class EwSubmission(models.Model):
@@ -16,10 +25,26 @@ class EwSubmission(models.Model):
     contact_name = fields.Char()
     contact_email = fields.Char(required=True)
     contact_phone = fields.Char(string="Contact Phone", required=True)
-    submitted_at = fields.Datetime(default=lambda self: fields.Datetime.now(), readonly=True)
+    submitted_at = fields.Datetime(readonly=True, copy=False)
+    privacy_policy_accepted = fields.Boolean(
+        string="RFQ privacy policy accepted",
+        copy=False,
+        default=False,
+    )
+    privacy_policy_accepted_at = fields.Datetime(
+        string="Privacy policy accepted at",
+        readonly=True,
+        copy=False,
+    )
     line_ids = fields.One2many("ew.submission.line", "submission_id", string="Documents", ondelete='cascade')
     closing_at = fields.Datetime("Closing Date & Time", related="rfq_id.closing_at", tracking=True, )
     rfq_state = fields.Selection([("draft","Draft"),("published", "Published"),("closed", "Closed")], related="rfq_id.state", default="draft", tracking=True, store=True)
+    rfq_publication_type = fields.Selection(
+        related="rfq_id.publication_type",
+        string="RFQ publication",
+        store=True,
+        readonly=True,
+    )
     rdq_rfp_ref = fields.Char("RFQ/RFP Ref",related="rfq_id.reference",  default='New', tracking=True,)
 
     # closing_at = fields.Datetime(default=lambda self: fields.Datetime.now())
@@ -36,6 +61,17 @@ class EwSubmission(models.Model):
     state = fields.Selection(
         [("draft", "Draft"), ("submitted", "Submitted"), ("closed", "Closed")],
         default="draft", tracking=True, required=True,
+    )
+    track_token = fields.Char(
+        string="Portal track token",
+        copy=False,
+        index=True,
+        help="Secret token embedded in the supplier proof / status URL. Issued once and not rotated.",
+    )
+    track_token_hash = fields.Char(copy=False, index=True)
+    track_token_expires = fields.Datetime(
+        copy=False,
+        help="Optional expiry for portal links. Empty means the link does not expire.",
     )
 
     company_id = fields.Many2one(
@@ -65,22 +101,181 @@ class EwSubmission(models.Model):
         "unique(rfq_id, email_norm)",
         "A submission with this email already exists for this RFQ.",
     )
+    @api.model
+    def _migrate_submission_name_rgq_to_rfq(self):
+        """One-time fix: EW-RGQ-xxx → EW-RFQ-xxx (sequence prefix typo)."""
+        subs = self.sudo().search([("name", "like", "EW-RGQ-%")])
+        for sub in subs:
+            sub.name = sub.name.replace("EW-RGQ-", "EW-RFQ-", 1)
+        seq = self.env.ref(
+            "ewseta_procurement.seq_ew_submission_rfq",
+            raise_if_not_found=False,
+        )
+        if seq and (seq.prefix or "").strip() != "EW-RFQ-":
+            seq.sudo().write({"prefix": "EW-RFQ-"})
+        return True
+
+    @api.model
+    def default_get(self, fields_list):
+        vals = super().default_get(fields_list)
+        user = self.env.user
+        if user.has_group("ewseta_procurement.group_service_provider") and not user._is_public():
+            partner = user.partner_id
+            if partner:
+                vals.setdefault("partner_id", partner.id)
+                vals.setdefault(
+                    "company_name",
+                    partner.commercial_company_name or partner.name or "",
+                )
+                vals.setdefault("contact_email", partner.email or user.email or "")
+                vals.setdefault(
+                    "contact_phone",
+                    partner.phone or getattr(partner, "mobile", None) or "",
+                )
+                if not vals.get("contact_name"):
+                    vals["contact_name"] = (
+                        user.name if partner.is_company else partner.name
+                    )
+        return vals
+
+    @api.model
+    def _provider_application_context_defaults(self, rfq, partner):
+        partner = partner or self.env.user.partner_id
+        return {
+            "default_rfq_id": rfq.id,
+            "default_partner_id": partner.id,
+            "default_company_name": partner.commercial_company_name or partner.name,
+            "default_contact_name": self.env.user.name,
+            "default_contact_email": partner.email or self.env.user.email,
+            "default_contact_phone": partner.phone or getattr(partner, "mobile", None) or "",
+        }
+
+    @api.model
+    def action_open_provider_application_from_rfq(self):
+        """Open draft application or create one (service provider backend, transversal/public)."""
+        rfq_id = self.env.context.get("active_id") or self.env.context.get("active_ids", [None])[0]
+        rfq = self.env["ew.rfq"].browse(rfq_id).exists()
+        if not rfq:
+            raise UserError(_("RFQ/RFP not found."))
+        partner = self.env.user.partner_id
+        if not partner:
+            raise UserError(
+                _("Your user has no linked contact. Ask an administrator to link your account.")
+            )
+        rfq._assert_provider_may_apply(partner=partner, user=self.env.user)
+        existing = self.search(
+            [
+                ("rfq_id", "=", rfq.id),
+                ("partner_id", "=", partner.id),
+            ],
+            limit=1,
+        )
+        action = {
+            "type": "ir.actions.act_window",
+            "name": _("Application"),
+            "res_model": "ew.submission",
+            "view_mode": "form",
+            "target": "current",
+            "context": dict(
+                self.env.context,
+                **self._provider_application_context_defaults(rfq, partner),
+            ),
+        }
+        if existing:
+            existing._ensure_document_lines()
+            action["res_id"] = existing.id
+            return action
+        action["context"]["form_view_initial_mode"] = "edit"
+        return action
+
+    def _validate_mandatory_documents(self):
+        self.ensure_one()
+        missing = []
+        by_req = {line.requirement_id.id: line for line in self.line_ids}
+        for req in self.rfq_id.requirement_ids:
+            if not req.is_mandatory:
+                continue
+            line = by_req.get(req.id)
+            if not line or not line.file:
+                missing.append(req.name or _("(Unnamed requirement)"))
+        if missing:
+            raise ValidationError(
+                _("Missing files for mandatory documents:\n- %s") % "\n- ".join(missing)
+            )
+
+    def _validate_contact_for_submit(self):
+        self.ensure_one()
+        if not (self.company_name or "").strip():
+            raise UserError(_("Company name is required."))
+        if not (self.contact_email or "").strip():
+            raise UserError(_("Email is required."))
+        if not (self.contact_phone or "").strip():
+            raise UserError(_("Contact phone is required."))
+
     # ---------- HARDENED SEEDING ----------
-    def _seed_lines_from_rfq(self):
-        """Ensure this submission has one line per RFQ requirement.
-        Also self-heals RFQs missing default requirements."""
+    def _rfq_requirements_ordered(self, rfq):
+        rfq = rfq.sudo()
+        if not rfq.requirement_ids:
+            if hasattr(rfq, "_prefill_requirements"):
+                rfq._prefill_requirements()
+            elif hasattr(rfq, "_default_requirements_commands"):
+                rfq.write({"requirement_ids": rfq._default_requirements_commands()})
+        return rfq.requirement_ids.sorted(key=lambda r: (r.section, r.sequence, r.id))
+
+    def _document_lines_match_rfq(self, lines, reqs):
+        if len(lines) != len(reqs):
+            return False
+        if not reqs:
+            return True
+        actual = lines.mapped("requirement_id").ids
+        expected = reqs.ids
+        return len(set(actual)) == len(reqs) and set(actual) == set(expected)
+
+    def _ensure_document_lines(self):
+        """One line per RFQ requirement, each linked to the correct requirement."""
+        Line = self.env["ew.submission.line"].sudo()
         for sub in self:
-            rfq = sub.rfq_id.sudo()
-            # If RFQ somehow has no requirements, prefill them now (self-heal)
-            if not rfq.requirement_ids:
-                if hasattr(rfq, "_prefill_requirements"):
-                    rfq._prefill_requirements()
-                elif hasattr(rfq, "_default_requirements_commands"):
-                    rfq.write({"requirement_ids": rfq._default_requirements_commands()})
-            if not sub.line_ids and rfq.requirement_ids:
-                sub.write({
-                    "line_ids": [(0, 0, {"requirement_id": r.id}) for r in rfq.requirement_ids]
-                })
+            if not sub.rfq_id:
+                continue
+            reqs = self._rfq_requirements_ordered(sub.rfq_id)
+            if not reqs:
+                continue
+            lines = sub.line_ids.sorted("id")
+            if self._document_lines_match_rfq(lines, reqs):
+                for line, req in zip(lines, reqs):
+                    if line.requirement_name != req.name:
+                        line.requirement_name = req.name
+                continue
+
+            if len(lines) == len(reqs):
+                for line, req in zip(lines, reqs):
+                    line.write({
+                        "requirement_id": req.id,
+                        "requirement_name": req.name,
+                    })
+                continue
+
+            if sub.state != "draft":
+                continue
+
+            preserved = [
+                (line.file, line.file_filename)
+                for line in lines
+            ]
+            lines.unlink()
+            for idx, req in enumerate(reqs):
+                vals = {
+                    "submission_id": sub.id,
+                    "requirement_id": req.id,
+                    "requirement_name": req.name,
+                }
+                if idx < len(preserved) and preserved[idx][0]:
+                    vals["file"] = preserved[idx][0]
+                    vals["file_filename"] = preserved[idx][1]
+                Line.with_context(ew_allow_submission_line_create=True).create(vals)
+
+    def _seed_lines_from_rfq(self):
+        self._ensure_document_lines()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -122,6 +317,9 @@ class EwSubmission(models.Model):
                     )
 
             rfq = rfq_id and self.env["ew.rfq"].browse(rfq_id).sudo()
+            if rfq:
+                partner = self.env["res.partner"].browse(partner_id).exists()
+                rfq._assert_provider_may_apply(partner=partner, user=self.env.user)
             if rfq and rfq.closing_at and rfq.closing_at <= now:
                 vals["state"] = "closed"
 
@@ -135,33 +333,279 @@ class EwSubmission(models.Model):
                     rfq._auto_close_if_due()
                 else:
                     rfq.write({"unlocked": True, "state": "closed"})
+            rec._briefing_send_start_email_if_due()
 
         return records
+
+    def _briefing_send_start_email_if_due(self):
+        """If briefing is live, ensure this applicant gets the start notification."""
+        for rec in self:
+            if rec.state not in ("submitted", "closed"):
+                continue
+            rfq = rec.rfq_id.sudo()
+            if not rfq or not rfq.briefing_session:
+                continue
+            if rfq.briefing_start_mail_sent:
+                rfq._send_briefing_start_to_submission(rec)
+            else:
+                rfq._send_briefing_start_emails()
 
     # Keep your existing onchange for UI niceness (not relied upon)
     @api.onchange("rfq_id")
     def _onchange_rfq_id_seed_lines(self):
-        if self.rfq_id and not self.line_ids:
-            self.line_ids = [(0, 0, {"requirement_id": r.id}) for r in self.rfq_id.requirement_ids]
+        """UI hint only — persisted lines come from create()/write() + _ensure_document_lines."""
+        if not self.rfq_id or self._origin.id:
+            return
+        if self.line_ids:
+            return
+        for req in self._rfq_requirements_ordered(self.rfq_id):
+            self.line_ids += self.env["ew.submission.line"].new({
+                "requirement_id": req.id,
+                "requirement_name": req.name,
+            })
+
+    def _ew_filter_sp_line_commands(self, commands):
+        """Service providers may update files on existing lines, not add/remove rows."""
+        if not commands:
+            return commands
+        kept = []
+        for cmd in commands:
+            if not isinstance(cmd, (list, tuple)):
+                kept.append(cmd)
+                continue
+            if cmd[0] == 1:
+                kept.append(cmd)
+            elif cmd[0] == 4:
+                kept.append(cmd)
+        return kept
+
+    def write(self, vals):
+        if (
+            not self.env.su
+            and self.env.user.has_group("ewseta_procurement.group_service_provider")
+            and "line_ids" in vals
+            and not self.env.context.get("ew_skip_line_ids_write")
+        ):
+            vals = dict(vals)
+            vals["line_ids"] = self._ew_filter_sp_line_commands(vals["line_ids"])
+        res = super().write(vals)
+        drafts = self.filtered(lambda s: s.state == "draft")
+        if vals.get("rfq_id") or (
+            "line_ids" in vals
+            and self.env.user.has_group("ewseta_procurement.group_service_provider")
+        ):
+            drafts.with_context(ew_allow_submission_line_create=True).sudo()._ensure_document_lines()
+        return res
+
+    @api.model
+    def _fix_document_line_requirements(self):
+        """Upgrade hook: realign draft submission lines with RFQ requirements."""
+        subs = self.search([("rfq_id", "!=", False)])
+        subs._ensure_document_lines()
+
+    @api.model
+    def _tracking_pepper(self):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'ewseta_procurement.submission_track_pepper',
+            'ewseta_submission_track',
+        )
+
+    @api.model
+    def _tracking_token_days(self):
+        """Days until link expiry; 0 or negative = never expires."""
+        try:
+            return int(self.env['ir.config_parameter'].sudo().get_param(
+                'ewseta_procurement.submission_track_days', '0',
+            ))
+        except (TypeError, ValueError):
+            return 0
+
+    @api.model
+    def _track_token_validity_domain(self):
+        """Domain clause: token not expired (empty expiry = permanent)."""
+        now = fields.Datetime.now()
+        return ['|', ('track_token_expires', '=', False), ('track_token_expires', '>=', now)]
+
+    def _issue_tracking_token(self, force_new=False):
+        """Return the supplier proof URL token. By default issued once and kept forever."""
+        self.ensure_one()
+        if self.track_token and not force_new:
+            return self.track_token
+
+        token = secrets.token_urlsafe(32)
+        days = self._tracking_token_days()
+        expires = (
+            False
+            if days <= 0
+            else fields.Datetime.now() + timedelta(days=days)
+        )
+        pepper = self._tracking_pepper()
+        self.sudo().write({
+            'track_token': token,
+            'track_token_hash': _hash_submission_track_token(token, pepper),
+            'track_token_expires': expires,
+        })
+        return token
+
+    def _portal_token_matches_submission(self, submission, token):
+        token = (token or '').strip()
+        if not token or not submission:
+            return False
+        if submission.track_token == token:
+            return True
+        pepper = self._tracking_pepper()
+        return submission.track_token_hash == _hash_submission_track_token(token, pepper)
+
+    @api.model
+    def find_by_tracking_token(self, token):
+        if not token:
+            return self.browse()
+        token = token.strip()
+        validity = self._track_token_validity_domain()
+        found = self.sudo().search(
+            [('track_token', '=', token)] + validity,
+            limit=1,
+        )
+        if found:
+            return found
+        pepper = self._tracking_pepper()
+        token_hash = _hash_submission_track_token(token, pepper)
+        return self.sudo().search(
+            [('track_token_hash', '=', token_hash)] + validity,
+            limit=1,
+        )
+
+    @api.model
+    def portal_resolve_submission(self, token, trusted_submission_id=None):
+        """Resolve submission for public thanks/track pages (token + optional session id)."""
+        token = (token or '').strip()
+        if token:
+            found = self.find_by_tracking_token(token)
+            if found:
+                return found
+        if trusted_submission_id and token:
+            sub = self.sudo().browse(int(trusted_submission_id)).exists()
+            if sub and sub.state in ('submitted', 'closed'):
+                if self._portal_token_matches_submission(sub, token):
+                    return sub
+        return self.browse()
+
+    def action_resend_portal_track_link(self):
+        """Re-email the same private status link (does not invalidate existing URLs)."""
+        for rec in self:
+            track_token = rec._issue_tracking_token()
+            rec._send_portal_application_received(track_token)
+        return True
+
+    def action_regenerate_portal_track_link(self):
+        """Issue a new link (invalidates previous URLs). SCM/Admin only."""
+        if not (
+            self.env.user.has_group('ewseta_procurement.group_scm_owner')
+            or self.env.user.has_group('ewseta_procurement.group_rfq_admin')
+        ):
+            raise AccessError(_("Only SCM or RFQ administrators can regenerate portal links."))
+        for rec in self:
+            track_token = rec._issue_tracking_token(force_new=True)
+            rec._send_portal_application_received(track_token)
+        return True
+
+    def _portal_track_url(self, track_token):
+        self.ensure_one()
+        base = (self.env['ir.config_parameter'].sudo().get_param('web.base.url') or '').rstrip('/')
+        if not base or not track_token:
+            return ''
+        return f'{base}/application/submissions/track/{track_token}'
+
+    def portal_track_reference_rows(self):
+        """Label/value rows for the public track page (supplier + application)."""
+        self.ensure_one()
+        rfq = self.rfq_id
+        supplier = [
+            {'label': _('Company / trading name'), 'value': self.company_name or '—'},
+            {'label': _('Contact person'), 'value': self.contact_name or '—'},
+            {'label': _('Contact email'), 'value': self.contact_email or '—', 'kind': 'email'},
+            {'label': _('Contact phone'), 'value': self.contact_phone or '—'},
+        ]
+        if self.partner_id:
+            supplier.append({
+                'label': _('Supplier partner (Odoo)'),
+                'value': self.partner_id.display_name,
+            })
+        application = [
+            {'label': _('Submission reference'), 'value': self.name or '—', 'kind': 'code'},
+            {'label': _('Submission status'), 'value': dict(self._fields['state'].selection).get(self.state, self.state)},
+            {'label': _('Submitted on'), 'value': self.submitted_at and format_datetime(self.env, self.submitted_at) or '—'},
+            {'label': _('RFQ / RFP title'), 'value': rfq.name or '—'},
+            {'label': _('RFQ / RFP reference'), 'value': rfq.reference or '—'},
+            {'label': _('Type'), 'value': (rfq.type or 'rfq').upper()},
+            {'label': _('RFQ closing date'), 'value': self.closing_at and format_datetime(self.env, self.closing_at) or '—'},
+            {'label': _('RFQ status'), 'value': dict(rfq._fields['state'].selection).get(rfq.state, rfq.state)},
+        ]
+        return {'supplier': supplier, 'application': application}
+
+    def _send_portal_application_received(self, track_token):
+        """Email the supplier their reference and private status link."""
+        self.ensure_one()
+        if not (self.contact_email or '').strip():
+            return False
+        template = self.env.ref(
+            'ewseta_procurement.mail_tmpl_submission_portal_received',
+            raise_if_not_found=False,
+        )
+        if not template:
+            return False
+        track_url = self._portal_track_url(track_token)
+        contact = self.contact_email.strip()
+        # use_default_to must be off on the template; also clear thread default
+        # partners so Odoo does not SMTP-send once per partner and once for email_to.
+        return template.with_context(
+            track_url=track_url,
+        ).send_mail(
+            self.id,
+            force_send=True,
+            email_values={
+                'email_to': contact,
+                'partner_ids': [],
+                'recipient_ids': [(5, 0, 0)],
+            },
+        )
 
     def action_submit(self):
-        """If a button submits from draft → submitted; close immediately if past deadline."""
+        """Draft → submitted with the same checks as the public portal (documents + contact)."""
         now = fields.Datetime.now()
         for rec in self:
-            if rec.state == "draft":
-                rec.state = "submitted"
-            # close instantly if RFQ deadline reached
+            if rec.state != "draft":
+                continue
+            rec.rfq_id._assert_provider_may_apply(
+                partner=rec.partner_id,
+                user=self.env.user,
+            )
+            if rec.rfq_id.closing_at and rec.rfq_id.closing_at <= now:
+                raise UserError(_("This RFQ/RFP is past the closing date."))
+            rec._validate_contact_for_submit()
+            if not rec.privacy_policy_accepted:
+                raise UserError(
+                    _("You must accept the RFQ privacy policy before submitting.")
+                )
+            rec.with_context(ew_allow_submission_line_create=True).sudo()._ensure_document_lines()
+            if not self.env.user.has_group(
+                "ewseta_procurement.group_service_provider"
+            ):
+                rec._validate_mandatory_documents()
+            rec.write({
+                "state": "submitted",
+                "submitted_at": now,
+            })
+            rec.message_post(
+                body=_("Application submitted via the service provider portal."),
+                subtype_xmlid="mail.mt_note",
+            )
+            track_token = rec._issue_tracking_token()
+            rec._send_portal_application_received(track_token)
+            rec._briefing_send_start_email_if_due()
             if rec.rfq_id.closing_at and rec.rfq_id.closing_at <= now:
                 rec.state = "closed"
                 rec.rfq_id._auto_close_if_due()
-
-        template = self.env.ref(
-            "ewseta_procurement.mail_tmpl_submission_sender",
-            raise_if_not_found=False,
-        )
-        if template:
-            for rec in self:
-                template.send_mail(rec.id)
 
     def send_mail(self):
         template = self.env.ref("ewseta_procurement.mail_tmpl_submission_receipt")
@@ -171,11 +615,36 @@ class EwSubmission(models.Model):
 
 
     @api.model
+    def _sync_scm_submission_access(self):
+        """Ensure past-deadline RFQs are closed/unlocked so SCM record rules allow access."""
+        user = self.env.user
+        if user._is_public():
+            return
+        if not user.has_group("ewseta_procurement.group_scm_owner"):
+            return
+        if user.has_group("ewseta_procurement.group_rfq_admin"):
+            return
+        self.env["ew.rfq"]._sync_due_closures()
+
+    @api.model
+    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
+        self._sync_scm_submission_access()
+        return super()._search(
+            domain,
+            offset=offset,
+            limit=limit,
+            order=order,
+            active_test=active_test,
+            bypass_access=bypass_access,
+        )
+
+    @api.model
     def cron_close_submissions_past_deadline(self):
         """Safety cron: close submissions when RFQ deadline has passed."""
         now = fields.Datetime.now()
         subs = self.search([("state", "!=", "closed"), ("rfq_id.closing_at", "<=", now)])
         subs.write({"state": "closed"})
+        self.env["ew.rfq"]._sync_due_closures()
 
 
     @api.constrains("rfq_id", "partner_id")
@@ -299,11 +768,15 @@ class EwSubmissionLine(models.Model):
 
     submission_id = fields.Many2one("ew.submission", required=True, ondelete="cascade")
     requirement_id = fields.Many2one("ew.rfq.requirement", string="Requirement", required=True)
-    # NEW: reflect mandatory from the requirement
+    requirement_name = fields.Char(
+        string="Requirement label",
+        readonly=True,
+        help="Copy of the RFQ document name at line creation (stable in the UI).",
+    )
     is_mandatory = fields.Boolean(
         string="Mandatory",
         related="requirement_id.is_mandatory",
-        store=False,  # set to True if you want to search/group by it
+        store=False,
         readonly=True,
         tracking=True
 
@@ -331,10 +804,10 @@ class EwSubmissionLine(models.Model):
 
 
 
-    @api.depends("requirement_id")
+    @api.depends("requirement_id", "requirement_name")
     def _compute_name(self):
         for rec in self:
-            rec.name = rec.requirement_id.name or ""
+            rec.name = rec.requirement_name or rec.requirement_id.name or ""
 
     # @api.model
     # def create(self, vals):
@@ -379,6 +852,10 @@ class EwSubmissionLine(models.Model):
                 elif not (incoming_comment or "").strip():
                     raise UserError("Please provide a verification comment when rejecting.")
 
+        if "requirement_id" in vals and "requirement_name" not in vals:
+            req = self.env["ew.rfq.requirement"].sudo().browse(vals["requirement_id"])
+            vals["requirement_name"] = req.name or ""
+
         res = super().write(vals)
         # If file changed, resync attachment
         if {"file", "file_filename"} & set(vals.keys()):
@@ -407,41 +884,86 @@ class EwSubmissionLine(models.Model):
             else:
                 rec.attachment_id = self.env["ir.attachment"].create(att_vals).id
 
+    def _stamp_requirement_name(self, vals):
+        req_id = vals.get("requirement_id")
+        if req_id and not vals.get("requirement_name"):
+            req = self.env["ew.rfq.requirement"].sudo().browse(req_id)
+            vals["requirement_name"] = req.name or ""
+
+    @api.model
+    def _ew_filter_submission_line_vals(self, vals_list):
+        """Keep one create per requirement; ignore duplicate/extra rows from form save."""
+        kept = []
+        pending_req_by_sub = {}
+        for vals in vals_list:
+            sub_id = vals.get("submission_id")
+            if not sub_id:
+                kept.append(vals)
+                continue
+            sub = self.env["ew.submission"].browse(sub_id).sudo()
+            if not sub.exists():
+                continue
+            req_id = vals.get("requirement_id")
+            if not req_id and sub.rfq_id:
+                used = (
+                    set(sub.line_ids.mapped("requirement_id").ids)
+                    | pending_req_by_sub.get(sub_id, set())
+                )
+                missing = sub.rfq_id.requirement_ids.filtered(
+                    lambda r: r.id not in used
+                )[:1]
+                if not missing:
+                    continue
+                req_id = missing.id
+                vals = dict(vals, requirement_id=req_id)
+                pending_req_by_sub.setdefault(sub_id, set()).add(req_id)
+            if not req_id:
+                continue
+            seen = pending_req_by_sub.setdefault(sub_id, set())
+            seen |= set(sub.line_ids.mapped("requirement_id").ids)
+            if req_id in seen:
+                continue
+            seen.add(req_id)
+            kept.append(vals)
+        return kept
+
     @api.model_create_multi
     def create(self, vals_list):
+        vals_list = self._ew_filter_submission_line_vals(vals_list)
         for vals in vals_list:
-            if not vals.get("requirement_id") and vals.get("submission_id"):
-                sub = self.env["ew.submission"].browse(vals["submission_id"])
-                if sub and sub.rfq_id:
-                    used_req_ids = set(sub.line_ids.mapped("requirement_id").ids)
-                    missing_req = (
-                        sub.rfq_id.requirement_ids
-                        - sub.rfq_id.requirement_ids.browse(list(used_req_ids))
-                    )[:1]
-                    if missing_req:
-                        vals["requirement_id"] = missing_req.id
-                    else:
-                        raise ValidationError(
-                            _("All RFQ requirements already have lines; cannot create extra lines.")
-                        )
-                else:
-                    raise ValidationError(
-                        _("Cannot create a document line without a requirement on this submission.")
-                    )
+            self._stamp_requirement_name(vals)
+        if not vals_list:
+            return self.browse()
 
-        records = super().create(vals_list)
+        records = super(
+            EwSubmissionLine,
+            self.sudo().with_context(ew_allow_submission_line_create=True),
+        ).create(vals_list)
         for rec in records:
             rec._sync_attachment()
         return records
 
 
+    def portal_file_is_pdf(self):
+        self.ensure_one()
+        return (self.file_filename or '').lower().endswith('.pdf')
+
     def action_preview_file(self):
         self.ensure_one()
         if not self.file:
             raise UserError(_("No file uploaded yet."))
-        filename = url_quote(self.file_filename or "document")
-        url = f"/web/content/ew.submission.line/{self.id}/file/{filename}?download=0"
-        return {"type": "ir.actions.act_url", "url": url, "target": "new"}
+        wizard = self.env["ew.submission.line.preview"].create({"line_id": self.id})
+        title = self.file_filename or self.requirement_name or _("Document preview")
+        return {
+            "type": "ir.actions.act_window",
+            "name": title,
+            "res_model": "ew.submission.line.preview",
+            "res_id": wizard.id,
+            "view_mode": "form",
+            "views": [(False, "form")],
+            "target": "new",
+            "context": {"dialog_size": "extra-large"},
+        }
 
 # # models/submission.py (only the line model & seeding/validation parts shown)
 # # models/submission.py

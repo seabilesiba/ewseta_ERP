@@ -42,6 +42,44 @@
                     } catch (e) {}
                 })();
             </script>
+            <script id="ew-proc-sticky-navbar" type="text/javascript">
+                (function () {
+                    function pinNavbar() {
+                        var wrap = document.getElementById('wrapwrap');
+                        if (!wrap || !wrap.classList.contains('ew-proc-sticky-nav')) {
+                            return;
+                        }
+                        var hdr = wrap.querySelector(':scope &gt; header#top');
+                        var main = wrap.querySelector(':scope &gt; main');
+                        if (!hdr || !main || hdr.classList.contains('d-none')) {
+                            return;
+                        }
+                        if (wrap.classList.contains('o_header_overlay')) {
+                            hdr.classList.add('ew-proc-navbar-pinned');
+                            main.style.removeProperty('padding-top');
+                            return;
+                        }
+                        hdr.classList.add('ew-proc-navbar-pinned');
+                        var height = Math.ceil(hdr.getBoundingClientRect().height);
+                        if (height &lt; 1) {
+                            return;
+                        }
+                        document.documentElement.style.setProperty('--ew-proc-header-offset', height + 'px');
+                        main.style.setProperty('padding-top', height + 'px', 'important');
+                    }
+                    function schedulePin() {
+                        pinNavbar();
+                        window.requestAnimationFrame(pinNavbar);
+                    }
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', schedulePin);
+                    } else {
+                        schedulePin();
+                    }
+                    window.addEventListener('resize', schedulePin, { passive: true });
+                    window.addEventListener('load', schedulePin);
+                })();
+            </script>
             <script id="ew-proc-user-menu" type="text/javascript">
                 (function () {
                     function clearMenuPosition(menu) {

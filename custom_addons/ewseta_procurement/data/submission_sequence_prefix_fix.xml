@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_ew_submission_rfq" model="ir.sequence">
+        <field name="prefix">EW-RFQ-</field>
+    </record>
+    <function model="ew.submission" name="_migrate_submission_name_rgq_to_rfq"/>
+</odoo>

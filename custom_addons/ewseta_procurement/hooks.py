@@ -38,21 +38,16 @@ def _cleanup_ewseta_web_top_menus(env):
         )
         keep = canonical[:1] if canonical else homes[:1]
         (homes - keep).unlink()
-    # ewseta_web adds a top-level "Contact Us" menu; procurement uses CMS navbar + header CTA instead.
-    Menu.search(
-        [
-            ("parent_id", "=", main.id),
-            ("website_id", "=", website.id),
-            ("name", "=", "Contact Us"),
-            ("url", "=", "/contactus"),
-        ]
-    ).unlink()
-
-
 def post_init_hook(env):
+    env["ew.rfq"]._deactivate_legacy_reference_sequence()
     env["website"].ewseta_apply_favicon()
-    legacy_menu = env.ref("ewseta_procurement.application_manu_rfq", raise_if_not_found=False)
-    if legacy_menu:
-        legacy_menu.unlink()
+    for xmlid in (
+        "ewseta_procurement.application_manu_rfq",
+        "ewseta_procurement.menu_ew_website_cms",
+    ):
+        legacy_menu = env.ref(xmlid, raise_if_not_found=False)
+        if legacy_menu:
+            legacy_menu.unlink()
     _cleanup_ewseta_web_top_menus(env)
     env["proc.cms.seed"].seed_all_websites()
+    env["proc.cms.seed"].apply_nav_layout()

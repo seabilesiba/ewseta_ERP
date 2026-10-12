@@ -22,6 +22,7 @@ class ProcCmsBlock(models.Model):
         [
             ("home", "Home"),
             ("contact", "Contact"),
+            ("rfq_policy", "RFQ policy"),
             ("global", "Global"),
         ],
         default="home",

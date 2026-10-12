@@ -1,10 +1,23 @@
-/* EWSETA procurement site — navbar logo + Contact Us CTA */
+/* EWSETA procurement site — navbar (mint bar + forest green accents) */
 
-/* Light mode: mint navbar + teal bottom stripe (brand swatch) */
+:root {
+    --ew-proc-nav-bg: #e9f5ef;
+    --ew-proc-nav-border: rgba(30, 77, 43, 0.14);
+    --ew-nav-green: #1e4d2b;
+    --ew-nav-green-hover: #173d22;
+    --ew-nav-green-active: #214c38;
+}
+
 html:not(.ew-proc-dark) #wrapwrap > header#top {
-    background-color: var(--ew-proc-nav-bg, #eaf4f2) !important;
-    border-bottom: 3px solid var(--ew-proc-nav-border, #5d8e9d) !important;
+    background-color: var(--ew-proc-nav-bg) !important;
+    border-bottom: 1px solid var(--ew-proc-nav-border) !important;
     box-shadow: none;
+}
+
+html:not(.ew-proc-dark) #wrapwrap.ew-proc-sticky-nav > header#top.ew-proc-navbar-pinned,
+html:not(.ew-proc-dark) #wrapwrap > header#top.o_header_affixed,
+html:not(.ew-proc-dark) #wrapwrap > header#top.o_header_is_scrolled {
+    box-shadow: 0 4px 18px rgba(30, 77, 43, 0.12);
 }
 
 html:not(.ew-proc-dark) #wrapwrap > header#top .navbar,
@@ -12,17 +25,42 @@ html:not(.ew-proc-dark) #wrapwrap > header#top .o_main_nav,
 html:not(.ew-proc-dark) #wrapwrap > header#top .o_header_mobile,
 html:not(.ew-proc-dark) #wrapwrap > header#top.o_header_affixed,
 html:not(.ew-proc-dark) #wrapwrap > header#top.o_header_is_scrolled {
-    background-color: var(--ew-proc-nav-bg, #eaf4f2) !important;
+    background-color: var(--ew-proc-nav-bg) !important;
 }
 
 html:not(.ew-proc-dark) header .navbar .nav-link:not(.active),
 html:not(.ew-proc-dark) header .navbar .navbar-brand,
-html:not(.ew-proc-dark) header .navbar .o_nav-link_secondary {
-    color: #2a4a52 !important;
+html:not(.ew-proc-dark) header .navbar .o_nav-link_secondary,
+html:not(.ew-proc-dark) header .navbar .text-muted {
+    color: var(--ew-nav-green) !important;
+}
+
+html:not(.ew-proc-dark) header .navbar .nav-link:hover,
+html:not(.ew-proc-dark) header .navbar .nav-link:focus,
+html:not(.ew-proc-dark) header .navbar .navbar-brand:hover {
+    color: var(--ew-nav-green-hover) !important;
 }
 
 html:not(.ew-proc-dark) header .navbar .nav-link.active {
-    color: #f29100 !important;
+    color: var(--ew-nav-green-active) !important;
+    font-weight: 600;
+}
+
+html:not(.ew-proc-dark) header .navbar a:not(.btn):not(.nav-link),
+html:not(.ew-proc-dark) header .navbar .fa {
+    color: var(--ew-nav-green) !important;
+}
+
+html:not(.ew-proc-dark) header .ew-proc-theme-toggle {
+    border-color: var(--ew-proc-nav-border);
+    background: rgba(30, 77, 43, 0.08);
+    color: var(--ew-nav-green);
+}
+
+html:not(.ew-proc-dark) header .ew-proc-theme-toggle:hover {
+    background: var(--ew-nav-green);
+    border-color: var(--ew-nav-green);
+    color: #fff;
 }
 
 .ewseta-navbar-logo {
@@ -35,14 +73,14 @@ html:not(.ew-proc-dark) header .navbar .nav-link.active {
 
 header .btn.ewseta-nav-cta,
 header .btn.ewseta-nav-cta.btn-primary {
-    --bs-btn-bg: #f29100;
-    --bs-btn-border-color: #f29100;
-    --bs-btn-hover-bg: #d97f00;
-    --bs-btn-hover-border-color: #c97400;
-    --bs-btn-active-bg: #c97400;
-    --bs-btn-active-border-color: #b36900;
-    background-color: #f29100;
-    border-color: #f29100;
+    --bs-btn-bg: var(--ew-nav-green);
+    --bs-btn-border-color: var(--ew-nav-green);
+    --bs-btn-hover-bg: var(--ew-nav-green-hover);
+    --bs-btn-hover-border-color: var(--ew-nav-green-hover);
+    --bs-btn-active-bg: var(--ew-nav-green-active);
+    --bs-btn-active-border-color: var(--ew-nav-green-active);
+    background-color: var(--ew-nav-green);
+    border-color: var(--ew-nav-green);
     color: #fff;
 }
 
@@ -50,14 +88,44 @@ header .btn.ewseta-nav-cta:hover,
 header .btn.ewseta-nav-cta:focus,
 header .btn.ewseta-nav-cta.btn-primary:hover,
 header .btn.ewseta-nav-cta.btn-primary:focus {
-    background-color: #d97f00;
-    border-color: #d97f00;
+    background-color: var(--ew-nav-green-hover);
+    border-color: var(--ew-nav-green-hover);
     color: #fff;
 }
 
+html.ew-proc-dark header .btn.ewseta-nav-cta,
+html.ew-proc-dark header .btn.ewseta-nav-cta.btn-primary {
+    --bs-btn-bg: var(--ew-nav-green);
+    --bs-btn-border-color: var(--ew-nav-green);
+    background-color: var(--ew-nav-green);
+    border-color: var(--ew-nav-green);
+}
+
 #wrapwrap > header#top {
-    position: relative;
     z-index: 1040;
+}
+
+#wrapwrap.ew-proc-sticky-nav > header#top.ew-proc-navbar-pinned {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1040;
+    transform: none !important;
+}
+
+#wrapwrap.ew-proc-sticky-nav > header#top.ew-proc-navbar-pinned.o_header_affixed,
+#wrapwrap.ew-proc-sticky-nav > header#top.ew-proc-navbar-pinned.o_top_fixed_element {
+    transform: none !important;
+}
+
+#wrapwrap.ew-proc-sticky-nav.o_header_overlay > main {
+    padding-top: 0 !important;
+}
+
+#wrapwrap.ew-proc-sticky-nav.o_header_overlay > header#top.ew-proc-navbar-pinned {
+    position: absolute;
 }
 
 #wrapwrap > header#top .o_no_autohide_item {
@@ -80,7 +148,6 @@ header .btn.ewseta-nav-cta.btn-primary:focus {
     position: relative;
 }
 
-/* Above the white search bar, on the dimmed overlay — not on the submit button */
 #o_search_modal .ew-proc-search-close {
     position: absolute;
     top: 0.75rem;
@@ -99,7 +166,6 @@ header .btn.ewseta-nav-cta.btn-primary:focus {
     z-index: 1055;
 }
 
-/* Visual dim only — must not capture taps (see ew-proc-mobile-critical in layout head). */
 .ew-proc-mobile-backdrop {
     z-index: 1035;
     pointer-events: none;
@@ -109,7 +175,6 @@ body.ew-proc-mobile-menu-open #wrapwrap > header#top {
     z-index: 1070;
 }
 
-/* Offcanvas panel must stay off-screen until opened (Bootstrap CSS can load late). */
 @media (max-width: 991.98px) {
     #top_menu_collapse_mobile.offcanvas {
         position: fixed;
@@ -172,7 +237,6 @@ html.ew-proc-dark header .ew-proc-user-menu.ew-proc-user-menu--open {
     border-color: #3a4540;
 }
 
-/* Mobile drawer: keep user menu in-flow (dropup); desktop uses fixed positioning via JS */
 @media (max-width: 991.98px) {
     #top_menu_collapse_mobile .ew-proc-user-menu.ew-proc-user-menu--open,
     #top_menu_collapse_mobile .ew-proc-user-menu.show {

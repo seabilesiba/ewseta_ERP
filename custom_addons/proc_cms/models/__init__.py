@@ -5,6 +5,7 @@ from . import proc_cms_button
 from . import proc_cms_card
 from . import proc_cms_block
 from . import proc_cms_page
+from . import proc_cms_policy_document
 from . import proc_cms_footer_link
 from . import proc_cms_seed
 from . import website

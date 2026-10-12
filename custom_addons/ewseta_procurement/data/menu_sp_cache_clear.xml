@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="ir.ui.menu" name="_ew_refresh_menu_visibility_cache"/>
+</odoo>

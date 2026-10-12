@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_tmpl_submission_portal_received" model="mail.template">
+        <field name="name">RFQ portal: application received (supplier)</field>
+        <field name="model_id" ref="model_ew_submission"/>
+        <field name="subject">EWSETA application received — {{ object.name }}</field>
+        <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.contact_email }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+    <p>Hello <t t-out="object.contact_name or object.company_name"/>,</p>
+    <p>We received your application for <strong><t t-out="object.rfq_id.name"/></strong>
+       (RFQ/RFP ref: <t t-out="object.rdq_rfp_ref"/>).</p>
+    <p>Your submission reference:</p>
+    <p style="font-size: 20px; letter-spacing: 1px;"><strong><t t-out="object.name"/></strong></p>
+    <p t-if="ctx.get('track_url')">
+        Keep this link as proof of your application — it does not expire (keep it private):
+        <br/>
+        <a t-att-href="ctx.get('track_url')"><t t-out="ctx.get('track_url')"/></a>
+    </p>
+    <p t-if="not ctx.get('track_url')">
+        Save your submission reference. Contact EWSETA SCM if you need a status link.
+    </p>
+    <p>EWSETA will review applications after the RFQ/RFP closing date.</p>
+    <p>Kind regards,<br/>EWSETA Supply Chain Management</p>
+</div>
+        </field>
+    </record>
+
+</odoo>

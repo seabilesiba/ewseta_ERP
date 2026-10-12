@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="proc.cms.seed" name="apply_nav_layout"/>
+</odoo>

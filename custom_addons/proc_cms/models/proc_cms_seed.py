@@ -72,6 +72,135 @@ class ProcCmsSeed(models.AbstractModel):
             raise
 
     @api.model
+    def apply_nav_layout(self):
+        """Main menu: Home, Procurements, CMS nav links (e.g. EOL), Contact. Header CTA: Procurement."""
+        Nav = self.env["proc.cms.nav.item"].sudo()
+        for website in self.env["website"].sudo().search([]):
+            self._apply_nav_layout(website)
+            self._ensure_eol_nav_item(website)
+            self._ensure_footer_eol_link(website)
+        Nav.search(
+            [
+                ("is_cta", "=", False),
+                ("url", "=", "/employee/eol-assets"),
+            ]
+        ).unlink()
+        self.env["proc.cms.nav.item"].sync_all_menus()
+
+    @api.model
+    def _apply_nav_layout(self, website):
+        from .proc_cms_nav_item import EOL_NAV_URL
+
+        Nav = self.env["proc.cms.nav.item"].sudo()
+        Nav.search(
+            [
+                ("website_id", "=", website.id),
+                ("is_cta", "=", False),
+                ("url", "!=", EOL_NAV_URL),
+            ]
+        ).unlink()
+        Nav.search(
+            [
+                ("website_id", "=", website.id),
+                ("is_cta", "=", True),
+                ("url", "in", ("/contactus", "/contact-us")),
+            ]
+        ).unlink()
+        cta = Nav.search(
+            [
+                ("website_id", "=", website.id),
+                ("is_cta", "=", True),
+                ("url", "=", "/application/rfqs"),
+            ],
+            limit=1,
+        )
+        vals = {
+            "name": "Procurement",
+            "url": "/application/rfqs",
+            "sequence": 5,
+            "is_cta": True,
+            "website_id": website.id,
+            "active": True,
+        }
+        if cta:
+            cta.write(vals)
+        else:
+            Nav.create(vals)
+
+    @api.model
+    def _ensure_eol_nav_item(self, website):
+        """Default CMS navbar row for EOL request form (toggle via Website CMS → Navbar)."""
+        from .proc_cms_nav_item import EOL_LANDING_URL, EOL_NAV_NAME, EOL_NAV_URL
+
+        Nav = self.env["proc.cms.nav.item"].sudo()
+        legacy = Nav.search(
+            [
+                ("website_id", "=", website.id),
+                ("url", "=", EOL_LANDING_URL),
+                ("is_cta", "=", False),
+            ],
+            limit=1,
+        )
+        if legacy:
+            legacy.write({"url": EOL_NAV_URL, "name": EOL_NAV_NAME})
+            return
+        eol = Nav.search(
+            [
+                ("website_id", "=", website.id),
+                ("url", "=", EOL_NAV_URL),
+                ("is_cta", "=", False),
+            ],
+            limit=1,
+        )
+        if eol:
+            return
+        Nav.create(
+            {
+                "website_id": website.id,
+                "name": EOL_NAV_NAME,
+                "url": EOL_NAV_URL,
+                "sequence": 30,
+                "is_cta": False,
+                "active": True,
+            }
+        )
+
+    @api.model
+    def _ensure_footer_eol_link(self, website):
+        """Explore footer: EOL asset purchase (existing sites on upgrade)."""
+        from .proc_cms_nav_item import EOL_NAV_NAME, EOL_NAV_URL
+
+        Link = self.env["proc.cms.footer.link"].sudo()
+        Link.search(
+            [
+                ("website_id", "=", website.id),
+                ("url", "=", "/employee/eol-assets"),
+            ]
+        ).write({"url": EOL_NAV_URL, "label": EOL_NAV_NAME})
+        if Link.search([("website_id", "=", website.id), ("url", "=", EOL_NAV_URL)], limit=1):
+            return
+        for label, seq in (("RFQ policy", 4), ("Contact us", 5)):
+            for link in Link.search(
+                [
+                    ("website_id", "=", website.id),
+                    ("column_key", "=", "explore"),
+                    ("label", "=", label),
+                ]
+            ):
+                if link.sequence < seq:
+                    link.sequence = seq
+        Link.create(
+            {
+                "website_id": website.id,
+                "column_key": "explore",
+                "label": EOL_NAV_NAME,
+                "url": EOL_NAV_URL,
+                "sequence": 3,
+                "active": True,
+            }
+        )
+
+    @api.model
     def seed_website(self, website, force=False):
         """Create or refresh CMS records to match the live procurement website."""
         if not website:
@@ -111,35 +240,7 @@ class ProcCmsSeed(models.AbstractModel):
             {**site_vals, "website_id": website.id},
         )
 
-        # Main menu links sync to website.menu; header CTA row (is_cta) drives the orange button only.
-        nav_items = [
-            {"name": "Procurements", "url": "/application/rfqs", "sequence": 50, "is_cta": False},
-            {"name": "Contact us", "url": "/contactus", "sequence": 60, "is_cta": False},
-            {"name": "Contact Us", "url": "/contactus", "sequence": 5, "is_cta": True},
-        ]
-        for item in nav_items:
-            domain = [
-                ("website_id", "=", website.id),
-                ("name", "=", item["name"]),
-                ("is_cta", "=", item["is_cta"]),
-            ]
-            vals = {**item, "website_id": website.id, "active": True}
-            record = upsert(
-                "proc.cms.nav.item",
-                domain,
-                vals,
-            )
-            if record:
-                record.write({k: v for k, v in vals.items() if k != "website_id"})
-
-        # Legacy misconfiguration: Procurements must be a menu link, not header CTA.
-        self.env["proc.cms.nav.item"].sudo().search(
-            [
-                ("website_id", "=", website.id),
-                ("name", "=", "Procurements"),
-                ("is_cta", "=", True),
-            ]
-        ).unlink()
+        self._apply_nav_layout(website)
 
         buttons = [
             {
@@ -295,6 +396,31 @@ class ProcCmsSeed(models.AbstractModel):
                 "page_key": "contact",
                 "eyebrow": "Our company",
             },
+            {
+                "code": "rfq_apply_privacy_policy",
+                "name": "RFQ application — privacy checkbox",
+                "page_key": "global",
+                "body": (
+                    "I confirm that I have read and accept the "
+                    '<a href="/application/rfq-policy" target="_blank" rel="noopener noreferrer">'
+                    "RFQ privacy policy</a>."
+                ),
+            },
+            {
+                "code": "rfq_policy_intro",
+                "name": "RFQ policy page intro",
+                "page_key": "rfq_policy",
+                "eyebrow": "Policy",
+                "title": "RFQ & RFP procurement policy",
+                "lead": (
+                    "Review EWSETA’s procurement policies and supporting documents "
+                    "before you prepare or submit an application."
+                ),
+                "body": (
+                    '<p class="text-muted mb-0">Download each document below or open PDFs '
+                    "in your browser. Contact us if you need clarification on any requirement.</p>"
+                ),
+            },
         ]
         for block in blocks:
             code = block.pop("code")
@@ -379,7 +505,9 @@ class ProcCmsSeed(models.AbstractModel):
         footer_links = [
             ("explore", "Explore", "Home", "/", 1),
             ("explore", None, "Procurements", "/application/rfqs", 2),
-            ("explore", None, "Contact us", "/contactus", 3),
+            ("explore", None, "EOL asset purchase", "/employee/eol-assets/request", 3),
+            ("explore", None, "RFQ policy", "/application/rfq-policy", 4),
+            ("explore", None, "Contact us", "/contactus", 5),
         ]
         for column_key, column_title, label, url, sequence in footer_links:
             vals = {

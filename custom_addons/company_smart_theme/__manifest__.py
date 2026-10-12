@@ -1,12 +1,12 @@
 {
     "name": "Company Smart Theme",
-    "version": "19.0.1.1.3",
+    "version": "19.0.1.1.7",
     "post_init_hook": "post_init_hook",
     "summary": "Dynamic backend theme per company and user based on logo or custom color for Odoo 19 (OWL)",
     "author": "Lesiba Dev",
     "category": "Tools",
     "license": "LGPL-3",
-    "depends": ["base", "web", "mail"],
+    "depends": ["base", "web", "mail", "auth_signup"],
     "external_dependencies": {"python": ["Pillow", "colorthief"]},
     "data": [
         "data/theme_sync.xml",

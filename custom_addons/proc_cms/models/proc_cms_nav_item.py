@@ -1,6 +1,10 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+EOL_NAV_URL = "/employee/eol-assets/request"
+EOL_NAV_NAME = "EOL asset purchase"
+EOL_LANDING_URL = "/employee/eol-assets"
+
 
 class ProcCmsNavItem(models.Model):
     _name = "proc.cms.nav.item"
@@ -84,6 +88,126 @@ class ProcCmsNavItem(models.Model):
     @api.model
     def sync_all_menus(self):
         self.search([])._sync_website_menu()
+        for website in self.env["website"].sudo().search([]):
+            self._normalize_main_menu(website)
+
+    @api.model
+    def _normalize_main_menu(self, website):
+        """Keep top menu to Home + Contact Us; drop legacy EWSETA corporate nav."""
+        Menu = self.env["website.menu"].sudo()
+        parent = website.menu_id
+        if not parent:
+            return
+        synced_menu_ids = set(
+            self.search([("website_id", "=", website.id), ("menu_id", "!=", False)]).mapped(
+                "menu_id"
+            ).ids
+        )
+        legacy_names = {
+            "About",
+            "Skills Development",
+            "Supply Chain",
+            "Procurements",
+            "Contact Us",
+            "Power Up",
+            "QA & Compliance",
+            "News & Events",
+            "Stakeholder Portal",
+            "Learner Resources",
+        }
+        for menu in Menu.search([("parent_id", "=", parent.id)]):
+            url = (menu.url or "/").rstrip("/") or "/"
+            if menu.id in synced_menu_ids:
+                continue
+            if menu.name in legacy_names and url in ("#", "/default-main-menu"):
+                menu.child_id.unlink()
+                menu.unlink()
+                continue
+            if url == "/":
+                menu.write({"name": "Home", "mega_menu_content": False, "sequence": 10})
+                continue
+            if url == "/contactus":
+                menu.write({"name": "Contact Us", "mega_menu_content": False, "sequence": 40})
+                continue
+            if url == "/application/rfqs":
+                menu.write({"name": "Procurements", "mega_menu_content": False, "sequence": 20})
+                continue
+            if url in (EOL_NAV_URL, EOL_LANDING_URL):
+                if url == EOL_LANDING_URL and menu.id not in synced_menu_ids:
+                    menu.child_id.unlink()
+                    menu.unlink()
+                    continue
+                if url == EOL_NAV_URL and menu.id not in synced_menu_ids:
+                    menu.write({"name": EOL_NAV_NAME, "mega_menu_content": False, "sequence": 30})
+                continue
+            if url == "/application/rfq-policy":
+                menu.child_id.unlink()
+                menu.unlink()
+                continue
+            menu.child_id.unlink()
+            menu.unlink()
+
+        self._ensure_standard_main_menus(website, parent)
+
+    @api.model
+    def _ensure_standard_main_menus(self, website, parent):
+        Menu = self.env["website.menu"].sudo()
+        home = Menu.search(
+            [
+                ("parent_id", "=", parent.id),
+                ("website_id", "=", website.id),
+                ("url", "in", ("/", "")),
+            ],
+            limit=1,
+        )
+        if not home:
+            Menu.create(
+                {
+                    "name": "Home",
+                    "url": "/",
+                    "parent_id": parent.id,
+                    "website_id": website.id,
+                    "sequence": 10,
+                }
+            )
+        procurements = Menu.search(
+            [
+                ("parent_id", "=", parent.id),
+                ("website_id", "=", website.id),
+                ("url", "=", "/application/rfqs"),
+            ],
+            limit=1,
+        )
+        if not procurements:
+            Menu.create(
+                {
+                    "name": "Procurements",
+                    "url": "/application/rfqs",
+                    "parent_id": parent.id,
+                    "website_id": website.id,
+                    "sequence": 20,
+                }
+            )
+        contact = Menu.search(
+            [
+                ("parent_id", "=", parent.id),
+                ("website_id", "=", website.id),
+                ("url", "=", "/contactus"),
+            ],
+            limit=1,
+        )
+        if not contact:
+            contact_page = self.env.ref("website.contactus_page", raise_if_not_found=False)
+            vals = {
+                "name": "Contact Us",
+                "url": "/contactus",
+                "parent_id": parent.id,
+                "website_id": website.id,
+                "sequence": 40,
+            }
+            if contact_page:
+                vals["page_id"] = contact_page.id
+            Menu.create(vals)
 
     def _sync_website_menu(self):
         Menu = self.env["website.menu"].sudo()

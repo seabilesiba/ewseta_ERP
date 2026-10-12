@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- SP-only users: no website editor bar (apps grid / Editor) on the public site. -->
+    <template id="proc_sp_hide_frontend_to_backend_nav" inherit_id="website.layout"
+        name="Procurement SP hide frontend backend nav" priority="70">
+        <xpath expr="//div[hasclass('o_frontend_to_backend_nav')]" position="attributes">
+            <attribute name="groups">website.group_website_restricted_editor</attribute>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_maintenance_equipment_it_asset_user,maintenance.equipment it asset user,maintenance.model_maintenance_equipment,group_it_asset_user,1,1,1,0
 access_it_asset_assignment_history_user,it.asset.assignment.history user,model_it_asset_assignment_history,group_it_asset_user,1,0,0,0
 access_it_asset_assignment_history_manager,it.asset.assignment.history manager,model_it_asset_assignment_history,group_it_asset_manager,1,1,1,1
 access_it_asset_assignment_history_admin,it.asset.assignment.history admin,model_it_asset_assignment_history,group_it_asset_administrator,1,1,1,1

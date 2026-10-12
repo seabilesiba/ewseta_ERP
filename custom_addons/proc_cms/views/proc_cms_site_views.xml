@@ -49,6 +49,9 @@
                         <button name="action_open_pages" type="object" class="oe_stat_button" icon="fa-file-text-o">
                             <span class="o_stat_text">Pages</span>
                         </button>
+                        <button name="action_open_policy_documents" type="object" class="oe_stat_button" icon="fa-gavel">
+                            <field name="policy_document_count" widget="statinfo" string="RFQ policy"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
 
@@ -133,6 +136,15 @@
                             </field>
                         </page>
                         <page string="Cards &amp; steps" name="cards" icon="fa-clone">
+                            <group>
+                                <field name="home_process_flow_style" widget="radio"/>
+                            </group>
+                            <p class="proc-cms-form-hint">
+                                Choose how the homepage process section is laid out (only one design is active).
+                                Edit step titles and descriptions in the list below — use section key
+                                <strong>home_how_steps</strong>. Section eyebrow, title, and lead come from content block
+                                <strong>home_how_intro</strong> on the Page copy tab.
+                            </p>
                             <field name="card_ids" nolabel="1" class="proc-cms-o2m"
                                    context="{'default_website_id': website_id, 'default_cms_site_id': id}">
                                 <list editable="bottom" decoration-muted="active == False">
@@ -171,6 +183,36 @@
                                     <field name="is_cta" string="Header button"/>
                                     <field name="active" widget="boolean_toggle"/>
                                 </list>
+                            </field>
+                        </page>
+                        <page string="RFQ policy" name="policy_docs" icon="fa-gavel">
+                            <p class="proc-cms-form-hint">
+                                Upload policy PDFs and related documents for applicants.
+                                They appear on <code>/application/rfq-policy</code>.
+                                Edit intro text in content block <strong>rfq_policy_intro</strong> (Page copy tab).
+                            </p>
+                            <field name="policy_document_ids" nolabel="1" class="proc-cms-o2m"
+                                   context="{'default_website_id': website_id, 'default_cms_site_id': id}">
+                                <list editable="bottom" decoration-muted="active == False">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="file_filename" optional="hide"/>
+                                    <field name="is_published" widget="boolean_toggle"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="file_filename" invisible="1"/>
+                                        <field name="file" filename="file_filename" widget="binary"/>
+                                        <field name="sequence"/>
+                                        <field name="is_published" widget="boolean_toggle"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                        <field name="website_id" invisible="1"/>
+                                        <field name="cms_site_id" invisible="1"/>
+                                    </group>
+                                    <field name="description" widget="html"/>
+                                </form>
                             </field>
                         </page>
                         <page string="Footer links" name="footer" icon="fa-link">

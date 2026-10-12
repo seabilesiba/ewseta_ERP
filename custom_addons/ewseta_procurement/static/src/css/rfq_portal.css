@@ -170,6 +170,55 @@
     color: var(--ew-portal-accent);
 }
 
+.ew-proc-portal__card-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.ew-proc-portal__ref-table .ew-proc-portal__ref-label {
+    width: 38%;
+    background: var(--ew-portal-accent-soft);
+    font-weight: 600;
+    color: #15251f;
+    vertical-align: middle;
+}
+
+.ew-proc-portal__ref-table .ew-proc-portal__ref-value {
+    font-weight: 500;
+    color: #1f2933;
+    word-break: break-word;
+}
+
+html.ew-proc-dark .ew-proc-portal__ref-table .ew-proc-portal__ref-label,
+html.ew-proc-dark .ew-proc-portal__ref-table .ew-proc-portal__ref-value {
+    color: inherit;
+}
+
+.ew-proc-doc-preview-frame {
+    width: 100%;
+    min-height: 75vh;
+    border: 0;
+    background: #f8f9fa;
+}
+
+.ew-proc-doc-modal.show {
+    z-index: 1060;
+}
+
+.ew-proc-doc-modal-backdrop {
+    z-index: 1055;
+}
+
+.ew-proc-doc-download,
+.ew-proc-doc-preview {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ew-proc-doc-download:hover,
+.ew-proc-doc-preview:hover {
+    text-decoration: underline;
+}
+
 .ew-proc-portal__table {
     margin-bottom: 0;
 }

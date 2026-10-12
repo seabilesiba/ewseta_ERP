@@ -1,0 +1,10 @@
+u = env["res.users"].browse(12)
+Menu = env["ir.ui.menu"].with_user(u)
+print("get_user_roots:", Menu.get_user_roots().mapped("name"))
+print("load_menus_root children:", [c.get("name") for c in Menu.load_menus_root().get("children", [])])
+
+u2 = env["res.users"].browse(10)
+Menu2 = env["ir.ui.menu"].with_user(u2)
+print("--- SCM")
+print("get_user_roots:", Menu2.get_user_roots().mapped("name"))
+print("load_menus_root children:", [c.get("name") for c in Menu2.load_menus_root().get("children", [])])

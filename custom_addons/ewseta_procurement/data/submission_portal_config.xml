@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- 0 = supplier proof / status links do not expire -->
+    <record id="config_submission_track_days" model="ir.config_parameter">
+        <field name="key">ewseta_procurement.submission_track_days</field>
+        <field name="value">0</field>
+    </record>
+</odoo>

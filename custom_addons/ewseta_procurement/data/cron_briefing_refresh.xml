@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Re-apply on upgrade so the scheduled action stays active (noupdate=1 on main cron.xml). -->
+    <record id="ir_cron_briefing_start_mail" model="ir.cron">
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="priority">5</field>
+    </record>
+</odoo>

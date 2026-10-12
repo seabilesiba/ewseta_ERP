@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="rfq_policy_documents_block" name="RFQ policy documents (portal)">
+        <t t-set="policy_docs" t-value="website.proc_cms_policy_documents()"/>
+        <t t-if="policy_docs">
+            <h2 class="h5 mt-4 mb-3">Policy documents</h2>
+            <ul class="list-group ew-proc-policy-list mb-4">
+                <t t-foreach="policy_docs" t-as="doc">
+                    <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center gap-3">
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold" t-esc="doc.name"/>
+                            <t t-if="doc.description">
+                                <div class="small text-muted mt-1" t-out="doc.description"/>
+                            </t>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 flex-shrink-0">
+                            <a t-att-href="doc.portal_download_url()"
+                               class="btn btn-primary btn-sm">
+                                <i class="fa fa-eye me-1" aria-hidden="true"/> View
+                            </a>
+                            <a t-att-href="doc.portal_download_url(download=True)"
+                               class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-download me-1" aria-hidden="true"/>
+                                <span t-esc="doc.portal_file_label()"/>
+                            </a>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+        </t>
+        <t t-else="">
+            <div class="ew-proc-portal__empty">
+                No policy documents have been published yet. Please check back later or contact us for assistance.
+            </div>
+        </t>
+    </template>
+
+    <template id="rfq_policy_public_page" name="RFQ policy (public)">
+        <t t-call="website.layout">
+            <div class="container ew-proc-portal mt-4 mb-5">
+                <t t-set="blk_policy" t-value="website.proc_cms_block('rfq_policy_intro')"/>
+                <div class="ew-proc-portal__hero">
+                    <p class="mb-2">
+                        <a href="/application/rfqs" class="text-decoration-none small fw-semibold">
+                            ← Procurement opportunities
+                        </a>
+                    </p>
+                    <t t-if="blk_policy and blk_policy.eyebrow">
+                        <span class="ew-landing__eyebrow d-block mb-1" t-esc="blk_policy.eyebrow"/>
+                    </t>
+                    <h1>
+                        <t t-if="blk_policy and blk_policy.title" t-esc="blk_policy.title"/>
+                        <t t-else="">RFQ &amp; RFP procurement policy</t>
+                    </h1>
+                    <t t-if="blk_policy and blk_policy.lead">
+                        <p class="ew-proc-portal__hero-lead" t-esc="blk_policy.lead"/>
+                    </t>
+                    <t t-elif="not blk_policy">
+                        <p class="ew-proc-portal__hero-lead">
+                            Review procurement policies and supporting documents before you apply.
+                        </p>
+                    </t>
+                </div>
+                <t t-if="blk_policy and blk_policy.body">
+                    <div class="mb-4" t-out="blk_policy.body"/>
+                </t>
+                <t t-call="ewseta_procurement.rfq_policy_documents_block"/>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -188,6 +188,26 @@
     font-size: 1.15rem;
     font-weight: 700;
     margin: 0 0 0.35rem;
+    max-width: 24rem;
+}
+
+.ew-it-asset-tag-value .o_field_widget,
+.ew-it-asset-tag-value input.o_input {
+    color: var(--ew-it-blue);
+    font-size: 1.15rem;
+    font-weight: 700;
+    width: 100%;
+}
+
+.ew-it-asset-form:not(.o_form_readonly) .ew-it-asset-tag-value input.o_input {
+    border: 1px solid var(--ew-it-border);
+    border-radius: 6px;
+    padding: 0.2rem 0.45rem;
+}
+
+.ew-it-asset-form:not(.o_form_readonly) .ew-it-asset-tag-value input.o_input:focus {
+    border-color: var(--ew-it-blue);
+    outline: none;
 }
 
 .ew-it-asset-name-label {

@@ -132,12 +132,27 @@ html.ew-proc-dark .ew-landing__section--alt {
     background: var(--ew-dm-bg-elevated);
 }
 
-html.ew-proc-dark .ew-landing__step,
+html.ew-proc-dark .ew-landing__process-banner {
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+}
+
+html.ew-proc-dark .ew-landing__process-card,
 html.ew-proc-dark .ew-landing__stat,
 html.ew-proc-dark .ew-landing__cta {
     background: var(--ew-dm-bg-card);
     border-color: var(--ew-dm-border);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+html.ew-proc-dark .ew-landing__process-step-box {
+    background: var(--ew-dm-bg-elevated);
+    border-color: var(--ew-dm-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+html.ew-proc-dark .ew-landing__process-connector-glyph {
+    background: var(--ew-dm-bg-card);
+    border-color: var(--ew-dm-border);
 }
 
 html.ew-proc-dark .ew-landing__stat {
@@ -151,7 +166,8 @@ html.ew-proc-dark .ew-landing__stat-value {
 
 html.ew-proc-dark .ew-landing__stat-label,
 html.ew-proc-dark .ew-landing__section-lead,
-html.ew-proc-dark .ew-landing__step p,
+html.ew-proc-dark .ew-landing__process-desc,
+html.ew-proc-dark .ew-landing__process-desc p,
 html.ew-proc-dark .ew-landing__checklist li {
     color: var(--ew-dm-muted) !important;
 }
@@ -162,7 +178,11 @@ html.ew-proc-dark .ew-landing p.text-muted {
 }
 
 html.ew-proc-dark .ew-landing__section-title,
-html.ew-proc-dark .ew-landing__step h3,
+html.ew-proc-dark .ew-landing__process-title,
+html.ew-proc-dark .ew-landing__process-dot {
+    border-color: var(--ew-dm-bg);
+}
+
 html.ew-proc-dark .ew-landing__split h2,
 html.ew-proc-dark .ew-landing__split p:not(.text-muted) {
     color: var(--ew-dm-text) !important;

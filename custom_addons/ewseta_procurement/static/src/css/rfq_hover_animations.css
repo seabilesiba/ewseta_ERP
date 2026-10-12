@@ -2,39 +2,42 @@
 
 @media (prefers-reduced-motion: no-preference) {
 
-    /* —— Landing: how-it-works steps —— */
-    .ew-landing__step {
-        transition:
-            transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1),
-            box-shadow 0.4s ease,
-            border-color 0.35s ease;
-        will-change: transform;
+    /* —— Landing: process flow —— */
+    .ew-landing__process-dot {
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
     }
 
-    .ew-landing__steps .ew-landing__step:nth-child(1):hover {
-        transform: translateY(-10px);
-        box-shadow: 0 18px 40px rgba(242, 145, 0, 0.22);
-        border-color: rgba(242, 145, 0, 0.35);
+    .ew-landing__process-step:hover .ew-landing__process-dot {
+        transform: scale(1.1);
     }
 
-    .ew-landing__steps .ew-landing__step:nth-child(2):hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 44px rgba(0, 174, 239, 0.25);
-        border-color: rgba(0, 174, 239, 0.35);
+    .ew-landing__process-step--1:hover .ew-landing__process-dot {
+        box-shadow: 0 10px 24px rgba(242, 145, 0, 0.45);
     }
 
-    .ew-landing__steps .ew-landing__step:nth-child(3):hover {
-        transform: translateY(-10px) rotate(-0.8deg);
-        box-shadow: 0 18px 38px rgba(140, 198, 63, 0.28);
-        border-color: rgba(140, 198, 63, 0.4);
+    .ew-landing__process-step--2:hover .ew-landing__process-dot {
+        box-shadow: 0 10px 24px rgba(0, 174, 239, 0.45);
     }
 
-    .ew-landing__step:hover .ew-landing__step-num {
-        transform: scale(1.12) rotate(-6deg);
+    .ew-landing__process-step--3:hover .ew-landing__process-dot {
+        box-shadow: 0 10px 24px rgba(140, 198, 63, 0.45);
     }
 
-    .ew-landing__step-num {
-        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    .ew-landing__process-step-box {
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .ew-landing__process-step:hover .ew-landing__process-step-box {
+        box-shadow: 0 12px 28px rgba(0, 174, 239, 0.12);
+        transform: translateY(-4px);
+    }
+
+    .ew-landing__process-connector-glyph {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .ew-landing__process-connector:hover .ew-landing__process-connector-glyph {
+        transform: scale(1.08);
     }
 
     /* —— Landing: stat cards —— */
@@ -217,7 +220,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .ew-landing__step,
+    .ew-landing__process-dot,
+    .ew-landing__process-step-box,
     .ew-landing__stat,
     .ew-landing__media,
     .ew-landing__gallery-item,

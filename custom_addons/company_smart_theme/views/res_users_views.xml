@@ -4,7 +4,29 @@
     Description: User form personal theme color override.
 -->
 <odoo>
-    <!-- View/action record: View users form inherit theme -->
+    <record id="view_users_form_auth_signup_fixup" model="ir.ui.view">
+        <field name="name">res.users.form.auth.signup.fixup</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="auth_signup.res_users_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_reset_password'][contains(@context, 'create_user')]" position="attributes">
+                <attribute name="class">btn btn-primary</attribute>
+                <attribute name="string">Send invitation email</attribute>
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_reset_password"
+                        type="object"
+                        string="Send password reset email"
+                        class="btn btn-primary"
+                        groups="base.group_erp_manager"
+                        invisible="state != 'active' or id == uid"/>
+            </xpath>
+            <xpath expr="//div[@name='auth']/button[@name='action_reset_password']" position="attributes">
+                <attribute name="class">btn btn-primary</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_users_form_inherit_theme" model="ir.ui.view">
         <field name="name">res.users.form.inherit.theme</field>
         <field name="model">res.users</field>

@@ -8,20 +8,39 @@
         <field name="arch" type="xml">
             <form string="RFQ/RFP" class="ew-proc-rfq-form">
                 <header>
-                    <button name="action_publish" type="object" string="Publish" invisible="state != 'draft'"
+                    <button name="action_view_matching_service_providers" type="object"
+                            string="View matching service providers"
+                            class="btn-secondary"
+                            invisible="publication_type != 'transversal'"/>
+                    <button name="action_publish" type="object" string="Publish" invisible="state in ('published', 'closed')"
                             class="btn-primary"/>
                     <button name="action_close" type="object" string="Close Now" invisible="state != 'published'"
                             class="btn-secondary"/>
+                    <button name="action_send_briefing_start_emails"
+                            type="object"
+                            string="Send briefing emails"
+                            class="btn-secondary"
+                            invisible="not briefing_session"
+                            confirm="Send (or resend) briefing start notifications to all registered recipients now?"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,published,closed"/>
                 </header>
 
                 <sheet>
+                    <field name="state" invisible="1"/>
+                    <field name="briefing_session" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button type="object"
                                 name="action_open_submissions"
                                 class="oe_stat_button"
                                 icon="fa-inbox">
                             <field name="submission_count" widget="statinfo" string="Submissions"/>
+                        </button>
+                        <button type="object"
+                                name="action_open_briefing_attendance"
+                                class="oe_stat_button"
+                                icon="fa-users"
+                                invisible="not briefing_session">
+                            <field name="briefing_attendance_count" widget="statinfo" string="Briefing"/>
                         </button>
                     </div>
                     <div class="oe_title ew-proc-form-title">
@@ -30,15 +49,54 @@
                         </h1>
                     </div>
 
-                    <div class="ew-proc-form-hero">
+                    <div class="ew-proc-form-hero ew-proc-form-hero--after-title">
                         <div class="ew-proc-form-hero__main">
                             <span class="ew-proc-form-label">Reference</span>
-                            <field name="reference" class="ew-proc-form-ref"/>
+                            <field name="reference" class="ew-proc-form-ref"
+                                   placeholder="EWSETA/RFQ/032/2026-27"/>
                         </div>
-                        <div class="ew-proc-form-hero__type">
-                            <field name="type" widget="badge"
+                        <div class="ew-proc-form-hero__type" invisible="state not in ('published', 'closed')">
+                            <field name="type" widget="badge" readonly="1"
                                    decoration-info="type == 'rfq'"
                                    decoration-success="type == 'rfp'"/>
+                        </div>
+                    </div>
+
+                    <div class="ew-proc-form-layout">
+                    <div class="ew-proc-form-grid ew-proc-form-grid--setup">
+                        <div class="ew-proc-form-card ew-proc-form-card--compact">
+                            <div class="ew-proc-form-card__head">RFQ / RFP type</div>
+                            <p class="ew-proc-form-hint">Choose the opportunity type before you upload documents or publish.</p>
+                            <group colspan="2" class="ew-proc-form-card-group ew-proc-form-card-group--inline">
+                                <field name="type"
+                                       widget="radio"
+                                       options="{'horizontal': true}"
+                                       readonly="state in ('published', 'closed')"
+                                       required="1"/>
+                            </group>
+                        </div>
+                        <div class="ew-proc-form-card ew-proc-form-card--compact">
+                            <div class="ew-proc-form-card__head">Publication type</div>
+                            <group colspan="2" class="ew-proc-form-card-group ew-proc-form-card-group--inline">
+                                <field name="publication_type"
+                                       widget="radio"
+                                       options="{'horizontal': true}"
+                                       readonly="state in ('published', 'closed')"/>
+                                <field name="transversal_eligible_count" readonly="1"
+                                       invisible="publication_type != 'transversal'"/>
+                            </group>
+                            <group colspan="2" class="ew-proc-form-card-group"
+                                   invisible="publication_type != 'transversal'">
+                                <field name="service_category_id"
+                                       readonly="state in ('published', 'closed')"/>
+                                <field name="province_ids" widget="many2many_tags"
+                                       readonly="state in ('published', 'closed')"/>
+                                <field name="transversal_eligible_partner_ids"
+                                       widget="many2many_tags"
+                                       readonly="1"
+                                       string="Notified providers (at publish)"
+                                       invisible="state not in ('published', 'closed')"/>
+                            </group>
                         </div>
                     </div>
 
@@ -54,34 +112,91 @@
                                 </group>
                             </group>
                         </div>
-                        <div class="ew-proc-form-card">
+                        <div class="ew-proc-form-card" invisible="type != 'rfq'">
                             <div class="ew-proc-form-card__head">RFQ document</div>
-                            <p class="ew-proc-form-hint">Required before publishing.</p>
+                            <p class="ew-proc-form-hint">Upload the official RFQ specification (required before publishing).</p>
                             <group colspan="2" class="ew-proc-form-card-group">
                                 <group colspan="2">
-                                    <field name="rfq_document" string="Document"/>
+                                    <field name="rfq_document_filename" invisible="1"/>
+                                    <field name="rfq_document" string="RFQ document" filename="rfq_document_filename"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div class="ew-proc-form-card" invisible="type != 'rfp'">
+                            <div class="ew-proc-form-card__head">RFP document</div>
+                            <p class="ew-proc-form-hint">Upload the official RFP specification (required before publishing).</p>
+                            <group colspan="2" class="ew-proc-form-card-group">
+                                <group colspan="2">
+                                    <field name="rfp_document_filename" invisible="1"/>
+                                    <field name="rfp_document" string="RFP document" filename="rfp_document_filename"/>
                                 </group>
                             </group>
                         </div>
                     </div>
 
-                    <div class="ew-proc-form-card ew-proc-form-card--wide">
-                        <div class="ew-proc-form-card__head">Supplier instructions</div>
-                        <field name="supplier_note" placeholder="Instructions shown to applicants on the portal…" nolabel="1"/>
+                    <div class="ew-proc-form-stack ew-proc-form-stack--full">
+                        <div class="ew-proc-form-card ew-proc-form-card--full ew-proc-form-card--briefing">
+                            <div class="ew-proc-form-card__head">Briefing session</div>
+                            <p class="ew-proc-form-hint" invisible="not briefing_session">
+                                Save after each change. Virtual link / venue are required before you publish the RFQ.
+                            </p>
+                            <group colspan="2" class="ew-proc-form-card-group ew-proc-briefing-two-col">
+                                <group string="Session">
+                                    <field name="briefing_session" widget="boolean_toggle"/>
+                                    <field name="briefing_compulsory"
+                                           invisible="not briefing_session"
+                                           widget="boolean_toggle"/>
+                                    <field name="briefing_mode"
+                                           string="Briefing format"
+                                           widget="radio"
+                                           options="{'horizontal': true}"
+                                           invisible="not briefing_session"/>
+                                </group>
+                                <group string="Timing &amp; notifications" invisible="not briefing_session">
+                                    <field name="briefing_start_mail_sent" readonly="1" invisible="not briefing_session"/>
+                                    <field name="briefing_at"
+                                           string="Briefing starts"
+                                           invisible="not briefing_session"
+                                           class="ew-proc-briefing-datetime"/>
+                                    <field name="briefing_end_at"
+                                           string="Briefing ends"
+                                           invisible="not briefing_session"
+                                           class="ew-proc-briefing-datetime"/>
+                                    <field name="briefing_location"
+                                           invisible="not briefing_session or briefing_mode != 'contact'"
+                                           placeholder="Street, building, city…"/>
+                                    <field name="briefing_virtual_link"
+                                           invisible="not briefing_session or briefing_mode != 'virtual'"
+                                           widget="url"
+                                           placeholder="https://…"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div class="ew-proc-form-card ew-proc-form-card--full ew-proc-form-card--notes">
+                            <div class="ew-proc-form-card__head">Supplier instructions</div>
+                            <field name="supplier_note"
+                                   placeholder="Instructions shown to applicants on the portal…"
+                                   nolabel="1"
+                                   options="{'rows': 3}"/>
+                        </div>
+                    </div>
                     </div>
 
                     <notebook class="ew-proc-form-notebook">
                         <!-- Mandatory requirements -->
                         <page string="Required documents">
+                            <p class="ew-proc-form-hint mb-2">
+                                Tick <strong>Mandatory</strong> for each document suppliers must upload on the portal.
+                            </p>
                             <div class="ew-proc-docs-panel">
                             <field name="requirement_ids"
-                                   domain="[('section','=','mandatory')]"
-                                   context="{'default_section': 'mandatory'}">
+                                   context="{'default_section': 'optional', 'default_is_mandatory': False}">
                                 <list editable="bottom">
                                     <field name="sequence"/>
                                     <field name="name"/>
                                     <!--                                    <field name="code"/>-->
-                                    <field name="is_mandatory"/>
+                                    <field name="is_mandatory" string="Mandatory"/>
+                                    <field name="section" column_invisible="1"/>
                                     <!--                                    <field name="section" invisible="1"/>-->
                                     <!--                                    <field name="help_text"/>-->
                                 </list>
@@ -93,6 +208,29 @@
                             <div class="ew-proc-desc-panel">
                                 <field name="description" widget="html" nolabel="1"/>
                             </div>
+                        </page>
+
+                        <page string="Briefing attendance" invisible="not briefing_session">
+                            <p class="ew-proc-form-hint">
+                                Suppliers self-register on the portal. You can add walk-ins manually below.
+                            </p>
+                            <field name="briefing_attendance_ids"
+                                   context="{
+                                       'default_rfq_id': id,
+                                       'default_mode': briefing_mode,
+                                       'default_source': 'scm_manual',
+                                   }">
+                                <list editable="bottom" class="ew-proc-briefing-att-list">
+                                    <field name="attended_at"/>
+                                    <field name="company_name"/>
+                                    <field name="contact_name"/>
+                                    <field name="contact_email"/>
+                                    <field name="contact_phone"/>
+                                    <field name="mode"/>
+                                    <field name="source" readonly="1"/>
+                                    <field name="registered_by" optional="hide"/>
+                                </list>
+                            </field>
                         </page>
 
                         <!-- Not Mandatory requirements -->
@@ -184,7 +322,7 @@
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_ew_rfq_admin_kanban')}),
                           (0, 0, {'view_mode': 'list', 'view_id': ref('view_ew_rfq_admin_tree')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('view_ew_rfq_admin_form')})]"/>
-        <field name="context">{}</field>
+        <field name="context">{'default_type': 'rfq'}</field>
     </record>
 
 </odoo>

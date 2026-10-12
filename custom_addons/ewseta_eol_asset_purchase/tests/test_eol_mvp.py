@@ -22,8 +22,13 @@ class TestEolAssetPurchaseMvp(TransactionCase):
             'name': 'EOL Test Employee',
             'work_email': 'eol.test@example.com',
         })
+        cls.maint_category = cls.env['maintenance.equipment.category'].create({
+            'name': 'EOL Test Laptops',
+        })
+        cls.category.write({'maintenance_category_id': cls.maint_category.id})
         cls.equipment = cls.env['maintenance.equipment'].create({
             'name': 'Pool laptop',
+            'category_id': cls.maint_category.id,
             'eol_sale_eligible': True,
             'sale_availability': 'available',
             'asset_state': 'available',
@@ -246,3 +251,9 @@ class TestEolAssetPurchaseMvp(TransactionCase):
         self.assertEqual(self.env['ew.eol.purchase.request'].find_by_tracking_token(token1), req1)
         self.assertEqual(self.env['ew.eol.purchase.request'].find_by_tracking_token(token2), req2)
         self.assertFalse(req1.validate_tracking_token(token2))
+
+    def test_public_catalogue_requires_pool_ready_stock(self):
+        Category = self.env['ew.eol.asset.category']
+        self.assertIn(self.category, Category.search_for_public_website())
+        self.equipment.eol_deprovision_done = False
+        self.assertNotIn(self.category, Category.search_for_public_website())

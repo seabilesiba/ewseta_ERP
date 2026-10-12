@@ -24,6 +24,7 @@
         <t t-set="btn_view_rfqs" t-value="website.proc_cms_button('home_view_rfqs')"/>
         <t t-set="btn_cta_portal" t-value="website.proc_cms_button('home_cta_portal')"/>
         <t t-set="cms_steps" t-value="website.proc_cms_cards('home_how_steps')"/>
+        <t t-set="process_flow_style" t-value="website.proc_cms_home_process_flow_style()"/>
         <t t-set="cms_gallery" t-value="website.proc_cms_cards('home_gallery')"/>
         <t t-set="hero_bg" t-value="website.proc_cms_hero_background_style(blk_hero, '/ewseta_procurement/static/src/img/landing_hero.jpg')"/>
 
@@ -74,22 +75,102 @@
                         <t t-else="">A clear, fair path from published opportunity to submitted proposal — built for service providers in the energy and water sectors.</t>
                     </p>
                 </div>
-                <div class="ew-landing__steps">
-                    <t t-if="cms_steps">
-                        <article t-foreach="cms_steps" t-as="step" class="ew-landing__step ew-landing-reveal" t-att-data-delay="step_index + 1">
-                            <div t-attf-class="ew-landing__step-num ew-landing__step-num--#{step_index + 1}" t-esc="step_index + 1"/>
-                            <h3 t-esc="step.title"/>
-                            <div t-if="step.body" t-out="step.body"/>
-                        </article>
-                    </t>
-                    <t t-else="">
-                        <article class="ew-landing__step ew-landing-reveal" data-delay="1">
-                            <div class="ew-landing__step-num ew-landing__step-num--1">1</div>
-                            <h3>Find an opportunity</h3>
-                            <p>Browse published RFQs and RFPs with closing dates, references, and requirements listed upfront.</p>
-                        </article>
-                    </t>
-                </div>
+                <t t-if="process_flow_style == 'banner'">
+                    <div class="ew-landing__process-banner ew-landing-reveal" role="list" aria-label="Procurement process">
+                        <div class="ew-landing__process-banner-inner">
+                            <t t-if="cms_steps">
+                                <t t-foreach="cms_steps" t-as="step">
+                                    <div role="listitem" class="ew-landing__process-banner-cell">
+                                        <p class="ew-landing__process-banner-heading">
+                                            <span class="ew-landing__process-banner-step-label">Step <t t-esc="step_index + 1"/>:</span>
+                                            <span class="ew-landing__process-banner-step-title" t-esc="step.title"/>
+                                        </p>
+                                        <div t-if="step.body" class="ew-landing__process-banner-desc" t-out="step.body"/>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <div role="listitem" class="ew-landing__process-banner-cell">
+                                    <p class="ew-landing__process-banner-heading">
+                                        <span class="ew-landing__process-banner-step-label">Step 1:</span>
+                                        <span class="ew-landing__process-banner-step-title">Find an opportunity</span>
+                                    </p>
+                                    <p class="ew-landing__process-banner-desc">Browse published RFQs and RFPs with closing dates, references, and requirements listed upfront.</p>
+                                </div>
+                                <div role="listitem" class="ew-landing__process-banner-cell">
+                                    <p class="ew-landing__process-banner-heading">
+                                        <span class="ew-landing__process-banner-step-label">Step 2:</span>
+                                        <span class="ew-landing__process-banner-step-title">Prepare &amp; apply</span>
+                                    </p>
+                                    <p class="ew-landing__process-banner-desc">Upload mandatory and optional documents through the online application form before the closing date and time.</p>
+                                </div>
+                                <div role="listitem" class="ew-landing__process-banner-cell">
+                                    <p class="ew-landing__process-banner-heading">
+                                        <span class="ew-landing__process-banner-step-label">Step 3:</span>
+                                        <span class="ew-landing__process-banner-step-title">Track outcomes</span>
+                                    </p>
+                                    <p class="ew-landing__process-banner-desc">After closing, view the public submission register and outcomes for completed procurements.</p>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="ew-landing__process-card ew-landing-reveal">
+                        <div class="ew-landing__process-columns" role="list" aria-label="Procurement process">
+                            <t t-if="cms_steps">
+                                <t t-foreach="cms_steps" t-as="step">
+                                    <div t-if="step_index > 0"
+                                        t-attf-class="ew-landing__process-connector ew-landing__process-connector--#{((step_index - 1) % 3) + 1}"
+                                        aria-hidden="true">
+                                        <span class="ew-landing__process-connector-glyph ew-landing__process-connector-glyph--h">→</span>
+                                        <span class="ew-landing__process-connector-glyph ew-landing__process-connector-glyph--v">↓</span>
+                                    </div>
+                                    <article role="listitem"
+                                        t-attf-class="ew-landing__process-step ew-landing__process-step--#{(step_index % 3) + 1} ew-landing-reveal"
+                                        t-att-data-delay="step_index + 1">
+                                        <span class="ew-landing__process-dot" t-esc="step_index + 1"/>
+                                        <div t-attf-class="ew-landing__process-step-box ew-landing__process-step-box--#{(step_index % 3) + 1}">
+                                            <h3 class="ew-landing__process-title" t-esc="step.title"/>
+                                            <div t-if="step.body" class="ew-landing__process-desc" t-out="step.body"/>
+                                        </div>
+                                    </article>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <article role="listitem" class="ew-landing__process-step ew-landing__process-step--1 ew-landing-reveal" data-delay="1">
+                                    <span class="ew-landing__process-dot">1</span>
+                                    <div class="ew-landing__process-step-box ew-landing__process-step-box--1">
+                                        <h3 class="ew-landing__process-title">Find an opportunity</h3>
+                                        <p class="ew-landing__process-desc">Browse published RFQs and RFPs with closing dates, references, and requirements listed upfront.</p>
+                                    </div>
+                                </article>
+                                <div class="ew-landing__process-connector ew-landing__process-connector--1" aria-hidden="true">
+                                    <span class="ew-landing__process-connector-glyph ew-landing__process-connector-glyph--h">→</span>
+                                    <span class="ew-landing__process-connector-glyph ew-landing__process-connector-glyph--v">↓</span>
+                                </div>
+                                <article role="listitem" class="ew-landing__process-step ew-landing__process-step--2 ew-landing-reveal" data-delay="2">
+                                    <span class="ew-landing__process-dot">2</span>
+                                    <div class="ew-landing__process-step-box ew-landing__process-step-box--2">
+                                        <h3 class="ew-landing__process-title">Prepare &amp; apply</h3>
+                                        <p class="ew-landing__process-desc">Upload mandatory and optional documents through the online application form before the closing date and time.</p>
+                                    </div>
+                                </article>
+                                <div class="ew-landing__process-connector ew-landing__process-connector--2" aria-hidden="true">
+                                    <span class="ew-landing__process-connector-glyph ew-landing__process-connector-glyph--h">→</span>
+                                    <span class="ew-landing__process-connector-glyph ew-landing__process-connector-glyph--v">↓</span>
+                                </div>
+                                <article role="listitem" class="ew-landing__process-step ew-landing__process-step--3 ew-landing-reveal" data-delay="3">
+                                    <span class="ew-landing__process-dot">3</span>
+                                    <div class="ew-landing__process-step-box ew-landing__process-step-box--3">
+                                        <h3 class="ew-landing__process-title">Track outcomes</h3>
+                                        <p class="ew-landing__process-desc">After closing, view the public submission register and outcomes for completed procurements.</p>
+                                    </div>
+                                </article>
+                            </t>
+                        </div>
+                    </div>
+                </t>
             </div>
         </section>
 

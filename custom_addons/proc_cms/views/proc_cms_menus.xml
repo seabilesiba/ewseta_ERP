@@ -49,6 +49,12 @@
               action="action_proc_cms_page"
               sequence="50"/>
 
+    <menuitem id="menu_proc_cms_policy_documents"
+              name="RFQ policy documents"
+              parent="menu_proc_cms_root"
+              action="action_proc_cms_policy_document"
+              sequence="45"/>
+
     <menuitem id="menu_proc_cms_footer"
               name="Footer links"
               parent="menu_proc_cms_root"

@@ -24,6 +24,14 @@ class Website(models.Model):
         self.env["proc.cms.seed"].seed_all_websites()
         return True
 
+    def proc_cms_home_process_flow_style(self):
+        """Homepage process section layout: 'cards' or 'banner' (CMS setting)."""
+        self.ensure_one()
+        site = self.proc_cms_site()
+        if site and getattr(site, "home_process_flow_style", False):
+            return site.home_process_flow_style
+        return "cards"
+
     def ewseta_procurement_landing_counts(self):
         """Open/closed RFQ counts for the public homepage template."""
         rfq = self.env["ew.rfq"].sudo()

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="website.option_header_brand_logo" model="ir.ui.view">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="website.option_header_brand_name" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
     <template id="proc_cms_header_logo" inherit_id="website.option_header_brand_logo" name="Proc CMS Navbar Logo" priority="50">
         <xpath expr="//a[@data-name='Navbar Logo']" position="replace">
             <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">

@@ -45,6 +45,21 @@ class ProcCmsSite(models.Model):
         string="Phone link (tel:)",
         help="Used in the tel: href. Digits and + only, e.g. +27112744700.",
     )
+    home_process_flow_style = fields.Selection(
+        selection=[
+            ("cards", "Cards with timeline"),
+            ("banner", "Compact banner strip"),
+        ],
+        string="Homepage process layout",
+        default="cards",
+        required=True,
+        help=(
+            "How the “How it works” steps appear on the landing page. "
+            "Only one layout is shown at a time. Step text is edited under "
+            "Cards & steps (section home_how_steps) and the section intro "
+            "under Page copy (block home_how_intro)."
+        ),
+    )
 
     _website_id_unique = models.Constraint(
         "unique(website_id)",
@@ -56,6 +71,7 @@ class ProcCmsSite(models.Model):
     card_count = fields.Integer(compute="_compute_content_counts")
     nav_count = fields.Integer(compute="_compute_content_counts")
     footer_count = fields.Integer(compute="_compute_content_counts")
+    policy_document_count = fields.Integer(compute="_compute_content_counts")
 
     block_ids = fields.One2many("proc.cms.block", "cms_site_id", string="Content blocks")
     button_ids = fields.One2many("proc.cms.button", "cms_site_id", string="Buttons")
@@ -63,6 +79,11 @@ class ProcCmsSite(models.Model):
     nav_item_ids = fields.One2many("proc.cms.nav.item", "cms_site_id", string="Navbar items")
     footer_link_ids = fields.One2many("proc.cms.footer.link", "cms_site_id", string="Footer links")
     page_ids = fields.One2many("proc.cms.page", "cms_site_id", string="CMS pages")
+    policy_document_ids = fields.One2many(
+        "proc.cms.policy.document",
+        "cms_site_id",
+        string="RFQ policy documents",
+    )
 
     @api.depends("website_id")
     def _compute_content_counts(self):
@@ -73,6 +94,9 @@ class ProcCmsSite(models.Model):
             site.card_count = self.env["proc.cms.card"].search_count([("website_id", "=", wid)])
             site.nav_count = self.env["proc.cms.nav.item"].search_count([("website_id", "=", wid)])
             site.footer_count = self.env["proc.cms.footer.link"].search_count([("website_id", "=", wid)])
+            site.policy_document_count = self.env["proc.cms.policy.document"].search_count(
+                [("website_id", "=", wid)]
+            )
 
     def _website_domain(self):
         self.ensure_one()
@@ -101,6 +125,10 @@ class ProcCmsSite(models.Model):
     def action_open_pages(self):
         self.ensure_one()
         return self._open_related("proc.cms.page", _("CMS pages"))
+
+    def action_open_policy_documents(self):
+        self.ensure_one()
+        return self._open_related("proc.cms.policy.document", _("RFQ policy documents"))
 
     def _open_related(self, model, title):
         self.ensure_one()
@@ -151,6 +179,7 @@ class ProcCmsSite(models.Model):
             "proc.cms.nav.item",
             "proc.cms.footer.link",
             "proc.cms.page",
+            "proc.cms.policy.document",
         ):
             self.env[model].search(
                 [("website_id", "=", wid), ("cms_site_id", "=", False)]

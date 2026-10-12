@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_ew_procurement" model="ir.ui.view">
+        <field name="name">res.partner.form.ew.procurement</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="EWSETA procurement"
+                      name="ew_procurement_sp"
+                      groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner">
+                    <group>
+                        <field name="ew_service_provider" widget="boolean_toggle"/>
+                        <field name="ew_service_category_ids"
+                               widget="many2many_tags"
+                               invisible="not ew_service_provider"/>
+                        <field name="ew_province_ids"
+                               widget="many2many_tags"
+                               invisible="not ew_service_provider"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_partner_search_ew_procurement" model="ir.ui.view">
+        <field name="name">res.partner.search.ew.procurement</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter string="EWSETA service providers"
+                        name="ew_service_providers"
+                        domain="[('ew_service_provider', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

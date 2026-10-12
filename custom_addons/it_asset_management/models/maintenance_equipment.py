@@ -23,7 +23,7 @@ class MaintenanceEquipment(models.Model):
     asset_code = fields.Char(
         string='Asset Tag',
         copy=False,
-        readonly=True,
+        tracking=True,
         index=True,
         default=lambda self: _('New'),
     )
@@ -107,6 +107,21 @@ class MaintenanceEquipment(models.Model):
     def _compute_incident_report_count(self):
         for equipment in self:
             equipment.incident_report_count = len(equipment.incident_report_ids)
+
+    @api.constrains('asset_code', 'company_id')
+    def _check_asset_code_unique(self):
+        for equipment in self.filtered(lambda e: e.asset_code and e.asset_code != _('New')):
+            duplicate = self.search([
+                ('id', '!=', equipment.id),
+                ('asset_code', '=', equipment.asset_code),
+                ('company_id', '=', equipment.company_id.id),
+            ], limit=1)
+            if duplicate:
+                raise UserError(_(
+                    'Asset tag "%(tag)s" is already used by %(asset)s.',
+                    tag=equipment.asset_code,
+                    asset=duplicate.display_name,
+                ))
 
     @api.constrains('hostname', 'company_id')
     def _check_hostname_unique(self):

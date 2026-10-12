@@ -75,10 +75,42 @@ input[type="radio"]:checked {
 .form-check-input:focus,
 .form-control:focus,
 .form-select:focus,
-input.o_input:focus,
-textarea:focus {
+.o_field_widget:not(.o_field_invalid) input.o_input:focus,
+.o_field_widget:not(.o_field_invalid) textarea:focus {
     border-color: var(--company-theme-color, #15803d) !important;
     box-shadow: 0 0 0 0.2rem var(--company-theme-accent-soft, rgba(21, 128, 61, 0.2)) !important;
+}
+
+/* Restore Odoo required / validation styling (overridden by theme input rules) */
+.o_field_widget.o_required_modifier:not(.o_field_invalid) input.o_input,
+.o_field_widget.o_required_modifier:not(.o_field_invalid) textarea.o_input,
+.o_field_widget.o_required_modifier:not(.o_field_invalid) select.o_input {
+    border-color: var(--company-theme-color, #15803d) !important;
+}
+
+.o_field_widget.o_field_invalid input.o_input,
+.o_field_widget.o_field_invalid textarea.o_input,
+.o_field_widget.o_field_invalid select.o_input,
+.o_list_view .o_data_cell.o_invalid_cell .o_input {
+    border-color: #dc3545 !important;
+    background-color: rgba(220, 53, 69, 0.08) !important;
+}
+
+.o_field_widget.o_field_invalid .o_form_label,
+.o_field_invalid.o_form_label {
+    color: #dc3545 !important;
+}
+
+.o_field_widget.o_field_invalid input.o_input:focus,
+.o_field_widget.o_field_invalid textarea.o_input:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.o_form_view .nav-tabs .nav-link.o_page_invalid {
+    color: #dc3545 !important;
+    border-bottom-color: #dc3545 !important;
+    background-color: rgba(220, 53, 69, 0.08) !important;
 }
 
 /* Odoo paints the currency on a span.o_input overlay; keep it see-through. */
@@ -138,4 +170,17 @@ input[type="range"],
 input[type="checkbox"],
 input[type="radio"] {
     accent-color: var(--company-theme-color, #15803d);
+}
+
+/* User form: invitation / password reset (status bar + Security tab) */
+.o_form_view .o_form_statusbar .o_statusbar_buttons .btn,
+.o_form_view .o_form_statusbar .o_statusbar_buttons button {
+    flex-shrink: 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.o_form_view div[name="auth"] .btn-primary,
+.o_form_view .ew-user-signup-link .btn-link {
+    visibility: visible !important;
 }

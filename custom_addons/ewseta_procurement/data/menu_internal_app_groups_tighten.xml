@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Default Odoo ties several app roots to base.group_user, so every internal
+        login sees HR / Discuss / Maintenance even when Access Rights says "No".
+        Require the real module groups on those app roots instead.
+    -->
+    <record id="hr.menu_hr_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('hr.group_hr_user'), ref('hr.group_hr_manager')])]"/>
+    </record>
+
+    <record id="maintenance.menu_maintenance_title" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('maintenance.group_equipment_manager')])]"/>
+    </record>
+</odoo>

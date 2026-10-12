@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Loaded after views/menu.xml so xmlids exist; forces group_ids on upgrade. -->
+    <record id="menu_ew_submission_provider_all" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('ewseta_procurement.group_rfq_admin')])]"/>
+    </record>
+    <record id="menu_ew_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('ewseta_procurement.group_scm_owner'), ref('ewseta_procurement.group_rfq_admin')])]"/>
+    </record>
+    <record id="menu_ew_sp_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('ewseta_procurement.group_service_provider')])]"/>
+    </record>
+    <record id="menu_ew_rfq_provider_transversal" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('ewseta_procurement.group_service_provider')])]"/>
+    </record>
+    <record id="menu_ew_submission_provider" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('ewseta_procurement.group_service_provider')])]"/>
+    </record>
+    <delete model="ir.ui.menu" id="menu_ew_provider_root"/>
+</odoo>

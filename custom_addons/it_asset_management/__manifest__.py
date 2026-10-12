@@ -1,6 +1,6 @@
 {
     'name': 'IT Assets Management',
-    'version': '19.0.1.9.0',
+    'version': '19.0.1.9.2',
     'category': 'Human Resources/Assets',
     'summary': 'Track organizational IT hardware — assign, maintain, and audit laptops, phones, and peripherals',
     'depends': ['hr_maintenance', 'maintenance', 'hr', 'mail'],

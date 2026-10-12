@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ew_submission_line_preview_form" model="ir.ui.view">
+        <field name="name">ew.submission.line.preview.form</field>
+        <field name="model">ew.submission.line.preview</field>
+        <field name="arch" type="xml">
+            <form string="Document preview">
+                <sheet>
+                    <group>
+                        <field name="line_id" invisible="1"/>
+                        <field name="file_name" readonly="1"/>
+                    </group>
+                    <field name="preview_html" nolabel="1" readonly="1" class="ew-submission-line-preview-html"/>
+                </sheet>
+                <footer>
+                    <button string="Close" special="cancel" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

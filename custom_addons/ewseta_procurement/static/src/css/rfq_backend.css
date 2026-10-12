@@ -1,3 +1,10 @@
+/* Submission document preview dialog */
+.o_dialog .ew-submission-line-preview-html iframe {
+    width: 100%;
+    min-height: 75vh;
+    border: none;
+}
+
 /* EWSETA Procurement — backend RFQ/RFP views */
 
 :root {
@@ -134,6 +141,19 @@
     border-radius: 10px;
 }
 
+.ew-proc-rfq-form .ew-proc-form-hero--after-title {
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-hero__main {
+    flex: 1 1 22rem;
+    min-width: min(100%, 22rem);
+    max-width: 100%;
+}
+
 .ew-proc-rfq-form .ew-proc-form-label,
 .ew-proc-submission-form .ew-proc-form-label {
     display: block;
@@ -147,16 +167,69 @@
 
 .ew-proc-rfq-form .ew-proc-form-ref,
 .ew-proc-submission-form .ew-proc-form-ref {
+    display: block;
+    width: 100%;
+    max-width: 28rem;
     font-size: 1.125rem;
     font-weight: 600;
     color: var(--ew-proc-accent);
+}
+
+.ew-proc-rfq-form .ew-proc-form-ref .o_input,
+.ew-proc-rfq-form .ew-proc-form-ref input {
+    width: 100% !important;
+    min-width: 22rem;
+    max-width: 28rem;
+    box-sizing: border-box;
+}
+
+.ew-proc-rfq-form .ew-proc-form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 72rem;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .ew-proc-rfq-form .ew-proc-form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+    align-items: stretch;
+}
+
+.ew-proc-rfq-form .ew-proc-form-grid > .ew-proc-form-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.ew-proc-rfq-form .ew-proc-form-grid > .ew-proc-form-card .ew-proc-form-card-group,
+.ew-proc-rfq-form .ew-proc-form-grid > .ew-proc-form-card .ew-proc-form-hint {
+    flex: 0 0 auto;
+}
+
+.ew-proc-rfq-form .ew-proc-form-grid > .ew-proc-form-card .ew-proc-form-card-group:last-child {
+    flex: 1 1 auto;
+}
+
+.ew-proc-rfq-form .ew-proc-form-grid--setup {
+    margin-bottom: 0.25rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.ew-proc-rfq-form .ew-proc-form-stack--full .ew-proc-form-card--full {
+    width: 100%;
+    max-width: none;
 }
 
 @media (max-width: 992px) {
@@ -202,8 +275,98 @@
     color: var(--ew-proc-muted);
 }
 
-.ew-proc-rfq-form .ew-proc-form-card--wide {
-    margin-bottom: 1.25rem;
+.ew-proc-rfq-form .ew-proc-form-card--compact {
+    min-height: 100%;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--compact .ew-proc-form-hint {
+    margin-bottom: 0.5rem;
+    line-height: 1.45;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card-group--inline .o_inner_group {
+    grid-template-columns: minmax(6rem, 28%) minmax(0, 1fr) !important;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card-group--inline .o_field_radio .o_horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .ew-proc-briefing-two-col {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.5rem 2rem;
+    width: 100% !important;
+    align-items: start;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .ew-proc-briefing-two-col > .o_group {
+    width: 100% !important;
+    max-width: none;
+    min-width: 0;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .ew-proc-briefing-two-col > .o_group > .o_horizontal_separator {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ew-proc-muted);
+    margin-bottom: 0.35rem;
+}
+
+@media (max-width: 768px) {
+    .ew-proc-rfq-form .ew-proc-form-card--briefing .ew-proc-briefing-two-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--notes {
+    padding-bottom: 0.65rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--notes .ew-proc-form-card__head {
+    margin-bottom: 0.45rem;
+    padding-bottom: 0.35rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--notes textarea,
+.ew-proc-rfq-form .ew-proc-form-card--notes .o_field_text textarea {
+    min-height: 3.25rem;
+    height: auto;
+    resize: vertical;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .o_inner_group {
+    grid-template-columns: minmax(9rem, 32%) minmax(0, 1fr) !important;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .o_field_widget.o_field_radio {
+    max-width: 36rem;
+}
+
+/* Odoo 19 datetime: keep picker value visible inside narrow form grids */
+.ew-proc-rfq-form .ew-proc-form-card--briefing .o_field_datetime .d-flex {
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 13rem;
+    gap: 0.35rem;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .o_field_datetime button.o_input,
+.ew-proc-rfq-form .ew-proc-form-card--briefing .o_field_datetime input.o_input {
+    min-width: 11.5rem;
+    max-width: 100%;
+    flex: 1 1 auto;
+    color: var(--o-main-text-color, #212529) !important;
+    opacity: 1 !important;
+}
+
+.ew-proc-rfq-form .ew-proc-form-card--briefing .o_wrap_input {
+    min-width: 12rem;
+    overflow: visible;
 }
 
 .ew-proc-rfq-form .ew-proc-form-card__head {
@@ -230,6 +393,12 @@
 .ew-proc-submission-form .ew-proc-field-emphasis .o_field_datetime input {
     font-weight: 600;
     color: #1a4d38;
+}
+
+.ew-proc-rfq-form .ew-proc-form-notebook {
+    max-width: 72rem;
+    margin: 0.75rem auto 0;
+    width: 100%;
 }
 
 .ew-proc-rfq-form .ew-proc-form-notebook .nav-tabs {
@@ -419,4 +588,112 @@
 .ew-proc-submission-form header .o_statusbar_status .o_arrow_button_current {
     background-color: var(--ew-proc-accent);
     border-color: var(--ew-proc-accent);
+}
+
+/* —— Briefing attendance (backend) —— */
+.ew-proc-briefing-att-form .o_form_sheet {
+    border-top: 3px solid var(--ew-proc-accent);
+    border-radius: 0 0 10px 10px;
+    padding-top: 1.25rem;
+    background: linear-gradient(180deg, #fbfdfc 0%, #ffffff 140px);
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-title h1 input,
+.ew-proc-briefing-att-form .ew-proc-form-title h1 span {
+    font-weight: 650;
+    font-size: 1.5rem;
+    color: #15251f;
+}
+
+.ew-proc-briefing-att-form__subtitle {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0.75rem 0 1.25rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--ew-proc-accent-soft);
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+}
+
+.ew-proc-briefing-att-form__rfq-line {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.ew-proc-briefing-att-form__rfq-name {
+    font-size: 0.875rem;
+    line-height: 1.35;
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 992px) {
+    .ew-proc-briefing-att-form .ew-proc-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-card {
+    background: #ffffff;
+    border: 1px solid var(--ew-proc-border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem 0.85rem;
+    box-shadow: var(--ew-proc-shadow);
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-card > .o_group,
+.ew-proc-briefing-att-form .ew-proc-form-card .ew-proc-form-card-group {
+    width: 100% !important;
+    max-width: 100%;
+    margin-bottom: 0;
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-card .o_inner_group {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(7.5rem, 38%) minmax(0, 1fr) !important;
+}
+
+.ew-proc-briefing-att-form .ew-proc-form-card__head {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ew-proc-accent);
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--ew-proc-border);
+}
+
+.ew-proc-briefing-att-form__proof .o_field_widget.o_field_url input {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+}
+
+.ew-proc-briefing-att-list thead {
+    background: var(--ew-proc-accent-soft);
+}
+
+.ew-proc-briefing-att-list thead th {
+    color: #1a4d38;
+    font-weight: 600;
+    border-bottom: 2px solid var(--ew-proc-accent);
+}
+
+.ew-proc-briefing-att-list tbody tr.o_data_row:hover {
+    background-color: #f4fbf7;
 }

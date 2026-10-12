@@ -36,7 +36,7 @@
         <field name="name">SCM: Submissions after unlock</field>
         <field name="model_id" ref="model_ew_submission"/>
         <field name="groups" eval="[(4, ref('ewseta_procurement.group_scm_owner'))]"/>
-        <field name="domain_force">[('rfq_id.unlocked','=',True)]</field>
+        <field name="domain_force">['|', ('rfq_id.unlocked', '=', True), ('rfq_id.state', '=', 'closed')]</field>
 
     </record>
 
@@ -44,23 +44,37 @@
         <field name="name">SCM: Submission lines after unlock</field>
         <field name="model_id" ref="model_ew_submission_line"/>
         <field name="groups" eval="[(4, ref('ewseta_procurement.group_scm_owner'))]"/>
-        <field name="domain_force">[('submission_id.rfq_id.unlocked','=',True)]</field>
+        <field name="domain_force">['|', ('submission_id.rfq_id.unlocked', '=', True), ('submission_id.rfq_id.state', '=', 'closed')]</field>
 
     </record>
 
-    <!-- Service Provider: published RFQs only (for applying / linking submissions) -->
+    <record id="rule_briefing_attendance_admin_all" model="ir.rule">
+        <field name="name">Admin: briefing attendance all</field>
+        <field name="model_id" ref="model_ew_rfq_briefing_attendance"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_rfq_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_briefing_attendance_scm_all" model="ir.rule">
+        <field name="name">SCM: briefing attendance all</field>
+        <field name="model_id" ref="model_ew_rfq_briefing_attendance"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_scm_owner'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- Service Provider: eligible transversal RFQs/RFPs only (not public website opportunities) -->
     <record id="rule_rfq_provider_published" model="ir.rule">
-        <field name="name">Provider: published RFQs</field>
+        <field name="name">Provider: transversal RFQs</field>
         <field name="model_id" ref="model_ew_rfq"/>
         <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
-        <field name="domain_force">[('state', '=', 'published')]</field>
+        <field name="domain_force">['&amp;', ('publication_type', '=', 'transversal'), ('transversal_eligible_partner_ids', 'in', user.partner_id.ids), '|', ('state', '=', 'published'), ('state', '=', 'closed')]</field>
     </record>
 
     <record id="rule_rfq_req_provider_published" model="ir.rule">
-        <field name="name">Provider: requirements on published RFQs</field>
+        <field name="name">Provider: requirements on transversal RFQs</field>
         <field name="model_id" ref="model_ew_rfq_requirement"/>
         <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
-        <field name="domain_force">[('rfq_id.state', '=', 'published')]</field>
+        <field name="domain_force">['&amp;', ('rfq_id.publication_type', '=', 'transversal'), ('rfq_id.transversal_eligible_partner_ids', 'in', user.partner_id.ids), '|', ('rfq_id.state', '=', 'published'), ('rfq_id.state', '=', 'closed')]</field>
     </record>
 
     <!-- Service Provider: only their own submissions and lines -->
