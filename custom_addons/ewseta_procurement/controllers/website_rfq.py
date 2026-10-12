@@ -98,6 +98,26 @@ class WebsiteRFQ(http.Controller):
         track_token = submission._issue_tracking_token()
         return submission, track_token
 
+    def _portal_briefing_template_extras(self, rfq, token=None):
+        """Live briefing join / register links for portal templates."""
+        rfq = rfq.sudo().exists() if rfq else rfq
+        if not rfq or not rfq.briefing_session:
+            return {}
+        rfq._portal_trigger_briefing_start_emails_if_due()
+        if rfq.portal_briefing_registration_state() != "open":
+            return {}
+        extras = {}
+        submission, track = self._briefing_submission_for_register(
+            rfq.id,
+            self._portal_token_from_request(token=token),
+        )
+        if submission and track:
+            safe = quote(track, safe="")
+            extras["briefing_register_url"] = (
+                f"/application/rfqs/{rfq.id}/briefing/register?token={safe}"
+            )
+        return extras
+
     @staticmethod
     def _portal_values_from_submission(submission):
         return {
@@ -107,28 +127,7 @@ class WebsiteRFQ(http.Controller):
             'contact_phone': submission.contact_phone or '',
         }
 
-    @classmethod
-    def _portal_briefing_register_url(cls, rfq, token=None):
-        """Attendance register link when session is live and application is known."""
-        if not rfq or rfq.portal_briefing_registration_state() != "open":
-            return ""
-        token = (token or cls._portal_token_from_request() or "").strip()
-        submission = cls._briefing_submission_from_token(rfq.id, token)
-        if not submission:
-            stash = request.session.get("ew_proc_submission_thanks") or {}
-            submission = request.env["ew.submission"].portal_resolve_submission(
-                stash.get("token"),
-                trusted_submission_id=stash.get("submission_id"),
-            )
-            if submission and submission.rfq_id.id != rfq.id:
-                submission = request.env["ew.submission"].browse()
-        if not submission:
-            return ""
-        url = rfq.portal_briefing_register_url_for_submission(submission)
-        return url or ""
-
-    def _render_rfq_apply_form(self, rfq, errors, values, extra=None):
-        rfq._portal_trigger_briefing_start_emails_if_due()
+    def _render_rfq_apply_form(self, rfq, errors, values, extra=None, portal_token=None):
         mand = rfq.requirement_ids.filtered(lambda r: r.is_mandatory)
         opti = rfq.requirement_ids.filtered(lambda r: not r.is_mandatory)
         ctx = {
@@ -137,8 +136,8 @@ class WebsiteRFQ(http.Controller):
             'req_opt': opti,
             'errors': errors,
             'values': values,
-            'briefing_register_url': self._portal_briefing_register_url(rfq),
         }
+        ctx.update(self._portal_briefing_template_extras(rfq, token=portal_token))
         if extra:
             ctx.update(extra)
         return request.render('ewseta_procurement.rfq_apply_form', ctx)
@@ -296,12 +295,8 @@ class WebsiteRFQ(http.Controller):
                 'ewseta_procurement.rfq_closed_or_missing', {'rfq': rfq}
             )
 
-        token = self._portal_token_from_request(**kw)
         return self._render_rfq_apply_form(
-            rfq,
-            {},
-            {},
-            extra={'briefing_register_url': self._portal_briefing_register_url(rfq, token)},
+            rfq, {}, {}, portal_token=kw.get("token"),
         )
 
     @http.route(['/application/rfqs/<int:rfq_id>/apply/submit'], type='http', auth='public',
@@ -376,7 +371,9 @@ class WebsiteRFQ(http.Controller):
             errors['files'] = (errors.get('files', '') + ' ' if errors.get('files') else '') + ' '.join(upload_errors)
 
         if errors:
-            return self._render_rfq_apply_form(rfq, errors, form_values)
+            return self._render_rfq_apply_form(
+                rfq, errors, form_values, portal_token=post.get("token"),
+            )
 
         # -------------------------------
         #  CREATE OR REUSE PARTNER
@@ -398,10 +395,12 @@ class WebsiteRFQ(http.Controller):
             ('partner_id', '=', partner.id),
         ], limit=1)
         if existing_submission:
+            dup_token = existing_submission._issue_tracking_token()
             return self._render_rfq_apply_form(
                 rfq,
                 {'duplicate': _("You have already submitted an application for this RFQ.")},
                 form_values,
+                portal_token=dup_token,
             )
 
         # -------------------------------
@@ -421,10 +420,10 @@ class WebsiteRFQ(http.Controller):
             'privacy_policy_accepted_at': accepted_at,
         })
 
-            submission.sudo().message_post(
+        submission.sudo().message_post(
             body=_("Application submitted via the website (SCM is notified when the RFQ closes)."),
-                subtype_xmlid="mail.mt_note",
-            )
+            subtype_xmlid="mail.mt_note",
+        )
 
         # -------------------------------
         #  CREATE LINES AND ATTACH FILES
@@ -480,19 +479,16 @@ class WebsiteRFQ(http.Controller):
             trusted_submission_id=stash.get('submission_id'),
         )
         track_token = token if submission else None
-        rfq = submission.rfq_id if submission else request.env['ew.rfq'].browse()
-        if rfq:
-            rfq._portal_trigger_briefing_start_emails_if_due()
-        briefing_register_url = ""
-        if rfq and submission:
-            briefing_register_url = rfq.portal_briefing_register_url_for_submission(submission) or ""
-        return request.render('ewseta_procurement.rfq_apply_thanks', {
+        rfq = submission.rfq_id if submission else None
+        ctx = {
             'submission': submission,
             'rfq': rfq,
             'track_token': track_token,
             'track_url': submission._portal_track_url(track_token) if submission and track_token else '',
-            'briefing_register_url': briefing_register_url,
-        })
+        }
+        if rfq:
+            ctx.update(self._portal_briefing_template_extras(rfq, token=track_token))
+        return request.render('ewseta_procurement.rfq_apply_thanks', ctx)
 
     @http.route(
         ['/application/submissions/track/<string:token>'],
@@ -507,18 +503,17 @@ class WebsiteRFQ(http.Controller):
         if not submission:
             return request.render('ewseta_procurement.submission_track_missing', {})
         rfq = submission.rfq_id
-        rfq._portal_trigger_briefing_start_emails_if_due()
         reference = submission.portal_track_reference_rows()
-        briefing_register_url = rfq.portal_briefing_register_url_for_submission(submission) or ""
-        return request.render('ewseta_procurement.submission_public_track', {
+        ctx = {
             'submission': submission,
             'rfq': rfq,
             'track_token': token,
             'track_url': submission._portal_track_url(token),
             'supplier_rows': reference['supplier'],
             'application_rows': reference['application'],
-            'briefing_register_url': briefing_register_url,
-        })
+        }
+        ctx.update(self._portal_briefing_template_extras(rfq, token=token))
+        return request.render('ewseta_procurement.submission_public_track', ctx)
 
     @http.route(
         ['/application/submissions/file/<int:line_id>'],

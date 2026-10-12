@@ -535,32 +535,6 @@ class EwRfq(models.Model):
         self.ensure_one()
         return self.portal_briefing_registration_state() == "open"
 
-    def portal_briefing_virtual_join_url(self):
-        """Virtual join URL — only while the live briefing window is open."""
-        self.ensure_one()
-        if self.portal_briefing_registration_state() != "open":
-            return False
-        if self.briefing_mode != "virtual":
-            return False
-        link = (self.briefing_virtual_link or "").strip()
-        return link or False
-
-    def portal_briefing_register_url_for_submission(self, submission):
-        """Private attendance register URL for an submitted application."""
-        self.ensure_one()
-        if self.portal_briefing_registration_state() != "open":
-            return False
-        if not submission or submission.rfq_id.id != self.id:
-            return False
-        if submission.state not in ("submitted", "closed"):
-            return False
-        base = (self.env["ir.config_parameter"].sudo().get_param("web.base.url") or "").rstrip("/")
-        if not base:
-            return False
-        track_token = submission._issue_tracking_token()
-        safe_token = quote(track_token, safe="")
-        return f"{base}/application/rfqs/{self.id}/briefing/register?token={safe_token}"
-
     def portal_has_briefing_attendance(self, contact_email):
         self.ensure_one()
         email_norm = (contact_email or "").strip().lower()

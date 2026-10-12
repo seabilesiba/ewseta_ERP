@@ -22,7 +22,7 @@
         <p>
             <a t-att-href="object.briefing_virtual_link"><t t-out="object.briefing_virtual_link"/></a>
         </p>
-        <p class="text-muted">The same join link appears on your application form while the session is live.</p>
+        <p class="text-muted">This join link is not published on the public RFQ page — use the link above.</p>
     </t>
     <t t-if="object.briefing_mode == 'contact'">
         <p><strong>Venue (on-site briefing):</strong></p>

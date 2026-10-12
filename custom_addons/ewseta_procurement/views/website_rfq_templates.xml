@@ -572,7 +572,6 @@
 
     <template id="rfq_briefing_session_public" name="RFQ briefing session (portal)">
         <t t-if="rfq.briefing_session">
-            <t t-set="briefing_register_url" t-value="briefing_register_url or ''"/>
             <section class="ew-proc-portal__apply-section ew-proc-portal__briefing-card mb-4">
                 <h2 class="ew-proc-portal__section-title ew-proc-portal__section-title--first mb-3">Briefing session</h2>
                 <p class="mb-2">
@@ -600,67 +599,60 @@
                         </span>
                     </p>
                 </t>
-                <t t-if="reg_state == 'before'">
+                <t t-if="rfq.briefing_mode == 'virtual'">
+                    <t t-if="reg_state == 'open' and rfq.briefing_virtual_link">
+                        <p class="mb-3">
+                            <span class="ew-proc-portal__apply-meta-label d-block">Join online (session live)</span>
+                            <a t-att-href="rfq.briefing_virtual_link"
+                               class="btn btn-primary btn-sm mt-1"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                                Open virtual briefing
+                            </a>
+                            <span class="d-block text-muted small mt-2" t-esc="rfq.briefing_virtual_link"/>
+                        </p>
+                    </t>
+                    <t t-elif="reg_state == 'before'">
+                        <p class="alert alert-info py-2 small mb-3">
+                            The virtual join link appears on this page when the session starts
+                            (<t t-esc="rfq.briefing_at" t-options="{'widget': 'datetime'}"/>).
+                            Applicants who already submitted also receive it by email.
+                        </p>
+                    </t>
+                </t>
+                <t t-if="not briefing_portal_readonly and reg_state == 'before'">
                     <div class="alert alert-info py-2 small mb-3">
-                        The virtual join link and attendance register appear here when the session starts
-                        (<t t-if="rfq.briefing_at"><t t-esc="rfq.briefing_at" t-options="{'widget': 'datetime'}"/></t>).
-                        You will also receive an email if you have already submitted an application.
+                        Attendance registration opens when the briefing session starts.
                     </div>
                 </t>
-                <t t-elif="reg_state == 'after'">
+                <t t-elif="not briefing_portal_readonly and reg_state == 'after'">
                     <div class="alert alert-secondary py-2 small mb-3">
                         The briefing session has ended. Portal registration is closed (contact EWSETA SCM if you need help).
                     </div>
                 </t>
-                <t t-if="rfq.briefing_mode == 'contact' and rfq.briefing_location">
+                <t t-if="rfq.briefing_mode == 'contact' and rfq.briefing_location and reg_state == 'open'">
                     <p class="mb-3">
-                        <span class="ew-proc-portal__apply-meta-label d-block">Venue address</span>
+                        <span class="ew-proc-portal__apply-meta-label d-block">Venue address (session live)</span>
                         <span t-esc="rfq.briefing_location"/>
                     </p>
                 </t>
-                <t t-if="reg_state == 'open'">
-                    <div class="alert alert-success py-2 small mb-3">
-                        <strong>Briefing session is live.</strong> Use the links below during this time window.
-                    </div>
-                    <t t-if="rfq.briefing_mode == 'virtual'">
-                        <t t-set="briefing_join_url" t-value="rfq.portal_briefing_virtual_join_url()"/>
-                        <t t-if="briefing_join_url">
-                            <p class="mb-2">
-                                <span class="ew-proc-portal__apply-meta-label d-block">Join virtual briefing</span>
-                                <a t-att-href="briefing_join_url"
-                                   class="btn btn-primary btn-sm mt-1"
-                                   target="_blank"
-                                   rel="noopener noreferrer">
-                                    Open virtual session
-                                </a>
-                            </p>
-                            <p class="text-muted small text-break mb-3">
-                                <a t-att-href="briefing_join_url" t-esc="briefing_join_url"/>
-                            </p>
-                        </t>
-                        <t t-else="">
-                            <p class="alert alert-warning py-2 small mb-3">
-                                Virtual join link is not configured yet. Contact EWSETA SCM.
-                            </p>
-                        </t>
-                    </t>
-                    <t t-if="briefing_register_url and not briefing_hide_register">
-                        <p class="mb-0">
-                            <span class="ew-proc-portal__apply-meta-label d-block">Attendance register</span>
-                            <a t-att-href="briefing_register_url"
-                               class="btn btn-outline-primary btn-sm mt-1">
-                                Sign briefing attendance register
-                            </a>
-                            <span class="d-block text-muted small mt-2">
-                                Private link for your submitted application. Also sent by email when the session started.
-                            </span>
-                        </p>
-                    </t>
-                    <t t-elif="not briefing_hide_register and not briefing_portal_readonly">
-                        <p class="text-muted small mb-0">
-                            Submit your application first — then return here (or use your confirmation email) to sign the attendance register while the session is open.
-                        </p>
-                    </t>
+                <t t-elif="rfq.briefing_mode == 'contact' and rfq.briefing_location and reg_state == 'before'">
+                    <p class="alert alert-info py-2 small mb-3">
+                        The on-site venue is shown here when the briefing session starts.
+                    </p>
+                </t>
+                <t t-if="reg_state == 'open' and briefing_register_url and not briefing_hide_register">
+                    <p class="mb-0">
+                        <span class="ew-proc-portal__apply-meta-label d-block">Briefing attendance</span>
+                        <a t-att-href="briefing_register_url" class="btn btn-outline-primary btn-sm mt-1">
+                            Sign briefing attendance register
+                        </a>
+                    </p>
+                </t>
+                <t t-elif="not briefing_portal_readonly and reg_state == 'open' and not briefing_hide_register">
+                    <p class="text-muted small mb-0">
+                        Submit your application first — then return to this page (or use your status link) to sign the briefing attendance register while the session is live.
+                    </p>
                 </t>
             </section>
         </t>
@@ -697,7 +689,7 @@
                             (<t t-esc="rfq.briefing_at" t-options="{'widget': 'datetime'}"/>).
                         </t>
                         <t t-else="">
-                            Registration opens when the briefing session starts. Virtual join links are sent by email at start time.
+                            Registration opens when the briefing session starts. The virtual join link appears on the application form when the session is live.
                         </t>
                     </t>
                     <t t-elif="registration_state == 'after'">
@@ -949,6 +941,7 @@
                     <t t-call="ewseta_procurement.rfq_public_document_block"/>
 
                     <t t-if="rfq.briefing_session">
+                        <t t-set="briefing_portal_readonly" t-value="False"/>
                         <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
                     </t>
 
@@ -1089,10 +1082,8 @@
                             (<t t-esc="submission.rdq_rfp_ref"/>)
                         </p>
                         <t t-if="rfq and rfq.briefing_session">
-                            <t t-set="briefing_register_url" t-value="briefing_register_url or ''"/>
-                            <div class="mt-4">
-                                <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
-                            </div>
+                            <t t-set="briefing_portal_readonly" t-value="False"/>
+                            <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
                         </t>
                         <t t-if="track_url">
                             <div class="ew-proc-portal__card mt-4 p-3">
@@ -1154,7 +1145,7 @@
                 </div>
 
                 <t t-if="rfq and rfq.briefing_session">
-                    <t t-set="briefing_register_url" t-value="briefing_register_url or ''"/>
+                    <t t-set="briefing_portal_readonly" t-value="False"/>
                     <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
                 </t>
 
