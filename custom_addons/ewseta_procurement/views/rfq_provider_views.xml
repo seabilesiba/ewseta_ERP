@@ -35,7 +35,9 @@
 
                        decoration-success="state == 'published'"
 
-                       decoration-danger="state == 'closed'"/>
+                       decoration-danger="state == 'closed'"
+
+                       decoration-muted="state == 'cancelled'"/>
 
                 <button name="%(ewseta_procurement.action_server_provider_apply_rfq)d"
 
@@ -83,7 +85,7 @@
 
                             type="object"
 
-                            string="Sign briefing register"
+                            string="Briefing session"
 
                             class="btn-secondary"
 
@@ -96,6 +98,8 @@
                 </header>
 
                 <sheet>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger"
+                            invisible="state != 'cancelled'"/>
 
                     <div class="oe_title ew-proc-form-title">
 
@@ -155,6 +159,8 @@
 
                                 <group colspan="2" class="ew-proc-form-card-group">
 
+                                    <field name="provider_show_briefing_join" invisible="1"/>
+
                                     <field name="briefing_mode" readonly="1"/>
 
                                     <field name="briefing_at" readonly="1"/>
@@ -163,13 +169,33 @@
 
                                     <field name="briefing_compulsory" readonly="1"/>
 
+                                    <field name="provider_briefing_virtual_link"
+
+                                           widget="url"
+
+                                           readonly="1"
+
+                                           invisible="not provider_show_briefing_join or briefing_mode != 'virtual'"/>
+
+                                    <field name="provider_briefing_location"
+
+                                           readonly="1"
+
+                                           invisible="not provider_show_briefing_join or briefing_mode != 'contact'"/>
+
                                 </group>
 
-                                <p class="ew-proc-form-hint mb-0">
+                                <p class="ew-proc-form-hint mb-0" invisible="provider_show_briefing_join">
 
-                                    During the session, use <strong>Sign briefing register</strong> above
-                                    (after your application is submitted). Virtual join links are sent by email
-                                    when the session starts.
+                                    The join link or venue and the attendance register appear when the session starts.
+                                    Open <strong>Briefing session</strong> above to sign the register while it is live.
+
+                                </p>
+
+                                <p class="ew-proc-form-hint mb-0" invisible="not provider_show_briefing_join">
+
+                                    Session is live. Use the join link or venue here, then open
+                                    <strong>Briefing session</strong> to sign the attendance register.
 
                                 </p>
 

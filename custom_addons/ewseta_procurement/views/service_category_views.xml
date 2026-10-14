@@ -33,11 +33,4 @@
         <field name="res_model">ew.service.category</field>
         <field name="view_mode">list,form</field>
     </record>
-
-    <menuitem id="menu_ew_service_category"
-              name="Service categories"
-              parent="ewseta_procurement.menu_ew_root"
-              action="action_ew_service_category"
-              sequence="90"
-              groups="ewseta_procurement.group_rfq_admin"/>
 </odoo>

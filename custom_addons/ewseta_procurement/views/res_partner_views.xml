@@ -11,6 +11,7 @@
                       groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner">
                     <group>
                         <field name="ew_service_provider" widget="boolean_toggle"/>
+                        <field name="ew_sita_rfb1183_no"/>
                         <field name="ew_service_category_ids"
                                widget="many2many_tags"
                                invisible="not ew_service_provider"/>
@@ -32,7 +33,13 @@
                 <filter string="EWSETA service providers"
                         name="ew_service_providers"
                         domain="[('ew_service_provider', '=', True)]"/>
+                <filter string="SITA RFB1183 panel"
+                        name="ew_sita_rfb1183"
+                        domain="[('ew_sita_rfb1183_no', '!=', False)]"/>
             </filter>
+            <field name="name" position="after">
+                <field name="ew_sita_rfb1183_no"/>
+            </field>
         </field>
     </record>
 </odoo>

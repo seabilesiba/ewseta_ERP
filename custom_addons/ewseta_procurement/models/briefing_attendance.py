@@ -45,6 +45,7 @@ class EwRfqBriefingAttendance(models.Model):
     source = fields.Selection(
         [
             ("portal", "Portal self-registration"),
+            ("sp_backend", "Service provider (backend)"),
             ("scm_manual", "SCM manual"),
         ],
         string="Source",
@@ -119,10 +120,12 @@ class EwRfqBriefingAttendance(models.Model):
                     raise ValidationError(
                         _("This email is already registered for this briefing session.")
                     )
-            if vals.get("source") == "portal" and not vals.get("proof_token"):
+            if vals.get("source") in ("portal", "sp_backend") and not vals.get("proof_token"):
                 vals["proof_token"] = secrets.token_urlsafe(32)
         records = super().create(vals_list)
-        records.filtered(lambda r: r.source == "portal" and not r.proof_token)._ensure_proof_token()
+        records.filtered(
+            lambda r: r.source in ("portal", "sp_backend") and not r.proof_token
+        )._ensure_proof_token()
         records._send_briefing_start_notification_if_late()
         return records
 
@@ -144,6 +147,11 @@ class EwRfqBriefingAttendance(models.Model):
     @api.model
     def portal_register(self, rfq, values):
         """Create attendance from public portal during the live session window."""
+        return self.self_register(rfq, values, source="portal")
+
+    @api.model
+    def self_register(self, rfq, values, source="portal"):
+        """Create attendance during the live session window (portal or backend SP)."""
         rfq.ensure_one()
         state = rfq.portal_briefing_registration_state()
         if state == "before":
@@ -165,6 +173,8 @@ class EwRfqBriefingAttendance(models.Model):
         company = (values.get("company_name") or "").strip()
         if not company:
             raise ValidationError(_("Company name is required."))
+        if source not in ("portal", "sp_backend"):
+            source = "portal"
 
         existing = self.sudo().search([
             ("rfq_id", "=", rfq.id),
@@ -178,7 +188,7 @@ class EwRfqBriefingAttendance(models.Model):
         partner = self.env["res.partner"].sudo().search(
             [("email", "=ilike", email)], limit=1
         )
-        return self.sudo().create({
+        vals = {
             "rfq_id": rfq.id,
             "partner_id": partner.id if partner else False,
             "company_name": company,
@@ -186,5 +196,8 @@ class EwRfqBriefingAttendance(models.Model):
             "contact_email": email,
             "contact_phone": (values.get("contact_phone") or "").strip(),
             "mode": rfq.briefing_mode or "virtual",
-            "source": "portal",
-        })
+            "source": source,
+        }
+        if source == "sp_backend":
+            vals["registered_by"] = self.env.user.id
+        return self.sudo().create(vals)

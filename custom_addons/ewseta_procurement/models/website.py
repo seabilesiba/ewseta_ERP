@@ -37,15 +37,9 @@ class Website(models.Model):
         rfq = self.env["ew.rfq"].sudo()
         now = fields.Datetime.now()
         return {
-            "open_count": rfq.search_count([
-                ("state", "=", "published"),
-                ("closing_at", ">", now),
-            ]),
-            "closed_count": rfq.search_count([
-                "|",
-                ("state", "=", "closed"),
-                "&",
-                ("state", "=", "published"),
-                ("closing_at", "<=", now),
-            ]),
+            "open_count": rfq.search_count(rfq._portal_open_domain(now)),
+            "closed_count": rfq.search_count(rfq._portal_closed_domain(now)),
+            "transversal_count": rfq.search_count(
+                rfq._portal_closed_transversal_domain(now)
+            ),
         }

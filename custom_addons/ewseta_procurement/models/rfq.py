@@ -4,6 +4,7 @@ from urllib.parse import quote
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.mail import email_split
 from odoo.tools.misc import format_datetime
 
 _logger = logging.getLogger(__name__)
@@ -48,7 +49,7 @@ class EwRfq(models.Model):
         "ew.service.category",
         string="Service category",
         help=(
-            "The one service this transversal RFQ/RFP is for. Registered providers "
+            "The one service this transversal RFQ/RFP is for. EWSETA service providers "
             "match when this category appears on their contact profile (they may "
             "offer other services too)."
         ),
@@ -88,7 +89,16 @@ class EwRfq(models.Model):
     requirement_ids = fields.One2many("ew.rfq.requirement", "rfq_id", string="Required Documents")
     closing_at = fields.Datetime("Closing Date & Time", required=True, tracking=True)
     unlocked = fields.Boolean("Unlocked", default=False)
-    state = fields.Selection([("draft","Draft"),("published", "Published"),("closed", "Closed")], default="draft", tracking=True)
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("published", "Published"),
+            ("closed", "Closed"),
+            ("cancelled", "Cancelled"),
+        ],
+        default="draft",
+        tracking=True,
+    )
     supplier_note = fields.Text("Supplier Instructions")
     briefing_session = fields.Boolean(
         string="Briefing session",
@@ -110,20 +120,21 @@ class EwRfq(models.Model):
     )
     briefing_location = fields.Text(
         string="Briefing venue address",
-        help="Physical address when the briefing is on-site.",
+        help="Physical address when the briefing is on-site. Shown on the application form only after the session start time.",
     )
     briefing_virtual_link = fields.Char(
         string="Virtual briefing link",
-        help="Meeting URL when the briefing is virtual.",
+        help="Meeting URL when the briefing is virtual. Shown on the application form only after the session start time.",
     )
     briefing_at = fields.Datetime(
         string="Briefing starts",
         tracking=True,
-        help="Suppliers may register attendance only during the session window.",
+        help="Must be before the RFQ/RFP closing date. The join link or venue is shown on the application form from this time.",
     )
     briefing_end_at = fields.Datetime(
         string="Briefing ends",
         tracking=True,
+        help="Must be before the RFQ/RFP closing date.",
     )
     briefing_start_mail_sent = fields.Boolean(
         string="Briefing start email sent",
@@ -136,17 +147,55 @@ class EwRfq(models.Model):
         "ew.rfq.briefing.attendance",
         "rfq_id",
         string="Briefing attendance",
+        groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner",
     )
     briefing_attendance_count = fields.Integer(
         string="Briefing registrations",
         compute="_compute_briefing_attendance_count",
+        groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner",
     )
-    opening_at = fields.Datetime(string="Created On", default=fields.Datetime.now, store=True)
+    provider_show_briefing_join = fields.Boolean(
+        string="Show briefing join details",
+        compute="_compute_provider_show_briefing_join",
+    )
+    provider_briefing_virtual_link = fields.Char(
+        string="Join link",
+        compute="_compute_provider_show_briefing_join",
+    )
+    provider_briefing_location = fields.Text(
+        string="Venue",
+        compute="_compute_provider_show_briefing_join",
+    )
+    opening_at = fields.Datetime(
+        string="Opens on",
+        default=fields.Datetime.now,
+        required=True,
+        store=True,
+    )
 
     @api.depends("briefing_attendance_ids")
     def _compute_briefing_attendance_count(self):
         for rfq in self:
             rfq.briefing_attendance_count = len(rfq.briefing_attendance_ids)
+
+    @api.depends(
+        "briefing_session",
+        "briefing_mode",
+        "briefing_at",
+        "briefing_end_at",
+        "briefing_virtual_link",
+        "briefing_location",
+    )
+    def _compute_provider_show_briefing_join(self):
+        for rfq in self:
+            show = bool(rfq.briefing_session and rfq.portal_show_briefing_join_details())
+            rfq.provider_show_briefing_join = show
+            rfq.provider_briefing_virtual_link = (
+                rfq.briefing_virtual_link if show and rfq.briefing_mode == "virtual" else False
+            )
+            rfq.provider_briefing_location = (
+                rfq.briefing_location if show and rfq.briefing_mode == "contact" else False
+            )
 
     def _portal_procurement_document(self):
         """Return (binary, filename) for the document matching this record's type."""
@@ -207,18 +256,16 @@ class EwRfq(models.Model):
             raise ValidationError(
                 _("Select the service category for this transversal RFQ/RFP.")
             )
-        eligible = self._find_eligible_service_providers()
-        if not eligible:
+        if not self._find_publish_notification_companies():
             raise UserError(
                 _(
-                    "No active registered service providers offer the selected "
-                    "service category(ies)%(province_hint)s. On each provider contact, "
-                    "open EWSETA procurement, enable service provider, and set matching "
-                    "service categories (and provinces if you filter by province here)."
+                    "No EWSETA service provider companies offer the selected "
+                    "service category%(province_hint)s. Enable EWSETA Service "
+                    "Provider, set the service category, and set Email on the company."
                 )
                 % {
                     "province_hint": (
-                        _(" and operate in the selected province(s)")
+                        _(" in the selected province(s)")
                         if self.province_ids
                         else ""
                     ),
@@ -243,19 +290,13 @@ class EwRfq(models.Model):
         return cat_id in partner.sudo().ew_service_category_ids.ids
 
     def _domain_registered_service_provider_partners(self):
-        """Active registered SP contacts linked to internal SP users."""
+        """Active EWSETA service providers (login not required; includes SITA imports)."""
         self.ensure_one()
         if self.publication_type != "transversal":
             return [("id", "=", 0)]
-        group = self.env.ref("ewseta_procurement.group_service_provider")
-        active_user_partners = self.env["res.users"].sudo().search([
-            ("active", "=", True),
-            ("group_ids", "in", group.ids),
-        ]).mapped("partner_id").ids
         return [
             ("ew_service_provider", "=", True),
             ("active", "=", True),
-            ("id", "in", active_user_partners or [0]),
         ]
 
     def _filter_partners_by_service_category(self, partners):
@@ -281,20 +322,40 @@ class EwRfq(models.Model):
         Partner = self.env["res.partner"].sudo()
         candidates = Partner.search(self._domain_registered_service_provider_partners())
         by_category = self._filter_partners_by_service_category(candidates)
-        if not self._transversal_province_ids():
-            return by_category
-        return self._filter_partners_by_provinces(by_category)
+        matched = (
+            by_category
+            if not self._transversal_province_ids()
+            else self._filter_partners_by_provinces(by_category)
+        )
+        # Snapshot the company res.partner so publish emails use the company Email field.
+        company_ids = list(dict.fromkeys(
+            (partner.commercial_partner_id or partner).id for partner in matched
+        ))
+        return Partner.browse(company_ids)
+
+    def _find_publish_notification_companies(self):
+        """Category matches (province is an optional extra filter). Login not required."""
+        return self._find_eligible_service_providers().filtered(
+            lambda partner: bool(self._partner_notification_emails(partner))
+        )
 
     def _partner_matches_transversal(self, partner):
         self.ensure_one()
         if self.publication_type != "transversal":
             return False
         partner = partner.sudo()
-        if not partner or not partner._ew_procurement_provider_active():
+        if not partner or not partner.active:
+            return False
+        company = partner.commercial_partner_id or partner
+        if not (partner.ew_service_provider or company.ew_service_provider):
             return False
         if self.state == "published" and self.transversal_eligible_partner_ids:
-            return partner in self.transversal_eligible_partner_ids
-        return partner in self._find_eligible_service_providers()
+            return (
+                partner in self.transversal_eligible_partner_ids
+                or company in self.transversal_eligible_partner_ids
+            )
+        eligible = self._find_eligible_service_providers()
+        return partner in eligible or company in eligible
 
     @api.depends(
         "publication_type",
@@ -381,14 +442,78 @@ class EwRfq(models.Model):
         return self._partner_matches_transversal(partner)
 
     def is_public_portal_rfq(self):
-        """May appear on the anonymous public procurement website."""
+        """May appear on the anonymous public procurement website as an open opportunity."""
         self.ensure_one()
         return self.publication_type == "public"
 
-    def assert_public_portal_access(self):
-        """Return False if this RFQ must not be exposed on the public website."""
+    def portal_applications_open(self, now=None):
+        """True while applicants may submit or update (public and transversal)."""
         self.ensure_one()
-        return self.is_public_portal_rfq()
+        now = now or fields.Datetime.now()
+        if self.state in ("closed", "cancelled") or self.unlocked:
+            return False
+        if self.state != "published":
+            return False
+        if self.opening_at and self.opening_at > now:
+            return False
+        if self.closing_at and self.closing_at <= now:
+            return False
+        return True
+
+    @api.model
+    def _portal_open_domain(self, now=None):
+        """Open public RFQs/RFPs only — never open transversal."""
+        now = now or fields.Datetime.now()
+        return [
+            ("publication_type", "=", "public"),
+            ("state", "=", "published"),
+            "|",
+            ("opening_at", "=", False),
+            ("opening_at", "<=", now),
+            ("closing_at", ">", now),
+        ]
+
+    @api.model
+    def _portal_due_or_closed_domain(self, now=None):
+        """Closed, or published with a closing date that has already passed."""
+        now = now or fields.Datetime.now()
+        return [
+            "|",
+            ("state", "=", "closed"),
+            "&",
+            ("state", "=", "published"),
+            ("closing_at", "<=", now),
+        ]
+
+    @api.model
+    def _portal_closed_domain(self, now=None):
+        """Closed public RFQs/RFPs only (own Closed tab)."""
+        return [("publication_type", "=", "public")] + self._portal_due_or_closed_domain(now)
+
+    @api.model
+    def _portal_closed_transversal_domain(self, now=None):
+        """Closed transversal RFQs/RFPs (own Transversal tab; never open transversal)."""
+        return [
+            ("publication_type", "=", "transversal"),
+        ] + self._portal_due_or_closed_domain(now)
+
+    def assert_public_portal_access(self, now=None):
+        """Public website: all public RFQs, plus transversal only after they have closed."""
+        self.ensure_one()
+        if self.state == "cancelled":
+            return False
+        if self.publication_type == "public":
+            return True
+        if self.publication_type != "transversal":
+            return False
+        now = now or fields.Datetime.now()
+        if self.state == "closed":
+            return True
+        return bool(
+            self.state == "published"
+            and self.closing_at
+            and self.closing_at <= now
+        )
 
     def _assert_provider_may_apply(self, partner=None, user=None):
         """Raise UserError if the given user/partner may not apply to this RFQ."""
@@ -409,28 +534,75 @@ class EwRfq(models.Model):
                     )
                 )
             return True
+        # Emailed SITA / flagged SPs apply on the public form without an Odoo login.
+        if user._is_public() or self.env.context.get("ew_public_website_apply"):
+            if self.state != "published":
+                raise UserError(_("This RFQ/RFP is not open for applications."))
+            return True
         if not self._user_may_apply_rfq(user=user, partner=partner):
             raise UserError(
                 _(
-                    "This transversal RFQ/RFP is only available to registered "
+                    "This transversal RFQ/RFP is only available to EWSETA "
                     "service providers who match the published categories and provinces."
                 )
             )
         return True
 
     def _transversal_submission_action_url(self):
-        """Deep link to this RFQ in the provider backend (Apply from the form)."""
+        """Public application form (no login). Used in provider notification emails."""
+        return self._portal_apply_url()
+
+    def _portal_apply_url(self):
+        """Anonymous website apply URL for this RFQ/RFP."""
         self.ensure_one()
-        base = self.get_base_url()
-        action = self.env.ref(
-            "ewseta_procurement.action_ew_rfq_provider_transversal",
-            raise_if_not_found=False,
-        )
-        action_id = action.id if action else ""
-        return (
-            f"{base}/web#id={self.id}&model=ew.rfq&view_type=form"
-            f"&action={action_id}"
-        )
+        base = (self.get_base_url() or "").rstrip("/")
+        path = f"/application/rfqs/{self.id}/apply"
+        return f"{base}{path}" if base else path
+
+    def _partner_notification_records(self, partner):
+        """Company res.partner first, then its contacts."""
+        partner = partner.sudo()
+        if not partner:
+            return partner
+        company = partner.commercial_partner_id or partner
+        # Company record first so publish mail always hits res.partner.email on the company.
+        return company | partner | company.child_ids
+
+    def _partner_notification_emails(self, partner):
+        """Unique emails: company record first, then contacts (SITA imports often use both)."""
+        seen = set()
+        emails = []
+        for rec in self._partner_notification_records(partner):
+            for email in email_split(rec.email or ""):
+                email = (email or "").strip()
+                key = email.lower()
+                if not email or key in seen:
+                    continue
+                seen.add(key)
+                emails.append(email)
+        return emails
+
+    def _transversal_publish_recipient_partners(self):
+        """Partners to email on publish: every flagged company, then contacts with extra addresses."""
+        seen_ids = set()
+        seen_emails = set()
+        ordered = []
+        sources = self.transversal_eligible_partner_ids or self._find_publish_notification_companies()
+        for matched in sources:
+            for rec in self._partner_notification_records(matched):
+                emails = [
+                    (email or "").strip().lower()
+                    for email in email_split(rec.email or "")
+                    if (email or "").strip()
+                ]
+                if not emails or rec.id in seen_ids:
+                    continue
+                if set(emails) <= seen_emails:
+                    continue
+                seen_ids.add(rec.id)
+                seen_emails.update(emails)
+                ordered.append(rec.id)
+        return self.env["res.partner"].sudo().browse(ordered)
 
     def _send_transversal_publication_emails(self):
         self.ensure_one()
@@ -442,30 +614,31 @@ class EwRfq(models.Model):
             return 0
         sent = 0
         failed = 0
-        for partner in self.transversal_eligible_partner_ids:
-            email = (partner.email or "").strip()
-            if not email:
-                continue
+        apply_url = self._portal_apply_url()
+        for rec in self._transversal_publish_recipient_partners():
+            company = rec.commercial_partner_id or rec
             try:
                 template.with_context(
-                    recipient_name=partner.name,
-                    transversal_apply_url=self._transversal_submission_action_url(),
+                    recipient_name=company.name or rec.name,
+                    transversal_apply_url=apply_url,
                 ).send_mail(
                     self.id,
                     force_send=False,
                     email_values={
-                        "email_to": email,
+                        # Send to the partner record (company Email on res.partner).
+                        "email_to": False,
                         "partner_ids": [],
-                        "recipient_ids": [(5, 0, 0)],
+                        "recipient_ids": [(6, 0, [rec.id])],
                     },
                 )
                 sent += 1
             except Exception:
                 failed += 1
                 _logger.exception(
-                    "Transversal publish email failed for RFQ %s to %s",
+                    "Transversal publish email failed for RFQ %s to partner %s (%s)",
                     self.id,
-                    email,
+                    rec.id,
+                    rec.email,
                 )
         if failed:
             self.message_post(
@@ -530,6 +703,23 @@ class EwRfq(models.Model):
             return "after"
         return "open"
 
+    def portal_show_briefing_join_details(self):
+        """Join link, venue and attendance register appear from session start until it ends."""
+        self.ensure_one()
+        if not self.briefing_session or not self.briefing_mode or not self.briefing_at:
+            return False
+        now = fields.Datetime.now()
+        if now < self.briefing_at:
+            return False
+        if self.briefing_end_at and now > self.briefing_end_at:
+            return False
+        return True
+
+    def portal_briefing_register_path(self):
+        """Public attendance-register URL (token appended by the website controller when known)."""
+        self.ensure_one()
+        return "/application/rfqs/%s/briefing/register" % self.id
+
     def portal_allows_briefing_registration(self):
         """Portal registration only while the live briefing session is in progress."""
         self.ensure_one()
@@ -576,10 +766,9 @@ class EwRfq(models.Model):
             if not partners and self.state != "published":
                 partners = self._find_eligible_service_providers()
             for partner in partners:
-                email = (partner.email or "").strip()
-                if email:
-                    key = email.lower()
-                    recipients.setdefault(key, partner.name or email)
+                company = partner.sudo().commercial_partner_id or partner
+                for email in self._partner_notification_emails(partner):
+                    recipients.setdefault(email.lower(), company.name or partner.name or email)
 
         return recipients
 
@@ -865,43 +1054,22 @@ class EwRfq(models.Model):
         }
 
     def action_provider_open_briefing_register(self):
-        """Transversal SP: open website attendance register (during live session)."""
+        """Internal SP: backend wizard with join link and attendance register."""
         self.ensure_one()
+        if not self.env.user.has_group("ewseta_procurement.group_service_provider"):
+            raise UserError(_("Only service providers can open this briefing form."))
         if not self.briefing_session:
             raise UserError(_("This RFQ/RFP has no briefing session."))
-        submission = self.env["ew.submission"].search([
-            ("rfq_id", "=", self.id),
-            ("partner_id", "=", self.env.user.partner_id.id),
-            ("state", "in", ("submitted", "closed")),
-        ], limit=1)
-        if not submission:
-            raise UserError(
-                _(
-                    "Submit your application for this RFQ/RFP first, then sign the "
-                    "briefing register during the live session."
-                )
-            )
-        state = self.portal_briefing_registration_state()
-        if state == "before":
-            raise UserError(
-                _("Registration opens when the briefing starts (%s).")
-                % format_datetime(self.env, self.briefing_at)
-            )
-        if state == "after":
-            raise UserError(
-                _("The briefing session has ended (%s).")
-                % format_datetime(self.env, self.briefing_end_at)
-            )
-        if state != "open":
-            raise UserError(_("Briefing registration is not available for this RFQ/RFP."))
-        self._portal_trigger_briefing_start_emails_if_due()
-        token = submission._issue_tracking_token()
-        safe_token = quote(token, safe="")
-        url = f"{self.get_base_url()}/application/rfqs/{self.id}/briefing/register?token={safe_token}"
+        self.sudo()._portal_trigger_briefing_start_emails_if_due()
         return {
-            "type": "ir.actions.act_url",
-            "url": url,
+            "type": "ir.actions.act_window",
+            "name": _("Briefing session"),
+            "res_model": "ew.rfq.briefing.register.wizard",
+            "view_mode": "form",
             "target": "new",
+            "context": {
+                "default_rfq_id": self.id,
+            },
         }
 
     @api.model
@@ -1019,9 +1187,17 @@ class EwRfq(models.Model):
         if not self.requirement_ids:
             self.write({"requirement_ids": self._default_requirements_commands()})
     #
-    @api.constrains("briefing_at", "briefing_end_at")
+    @api.constrains("opening_at", "closing_at")
+    def _check_opening_before_closing(self):
+        for rfq in self:
+            if rfq.opening_at and rfq.closing_at and rfq.opening_at >= rfq.closing_at:
+                raise ValidationError(
+                    _("The open date must be before the closing date.")
+                )
+
+    @api.constrains("briefing_session", "briefing_at", "briefing_end_at", "closing_at")
     def _check_briefing_times(self):
-        """Allow saving draft briefing fields step-by-step; only enforce time order."""
+        """Allow saving draft briefing fields step-by-step; enforce order vs closing date."""
         for rfq in self:
             if (
                 rfq.briefing_at
@@ -1030,6 +1206,16 @@ class EwRfq(models.Model):
             ):
                 raise ValidationError(
                     _("Briefing end time must be after the start time.")
+                )
+            if not rfq.briefing_session or not rfq.closing_at:
+                continue
+            if rfq.briefing_at and rfq.briefing_at >= rfq.closing_at:
+                raise ValidationError(
+                    _("The briefing session start time must be before the RFQ/RFP closing date.")
+                )
+            if rfq.briefing_end_at and rfq.briefing_end_at >= rfq.closing_at:
+                raise ValidationError(
+                    _("The briefing session must finish before the RFQ/RFP closing date.")
                 )
 
     def _validate_briefing_for_publish(self):
@@ -1053,6 +1239,14 @@ class EwRfq(models.Model):
             raise ValidationError(
                 _("Briefing end time must be after the start time.")
             )
+        if self.closing_at and self.briefing_at >= self.closing_at:
+            raise ValidationError(
+                _("The briefing session start time must be before the RFQ/RFP closing date.")
+            )
+        if self.closing_at and self.briefing_end_at >= self.closing_at:
+            raise ValidationError(
+                _("The briefing session must finish before the RFQ/RFP closing date.")
+            )
 
     @api.onchange("briefing_session")
     def _onchange_briefing_session(self):
@@ -1073,6 +1267,8 @@ class EwRfq(models.Model):
 
     def action_publish(self):
         for rec in self:
+            if rec.state == "cancelled":
+                raise UserError(_("This RFQ/RFP is cancelled and cannot be published."))
             rec._validate_procurement_document_for_publish()
             rec._validate_closing_for_publish()
             rec._validate_briefing_for_publish()
@@ -1080,15 +1276,17 @@ class EwRfq(models.Model):
             rec._prefill_requirements()
             publish_vals = {"state": "published"}
             if rec.publication_type == "transversal":
-                eligible = rec._find_eligible_service_providers()
-                publish_vals["transversal_eligible_partner_ids"] = [(6, 0, eligible.ids)]
+                notify = rec._find_publish_notification_companies()
+                publish_vals["transversal_eligible_partner_ids"] = [(6, 0, notify.ids)]
             rec.write(publish_vals)
             if rec.publication_type == "transversal":
                 sent = rec._send_transversal_publication_emails()
                 rec.message_post(
                     body=_(
-                        "Transversal RFQ/RFP published. Notifications queued for "
-                        "%(count)s eligible service provider(s) (outgoing mail / cron)."
+                        "Transversal RFQ/RFP published. The public application email "
+                        "was queued for %(count)s category-matching company email(s) "
+                        "on res.partner (outgoing mail / cron). "
+                        "Service providers do not need an Odoo login."
                     )
                     % {"count": sent},
                     subtype_xmlid="mail.mt_note",
@@ -1105,10 +1303,25 @@ class EwRfq(models.Model):
                 rec._send_briefing_start_emails()
 
 
-    def action_close(self):
-        to_notify = self.filtered(lambda r: r.state != "closed")
-        self.write({"state": "closed", "unlocked": True})
+    def action_cancel_rfq(self):
+        """Withdraw the RFQ/RFP so it no longer accepts applications."""
         for rec in self:
+            if rec.state == "cancelled":
+                continue
+            if rec.state == "closed":
+                raise UserError(_("A closed RFQ/RFP cannot be cancelled."))
+            rec.write({"state": "cancelled"})
+            rec.message_post(
+                body=_("RFQ/RFP cancelled."),
+                subtype_xmlid="mail.mt_note",
+            )
+        return True
+
+    def action_close(self):
+        recs = self.filtered(lambda r: r.state not in ("closed", "cancelled"))
+        to_notify = recs
+        recs.write({"state": "closed", "unlocked": True})
+        for rec in recs:
             rec.submission_ids.filtered(lambda s: s.state != "closed").write({"state": "closed"})
             rec.message_post(body=_("RFQ manually closed and unlocked."), subtype_xmlid="mail.mt_note")
         to_notify._notify_scm_submissions_available()
@@ -1515,18 +1728,16 @@ class EwRfq(models.Model):
     def _website_procurement_landing_counts(self):
         """Counts for public website homepage (RFQ landing)."""
         now = fields.Datetime.now()
-        open_count = self.sudo().search_count([
-            ('state', '=', 'published'),
-            ('closing_at', '>', now),
-        ])
-        closed_count = self.sudo().search_count([
-            '|',
-            ('state', '=', 'closed'),
-            '&',
-            ('state', '=', 'published'),
-            ('closing_at', '<=', now),
-        ])
-        return {'open_count': open_count, 'closed_count': closed_count}
+        open_count = self.sudo().search_count(self._portal_open_domain(now))
+        closed_count = self.sudo().search_count(self._portal_closed_domain(now))
+        transversal_count = self.sudo().search_count(
+            self._portal_closed_transversal_domain(now)
+        )
+        return {
+            "open_count": open_count,
+            "closed_count": closed_count,
+            "transversal_count": transversal_count,
+        }
 
 class EwRfqRequirement(models.Model):
     _name = "ew.rfq.requirement"

@@ -25,6 +25,10 @@ access_submission_line_download_log_scm,access_submission_line_download_log_scm,
 
 access_briefing_attendance_admin,Briefing attendance admin,model_ew_rfq_briefing_attendance,ewseta_procurement.group_rfq_admin,1,1,1,1
 access_briefing_attendance_scm,Briefing attendance scm,model_ew_rfq_briefing_attendance,ewseta_procurement.group_scm_owner,1,1,1,1
+access_briefing_attendance_provider,Briefing attendance provider read,model_ew_rfq_briefing_attendance,ewseta_procurement.group_service_provider,1,0,0,0
+access_briefing_register_wiz_sp,Briefing register wizard SP,model_ew_rfq_briefing_register_wizard,ewseta_procurement.group_service_provider,1,1,1,1
+access_briefing_register_wiz_admin,Briefing register wizard admin,model_ew_rfq_briefing_register_wizard,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_briefing_register_wiz_scm,Briefing register wizard scm,model_ew_rfq_briefing_register_wizard,ewseta_procurement.group_scm_owner,1,1,1,1
 
 access_briefing_notify_admin,Briefing notify admin,model_ew_rfq_briefing_notify,ewseta_procurement.group_rfq_admin,1,1,1,1
 access_briefing_notify_scm,Briefing notify scm,model_ew_rfq_briefing_notify,ewseta_procurement.group_scm_owner,1,1,1,1
@@ -33,6 +37,11 @@ access_briefing_notify_public,Briefing notify public,model_ew_rfq_briefing_notif
 access_service_category_admin,Service category admin,model_ew_service_category,ewseta_procurement.group_rfq_admin,1,1,1,1
 access_service_category_scm,Service category scm,model_ew_service_category,ewseta_procurement.group_scm_owner,1,0,0,0
 access_service_category_provider,Service category provider read,model_ew_service_category,ewseta_procurement.group_service_provider,1,0,0,0
+
+access_sita_sp_import_admin,SITA SP import admin,model_ew_sita_sp_import,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_sita_sp_import_scm,SITA SP import scm,model_ew_sita_sp_import,ewseta_procurement.group_scm_owner,1,1,1,1
+access_sita_sp_import_line_admin,SITA SP import line admin,model_ew_sita_sp_import_line,ewseta_procurement.group_rfq_admin,1,1,1,1
+access_sita_sp_import_line_scm,SITA SP import line scm,model_ew_sita_sp_import_line,ewseta_procurement.group_scm_owner,1,1,1,1
 
 
 

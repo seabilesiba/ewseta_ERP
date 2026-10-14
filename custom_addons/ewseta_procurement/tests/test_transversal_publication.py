@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -170,11 +170,165 @@ class TestTransversalPublication(TransactionCase):
         self.assertIn(self.provider_partner, eligible)
         self.assertNotIn(other_sp, eligible)
 
+    def test_cancel_rfq_sets_cancelled_and_blocks_publish(self):
+        rfq = self.Rfq.create(self._draft_rfq_vals(publication_type="public"))
+        rfq.action_publish()
+        rfq.action_cancel_rfq()
+        self.assertEqual(rfq.state, "cancelled")
+        listed = self.Rfq.search([
+            ("state", "=", "published"),
+            ("publication_type", "=", "public"),
+        ])
+        self.assertNotIn(rfq, listed)
+        with self.assertRaises(UserError):
+            rfq.action_publish()
+
     def test_publish_transversal_snapshots_providers(self):
         rfq = self.Rfq.create(self._draft_rfq_vals())
         rfq.action_publish()
         self.assertEqual(rfq.state, "published")
         self.assertIn(self.provider_partner, rfq.transversal_eligible_partner_ids)
+
+    def test_flagged_sp_without_login_is_emailed_public_apply_url(self):
+        sita = self.Partner.create({
+            "name": "SITA Imported Energy Co",
+            "email": "sita.imported.energy@example.com",
+            "is_company": True,
+            "ew_service_provider": True,
+            "ew_service_category_ids": [(6, 0, self.cat_energy.ids)],
+            "ew_province_ids": [(6, 0, self.province.ids)],
+        })
+        self.Partner.create({
+            "name": "SITA Energy Contact",
+            "email": "sita.energy.contact@example.com",
+            "parent_id": sita.id,
+            "type": "contact",
+        })
+        unflagged = self.Partner.create({
+            "name": "Energy Co without EWSETA flag",
+            "email": "not.ewseta.sp@example.com",
+            "is_company": True,
+            "ew_service_provider": False,
+            "ew_service_category_ids": [(6, 0, self.cat_energy.ids)],
+            "ew_province_ids": [(6, 0, self.province.ids)],
+        })
+        rfq = self.Rfq.create(self._draft_rfq_vals())
+        eligible = rfq._find_eligible_service_providers()
+        self.assertIn(sita, eligible)
+        self.assertNotIn(unflagged, eligible)
+        emails = rfq._partner_notification_emails(sita)
+        self.assertEqual(
+            set(e.lower() for e in emails),
+            {"sita.imported.energy@example.com", "sita.energy.contact@example.com"},
+        )
+        apply_url = rfq._portal_apply_url()
+        self.assertIn(f"/application/rfqs/{rfq.id}/apply", apply_url)
+
+        rfq.action_publish()
+        self.assertIn(sita, rfq.transversal_eligible_partner_ids)
+        self.assertNotIn(unflagged, rfq.transversal_eligible_partner_ids)
+        mails = self.env["mail.mail"].search([
+            ("model", "=", "ew.rfq"),
+            ("res_id", "=", rfq.id),
+        ])
+        recipient_partners = mails.mapped("recipient_ids")
+        self.assertIn(sita, recipient_partners)
+        recipients = ",".join(
+            [addr for addr in recipient_partners.mapped("email") if addr]
+        ).lower()
+        self.assertIn("sita.imported.energy@example.com", recipients)
+        self.assertIn("sita.energy.contact@example.com", recipients)
+        self.assertNotIn("not.ewseta.sp@example.com", recipients)
+        body = " ".join(m or "" for m in mails.mapped("body_html"))
+        self.assertIn(f"/application/rfqs/{rfq.id}/apply", body)
+        self.assertNotIn("Sign in to Odoo", body)
+
+    def test_publish_emails_category_matches_only_province_optional(self):
+        ict_company = self.Partner.create({
+            "name": "ICT Company To Notify",
+            "email": "ict.company.notify@example.com",
+            "is_company": True,
+            "ew_service_provider": True,
+            "ew_service_category_ids": [(6, 0, self.env.ref("ewseta_procurement.service_category_ict").ids)],
+            "ew_province_ids": [(6, 0, self.province.ids)],
+        })
+        rfq = self.Rfq.create({
+            **self._draft_rfq_vals(),
+            "province_ids": [(5, 0, 0)],
+        })
+        self.assertNotIn(ict_company, rfq._find_publish_notification_companies())
+        self.assertIn(self.provider_partner, rfq._find_publish_notification_companies())
+        rfq.action_publish()
+        self.assertNotIn(ict_company, rfq.transversal_eligible_partner_ids)
+        mails = self.env["mail.mail"].search([
+            ("model", "=", "ew.rfq"),
+            ("res_id", "=", rfq.id),
+        ])
+        self.assertNotIn(ict_company, mails.mapped("recipient_ids"))
+        self.assertIn(self.provider_partner, mails.mapped("recipient_ids"))
+
+    def test_notification_emails_include_parent_company_record(self):
+        company = self.Partner.create({
+            "name": "Parent Company Energy",
+            "email": "info.parent.energy@example.com",
+            "is_company": True,
+        })
+        contact = self.Partner.create({
+            "name": "Child Contact Energy",
+            "email": "child.energy@example.com",
+            "parent_id": company.id,
+            "type": "contact",
+            "ew_service_provider": True,
+            "ew_service_category_ids": [(6, 0, self.cat_energy.ids)],
+            "ew_province_ids": [(6, 0, self.province.ids)],
+        })
+        rfq = self.Rfq.create(self._draft_rfq_vals())
+        emails = {e.lower() for e in rfq._partner_notification_emails(contact)}
+        self.assertIn("info.parent.energy@example.com", emails)
+        self.assertIn("child.energy@example.com", emails)
+        self.assertIn(company, rfq._find_eligible_service_providers())
+        rfq.action_publish()
+        self.assertIn(company, rfq.transversal_eligible_partner_ids)
+        mails = self.env["mail.mail"].search([
+            ("model", "=", "ew.rfq"),
+            ("res_id", "=", rfq.id),
+        ])
+        self.assertIn(company, mails.mapped("recipient_ids"))
+        recipient_emails = ",".join(
+            [addr for addr in mails.mapped("recipient_ids.email") if addr]
+        ).lower()
+        self.assertIn("info.parent.energy@example.com", recipient_emails)
+        self.assertIn("child.energy@example.com", recipient_emails)
+
+    def test_public_website_can_submit_transversal_without_login(self):
+        sita = self.Partner.create({
+            "name": "SITA Public Apply Co",
+            "email": "sita.public.apply@example.com",
+            "is_company": True,
+            "ew_service_provider": True,
+            "ew_service_category_ids": [(6, 0, self.cat_energy.ids)],
+            "ew_province_ids": [(6, 0, self.province.ids)],
+        })
+        rfq = self.Rfq.create(self._draft_rfq_vals())
+        rfq.action_publish()
+        public = self.env.ref("base.public_user")
+        sub = (
+            self.env["ew.submission"]
+            .with_user(public)
+            .sudo()
+            .with_context(ew_public_website_apply=True)
+            .create({
+                "rfq_id": rfq.id,
+                "partner_id": sita.id,
+                "company_name": sita.name,
+                "contact_email": sita.email,
+                "contact_phone": "0123456789",
+                "state": "submitted",
+                "privacy_policy_accepted": True,
+            })
+        )
+        self.assertEqual(sub.rfq_id, rfq)
+        self.assertEqual(sub.partner_id, sita)
 
     def test_public_list_domain_excludes_transversal(self):
         trans = self.Rfq.create(self._draft_rfq_vals())
@@ -187,6 +341,30 @@ class TestTransversalPublication(TransactionCase):
         ])
         self.assertIn(public, listed)
         self.assertNotIn(trans, listed)
+
+    def test_portal_lists_closed_transversal_but_not_open(self):
+        now = fields.Datetime.now()
+        open_trans = self.Rfq.create(self._draft_rfq_vals())
+        open_trans.action_publish()
+        closed_trans = self.Rfq.create(self._draft_rfq_vals())
+        closed_trans.action_publish()
+        closed_trans.action_close()
+        public_open = self.Rfq.create(self._draft_rfq_vals(publication_type="public"))
+        public_open.action_publish()
+        open_listed = self.Rfq.search(self.Rfq._portal_open_domain(now))
+        closed_listed = self.Rfq.search(self.Rfq._portal_closed_domain(now))
+        trans_listed = self.Rfq.search(self.Rfq._portal_closed_transversal_domain(now))
+        self.assertIn(public_open, open_listed)
+        self.assertNotIn(open_trans, open_listed)
+        self.assertNotIn(closed_trans, open_listed)
+        self.assertNotIn(closed_trans, closed_listed)
+        self.assertNotIn(open_trans, closed_listed)
+        self.assertNotIn(public_open, closed_listed)
+        self.assertIn(closed_trans, trans_listed)
+        self.assertNotIn(open_trans, trans_listed)
+        self.assertNotIn(public_open, trans_listed)
+        self.assertFalse(open_trans.assert_public_portal_access())
+        self.assertTrue(closed_trans.assert_public_portal_access())
 
     def test_partner_matches_transversal_after_publish(self):
         rfq = self.Rfq.create(self._draft_rfq_vals())
@@ -332,6 +510,48 @@ class TestTransversalPublication(TransactionCase):
             recipients,
         )
 
+    def test_briefing_must_finish_before_closing_date(self):
+        now = fields.Datetime.now()
+        with self.assertRaises(ValidationError):
+            self.Rfq.create({
+                **self._draft_rfq_vals(),
+                "briefing_session": True,
+                "briefing_mode": "virtual",
+                "briefing_virtual_link": "https://meet.example.com/briefing",
+                "briefing_at": self.closing - timedelta(hours=1),
+                "briefing_end_at": self.closing + timedelta(hours=1),
+            })
+        with self.assertRaises(ValidationError):
+            self.Rfq.create({
+                **self._draft_rfq_vals(),
+                "briefing_session": True,
+                "briefing_mode": "contact",
+                "briefing_location": "1 Test Street",
+                "briefing_at": self.closing + timedelta(hours=1),
+                "briefing_end_at": self.closing + timedelta(hours=2),
+            })
+        rfq = self.Rfq.create({
+            **self._draft_rfq_vals(),
+            "briefing_session": True,
+            "briefing_mode": "virtual",
+            "briefing_virtual_link": "https://meet.example.com/briefing",
+            "briefing_at": now + timedelta(days=1),
+            "briefing_end_at": now + timedelta(days=1, hours=1),
+        })
+        self.assertFalse(rfq.portal_show_briefing_join_details())
+
+    def test_join_details_visible_from_briefing_start(self):
+        now = fields.Datetime.now()
+        rfq = self.Rfq.create({
+            **self._draft_rfq_vals("public"),
+            "briefing_session": True,
+            "briefing_mode": "virtual",
+            "briefing_virtual_link": "https://meet.example.com/briefing",
+            "briefing_at": now - timedelta(minutes=2),
+            "briefing_end_at": now + timedelta(minutes=13),
+        })
+        self.assertTrue(rfq.portal_show_briefing_join_details())
+
     def test_transversal_briefing_registration_during_session(self):
         now = fields.Datetime.now()
         rfq = self.Rfq.create({
@@ -370,3 +590,153 @@ class TestTransversalPublication(TransactionCase):
         self.assertTrue(user._ew_is_procurement_app_restricted_user())
         roots = self.env["ir.ui.menu"].with_user(user).get_user_roots()
         self.assertEqual(roots.mapped("name"), ["EWSETA Procurement"])
+
+    def _live_transversal_briefing_rfq(self):
+        now = fields.Datetime.now()
+        rfq = self.Rfq.create({
+            **self._draft_rfq_vals(),
+            "briefing_session": True,
+            "briefing_mode": "virtual",
+            "briefing_virtual_link": "https://meet.example.com/briefing",
+            "briefing_at": now - timedelta(minutes=2),
+            "briefing_end_at": now + timedelta(minutes=13),
+        })
+        rfq.action_publish()
+        return rfq
+
+    def test_sp_backend_briefing_wizard_opens_not_portal(self):
+        rfq = self._live_transversal_briefing_rfq()
+        action = rfq.with_user(self.provider_user).action_provider_open_briefing_register()
+        self.assertEqual(action["type"], "ir.actions.act_window")
+        self.assertEqual(action["res_model"], "ew.rfq.briefing.register.wizard")
+        self.assertEqual(action["target"], "new")
+        self.assertEqual(action["context"]["default_rfq_id"], rfq.id)
+        rfq.with_user(self.provider_user).read(["name", "briefing_session", "briefing_mode"])
+        own = self.env["ew.rfq.briefing.attendance"].with_user(self.provider_user).search([
+            ("rfq_id", "=", rfq.id),
+        ])
+        self.assertFalse(own)
+
+    def test_sp_backend_briefing_wizard_register_and_join_link(self):
+        rfq = self._live_transversal_briefing_rfq()
+        self.assertTrue(rfq.with_user(self.provider_user).provider_show_briefing_join)
+        Wizard = self.env["ew.rfq.briefing.register.wizard"].with_user(self.provider_user)
+        wiz = Wizard.create({"rfq_id": rfq.id})
+        self.assertTrue(wiz.join_visible)
+        self.assertTrue(wiz.can_register)
+        self.assertEqual(wiz.briefing_virtual_link, "https://meet.example.com/briefing")
+        self.assertEqual(wiz.contact_email, "transversal.provider@example.com")
+        join = wiz.action_open_virtual_briefing()
+        self.assertEqual(join["type"], "ir.actions.act_url")
+        self.assertEqual(join["url"], "https://meet.example.com/briefing")
+        wiz.action_register()
+        att = self.env["ew.rfq.briefing.attendance"].sudo().search([
+            ("rfq_id", "=", rfq.id),
+            ("email_norm", "=", "transversal.provider@example.com"),
+        ])
+        self.assertEqual(len(att), 1)
+        self.assertEqual(att.source, "sp_backend")
+        self.assertTrue(wiz.already_registered)
+        self.assertFalse(wiz.can_register)
+        other = self.env["ew.rfq.briefing.attendance"].sudo().create({
+            "rfq_id": rfq.id,
+            "company_name": "Other Co",
+            "contact_email": "other.not.sp@example.com",
+            "mode": "virtual",
+            "source": "portal",
+        })
+        seen = self.env["ew.rfq.briefing.attendance"].with_user(self.provider_user).search([
+            ("rfq_id", "=", rfq.id),
+        ])
+        self.assertIn(att, seen)
+        self.assertNotIn(other, seen)
+
+    def _portal_submission(self, publication_type="public"):
+        partner = self.Partner.create({
+            "name": "Portal Applicant %s" % publication_type,
+            "email": "portal.%s@example.com" % publication_type,
+            "is_company": True,
+            "ew_service_provider": True,
+            "ew_service_category_ids": [(6, 0, self.cat_energy.ids)],
+            "ew_province_ids": [(6, 0, self.province.ids)],
+        })
+        rfq = self.Rfq.create(self._draft_rfq_vals(publication_type=publication_type))
+        rfq.action_publish()
+        sub = (
+            self.env["ew.submission"]
+            .sudo()
+            .with_context(ew_public_website_apply=True)
+            .create({
+                "rfq_id": rfq.id,
+                "partner_id": partner.id,
+                "company_name": partner.name,
+                "contact_name": "Applicant",
+                "contact_email": partner.email,
+                "contact_phone": "0123456789",
+                "state": "submitted",
+                "privacy_policy_accepted": True,
+            })
+        )
+        return rfq, sub
+
+    def test_portal_update_while_open_public_and_transversal(self):
+        for publication_type in ("public", "transversal"):
+            rfq, sub = self._portal_submission(publication_type)
+            self.assertTrue(rfq.portal_applications_open())
+            self.assertTrue(sub.portal_may_update())
+            sub.portal_update_application({
+                "company_name": "Updated %s Co" % publication_type,
+                "contact_name": "Updated Contact",
+                "contact_email": "updated.%s@example.com" % publication_type,
+                "contact_phone": "0110000000",
+            })
+            self.assertEqual(sub.company_name, "Updated %s Co" % publication_type)
+            self.assertEqual(sub.contact_email, "updated.%s@example.com" % publication_type)
+
+    def test_portal_update_blocked_when_rfq_closed(self):
+        for publication_type in ("public", "transversal"):
+            rfq, sub = self._portal_submission(publication_type)
+            rfq.action_close()
+            self.assertFalse(rfq.portal_applications_open())
+            self.assertFalse(sub.portal_may_update())
+            with self.assertRaises(UserError):
+                sub.portal_update_application({
+                    "company_name": "Should Not Save",
+                    "contact_name": "Blocked",
+                    "contact_email": "blocked@example.com",
+                    "contact_phone": "0000000000",
+                })
+            self.assertNotEqual(sub.company_name, "Should Not Save")
+
+    def test_opening_at_is_writable_and_must_precede_closing(self):
+        rfq = self.Rfq.create(self._draft_rfq_vals(publication_type="public"))
+        later_open = fields.Datetime.now() + timedelta(days=1)
+        rfq.write({"opening_at": later_open})
+        self.assertEqual(rfq.opening_at, later_open)
+        with self.assertRaises(ValidationError):
+            rfq.write({"opening_at": rfq.closing_at + timedelta(hours=1)})
+        rfq.action_publish()
+        self.assertFalse(rfq.portal_applications_open())
+        rfq.write({"opening_at": fields.Datetime.now() - timedelta(minutes=1)})
+        self.assertTrue(rfq.portal_applications_open())
+
+    def test_sp_backend_briefing_wizard_not_open_before_start(self):
+        now = fields.Datetime.now()
+        rfq = self.Rfq.create({
+            **self._draft_rfq_vals(),
+            "briefing_session": True,
+            "briefing_mode": "virtual",
+            "briefing_virtual_link": "https://meet.example.com/briefing",
+            "briefing_at": now + timedelta(hours=2),
+            "briefing_end_at": now + timedelta(hours=3),
+        })
+        rfq.action_publish()
+        wiz = self.env["ew.rfq.briefing.register.wizard"].with_user(
+            self.provider_user
+        ).create({"rfq_id": rfq.id})
+        self.assertFalse(wiz.join_visible)
+        self.assertFalse(wiz.can_register)
+        with self.assertRaises(UserError):
+            wiz.action_register()
+        with self.assertRaises(UserError):
+            wiz.action_open_virtual_briefing()

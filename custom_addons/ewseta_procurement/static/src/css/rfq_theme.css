@@ -454,6 +454,34 @@ html.ew-proc-dark .ew-proc-portal__form-label {
     color: var(--ew-dm-text);
 }
 
+html.ew-proc-dark .ew-proc-portal__privacy-check,
+html.ew-proc-dark .ew-proc-portal .ew-proc-portal__privacy-check.bg-light {
+    background: var(--ew-dm-bg-elevated) !important;
+    border-color: var(--ew-dm-border) !important;
+}
+
+html.ew-proc-dark .ew-proc-portal__privacy-check .form-check-input {
+    background-color: #121820;
+    border-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-portal__privacy-check .form-check-input:checked {
+    background-color: #f29100;
+    border-color: #f29100;
+}
+
+html.ew-proc-dark .ew-proc-portal__privacy-label,
+html.ew-proc-dark .ew-proc-portal__privacy-label p,
+html.ew-proc-dark .ew-proc-portal__privacy-label span,
+html.ew-proc-dark .ew-proc-portal__privacy-check .form-check-label {
+    color: var(--ew-dm-text) !important;
+}
+
+html.ew-proc-dark .ew-proc-portal__privacy-label a,
+html.ew-proc-dark .ew-proc-portal__privacy-check a {
+    color: #f29100 !important;
+}
+
 html.ew-proc-dark .ew-proc-portal__input.form-control:focus {
     border-color: rgba(242, 145, 0, 0.55);
     box-shadow: 0 0 0 0.2rem rgba(242, 145, 0, 0.12);
@@ -592,4 +620,117 @@ html.ew-proc-dark #footer.ew-proc-footer {
 html.ew-proc-dark footer .ew-proc-footer__copyright,
 html.ew-proc-dark .ew-proc-footer__copyright {
     background: #050608 !important;
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing {
+    background: linear-gradient(180deg, #151c24 0%, var(--ew-dm-bg-card) 55%);
+    border-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing--live {
+    border-color: rgba(140, 198, 63, 0.35);
+    background: linear-gradient(180deg, #162018 0%, var(--ew-dm-bg-card) 55%);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-title,
+html.ew-proc-dark .ew-proc-portal__briefing-time strong,
+html.ew-proc-dark .ew-proc-portal__briefing-venue-text {
+    color: var(--ew-dm-text);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-time,
+html.ew-proc-dark .ew-proc-portal__briefing-join,
+html.ew-proc-dark .ew-proc-portal__briefing-venue,
+html.ew-proc-dark .ew-proc-portal__briefing-register {
+    background: var(--ew-dm-bg-elevated);
+    border-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-note {
+    background: rgba(242, 145, 0, 0.12);
+    border-color: rgba(242, 145, 0, 0.35);
+    color: #f3d2a0;
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-note--ended {
+    background: var(--ew-dm-bg-elevated);
+    border-color: var(--ew-dm-border);
+    color: var(--ew-dm-muted);
+}
+
+html.ew-proc-dark .ew-proc-portal__badge--soon {
+    background: rgba(242, 145, 0, 0.16);
+    color: #f3d2a0;
+    border-color: rgba(242, 145, 0, 0.35);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-chips {
+    background: var(--ew-dm-bg-elevated);
+    border-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-portal__chip + .ew-proc-portal__chip {
+    border-left-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-portal__chip--required {
+    background: rgba(192, 57, 43, 0.18);
+    color: #f5b7b1;
+}
+
+html.ew-proc-dark .ew-proc-portal__chip--optional,
+html.ew-proc-dark .ew-proc-portal__chip--live {
+    background: rgba(140, 198, 63, 0.14);
+    color: #b8e986;
+}
+
+html.ew-proc-dark .ew-proc-portal__chip--upcoming {
+    background: rgba(242, 145, 0, 0.16);
+    color: #f3d2a0;
+}
+
+html.ew-proc-dark .ew-proc-portal__chip--ended {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ew-dm-muted);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-register-form {
+    background: var(--ew-dm-bg-elevated);
+    border-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-briefing-register-modal .modal-content {
+    background: var(--ew-dm-bg-card);
+    border-color: var(--ew-dm-border);
+    color: var(--ew-dm-text);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+html.ew-proc-dark .ew-proc-briefing-register-modal .modal-header,
+html.ew-proc-dark .ew-proc-briefing-register-modal .modal-footer {
+    border-color: var(--ew-dm-border);
+}
+
+html.ew-proc-dark .ew-proc-briefing-register-modal .modal-title {
+    color: var(--ew-dm-text);
+}
+
+html.ew-proc-dark .ew-proc-briefing-register-modal .btn-close {
+    filter: invert(1) grayscale(1);
+}
+
+html.ew-proc-dark .ew-proc-briefing-register-modal .ew-proc-portal__input,
+html.ew-proc-dark .ew-proc-briefing-register-modal .form-control {
+    background: var(--ew-dm-bg-elevated);
+    border-color: var(--ew-dm-border);
+    color: var(--ew-dm-text);
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-registered {
+    background: rgba(140, 198, 63, 0.14);
+    color: #b8e986;
+}
+
+html.ew-proc-dark .ew-proc-portal__briefing-registered a {
+    color: #8cc63f;
 }

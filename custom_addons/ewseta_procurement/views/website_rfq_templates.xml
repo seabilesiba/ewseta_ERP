@@ -13,17 +13,17 @@
                     <h1>Procurement opportunities</h1>
                     <p class="ew-proc-portal__hero-lead">
                         Browse open RFQs and RFPs, submit your application before the closing date,
-                        or review outcomes and submissions received on closed opportunities.
+                        or review outcomes and submissions received on closed and transversal opportunities.
                     </p>
                 </div>
 
-                <t t-if="not open_rfqs and not closed_rfqs">
+                <t t-if="not open_rfqs and not closed_rfqs and not closed_transversal_rfqs">
                     <div class="ew-proc-portal__empty">
                         There are currently no RFQs/RFPs published on the portal.
                     </div>
                 </t>
 
-                <t t-if="open_rfqs or closed_rfqs">
+                <t t-if="open_rfqs or closed_rfqs or closed_transversal_rfqs">
                     <ul class="nav nav-tabs ew-proc-portal__tabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active o_no_wait_lazy_js ew-proc-portal__tab-link"
@@ -45,6 +45,17 @@
                                aria-selected="false">
                                 Closed
                                 <span class="badge bg-secondary ms-1" t-esc="len(closed_rfqs)"/>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link o_no_wait_lazy_js ew-proc-portal__tab-link"
+                               id="tab-transversal-rfqs"
+                               href="#tab-pane-transversal-rfqs"
+                               role="tab"
+                               aria-controls="tab-pane-transversal-rfqs"
+                               aria-selected="false">
+                                Transversal
+                                <span class="badge bg-info ms-1" t-esc="len(closed_transversal_rfqs)"/>
                             </a>
                         </li>
                     </ul>
@@ -233,6 +244,118 @@
                                                         <t t-foreach="closed_rfqs" t-as="r">
                                                             <tr t-att-data-ew-id="r.id"
                                                                 t-att-data-ew-type="r.type or 'rfq'"
+                                                                t-att-data-ew-search="('%s %s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'), r.publication_type or '')).lower()"
+                                                                t-att-data-ew-title="(r.name or '').lower()"
+                                                                t-att-data-ew-reference="(r.reference or '').lower()"
+                                                                t-att-data-ew-type-sort="r.type or 'rfq'"
+                                                                t-att-data-ew-closing-ts="r.closing_at.timestamp() if r.closing_at else 0"
+                                                                t-att-data-ew-submissions="r.submission_count or 0">
+                                                                <td data-label="Title" t-esc="r.name"/>
+                                                                <td data-label="Reference" t-esc="r.reference or '—'"/>
+                                                                <td data-label="Type">
+                                                                    <span t-attf-class="badge ew-proc-portal__badge ew-proc-portal__badge--#{r.type or 'rfq'}">
+                                                                        <t t-esc="(r.type or 'rfq').upper()"/>
+                                                                    </span>
+                                                                </td>
+                                                                <td data-label="Status">
+                                                                    <span class="badge ew-proc-portal__badge ew-proc-portal__badge--closed">Closed</span>
+                                                                    <span t-if="r.publication_type == 'transversal'" class="badge ew-proc-portal__badge ms-1">Transversal</span>
+                                                                </td>
+                                                                <td data-label="Closed on">
+                                                                    <t t-if="r.closing_at">
+                                                                        <t t-esc="r.closing_at" t-options="{'widget': 'datetime'}"/>
+                                                                    </t>
+                                                                    <t t-else="">—</t>
+                                                                </td>
+                                                                <td data-label="Submissions">
+                                                                    <span class="ew-proc-portal__count-pill" t-esc="r.submission_count"/>
+                                                                </td>
+                                                                <td class="text-end" data-label="Action">
+                                                                    <a t-attf-href="/application/rfqs/{{ r.id }}/submissions"
+                                                                       class="btn btn-outline-primary btn-sm">
+                                                                        Submissions
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="ew-proc-portal__filter-footer d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
+                                        <p class="ew-proc-portal__filter-info small text-muted mb-0"/>
+                                        <ul class="pagination pagination-sm ew-proc-portal__filter-pagination mb-0"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-pane-transversal-rfqs" role="tabpanel">
+                            <t t-if="not closed_transversal_rfqs">
+                                <div class="ew-proc-portal__empty">No closed transversal RFQs/RFPs yet.</div>
+                            </t>
+                            <t t-if="closed_transversal_rfqs">
+                                <div class="ew-proc-portal__rfq-tab" data-ew-rfq-tab="transversal">
+                                    <t t-set="ew_filter_uid" t-value="'transversal'"/>
+                                    <t t-call="ewseta_procurement.rfq_portal_filter_toolbar"/>
+                                    <div class="ew-proc-portal__filter-empty d-none">
+                                        No transversal RFQs match your search or filters.
+                                    </div>
+                                    <div class="ew-proc-portal__view-pane ew-proc-portal__view-pane--cards">
+                                        <div class="ew-proc-portal__rfq-grid">
+                                            <t t-foreach="closed_transversal_rfqs" t-as="r">
+                                                <t t-call="ewseta_procurement.rfq_portal_card_closed"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="ew-proc-portal__view-pane ew-proc-portal__view-pane--list d-none">
+                                        <div class="ew-proc-portal__datatable" data-ew-datatable="transversal">
+                                        <div class="ew-proc-portal__card mt-2">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle ew-proc-portal__table ew-proc-portal__datatable-table mb-0"
+                                                       data-ew-datatable-table="1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="title"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Title
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="reference"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Reference
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="type"
+                                                                data-ew-sort-type="text"
+                                                                scope="col">
+                                                                Type
+                                                            </th>
+                                                            <th scope="col">Status</th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="closing"
+                                                                data-ew-sort-type="number"
+                                                                scope="col">
+                                                                Closed on
+                                                            </th>
+                                                            <th class="ew-proc-portal__datatable-th--sortable"
+                                                                data-ew-sort="submissions"
+                                                                data-ew-sort-type="number"
+                                                                scope="col">
+                                                                Submissions
+                                                            </th>
+                                                            <th class="text-end" scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <t t-foreach="closed_transversal_rfqs" t-as="r">
+                                                            <tr t-att-data-ew-id="r.id"
+                                                                t-att-data-ew-type="r.type or 'rfq'"
                                                                 t-att-data-ew-search="('%s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'))).lower()"
                                                                 t-att-data-ew-title="(r.name or '').lower()"
                                                                 t-att-data-ew-reference="(r.reference or '').lower()"
@@ -248,6 +371,7 @@
                                                                 </td>
                                                                 <td data-label="Status">
                                                                     <span class="badge ew-proc-portal__badge ew-proc-portal__badge--closed">Closed</span>
+                                                                    <span class="badge ew-proc-portal__badge ms-1">Transversal</span>
                                                                 </td>
                                                                 <td data-label="Closed on">
                                                                     <t t-if="r.closing_at">
@@ -282,6 +406,7 @@
                     </div>
                 </t>
             </div>
+            <script type="text/javascript" src="/ewseta_procurement/static/src/js/rfq_portal_datatable.js?v=188"></script>
         </t>
     </template>
 
@@ -297,7 +422,7 @@
                             </span>
                             <input type="search"
                                    t-attf-id="ew-filter-search-{{ ew_filter_uid }}"
-                                   class="form-control ew-proc-portal__filter-search"
+                                   class="form-control ew-proc-portal__filter-search o_no_wait_lazy_js"
                                    placeholder="Search by title or reference..."
                                    autocomplete="off"/>
                         </div>
@@ -305,7 +430,7 @@
                     <div class="col-lg-3 col-md-6">
                         <label class="visually-hidden" t-attf-for="ew-filter-type-{{ ew_filter_uid }}">Filter by type</label>
                         <select t-attf-id="ew-filter-type-{{ ew_filter_uid }}"
-                                class="form-select ew-proc-portal__filter-type">
+                                class="form-select ew-proc-portal__filter-type o_no_wait_lazy_js">
                             <option value="">All types</option>
                             <option value="rfq">RFQ only</option>
                             <option value="rfp">RFP only</option>
@@ -314,7 +439,7 @@
                     <div class="col-lg-3 col-md-6">
                         <label class="visually-hidden" t-attf-for="ew-filter-pagesize-{{ ew_filter_uid }}">Items per page</label>
                         <select t-attf-id="ew-filter-pagesize-{{ ew_filter_uid }}"
-                                class="form-select ew-proc-portal__filter-pagesize">
+                                class="form-select ew-proc-portal__filter-pagesize o_no_wait_lazy_js">
                             <option value="10" selected="selected">10 per page</option>
                             <option value="25">25 per page</option>
                             <option value="50">50 per page</option>
@@ -374,7 +499,7 @@
         <article t-attf-class="ew-proc-portal__rfq-card ew-proc-portal__rfq-card--closed"
                  t-att-data-ew-id="r.id"
                  t-att-data-ew-type="r.type or 'rfq'"
-                 t-att-data-ew-search="('%s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'))).lower()"
+                 t-att-data-ew-search="('%s %s %s %s' % (r.name or '', r.reference or '', (r.type or 'rfq'), r.publication_type or '')).lower()"
                  t-att-data-ew-title="(r.name or '').lower()"
                  t-att-data-ew-reference="(r.reference or '').lower()"
                  t-att-data-ew-type-sort="r.type or 'rfq'"
@@ -390,6 +515,7 @@
                 Ref: <t t-esc="r.reference or '—'"/>
             </p>
             <span class="badge ew-proc-portal__badge ew-proc-portal__badge--closed mb-2">Closed</span>
+            <span t-if="r.publication_type == 'transversal'" class="badge ew-proc-portal__badge mb-2">Transversal</span>
             <div class="ew-proc-portal__rfq-card-meta">
                 <div class="ew-proc-portal__rfq-card-meta-row">
                     <span>Closed on</span>
@@ -572,86 +698,206 @@
 
     <template id="rfq_briefing_session_public" name="RFQ briefing session (portal)">
         <t t-if="rfq.briefing_session">
-            <section class="ew-proc-portal__apply-section ew-proc-portal__briefing-card mb-4">
-                <h2 class="ew-proc-portal__section-title ew-proc-portal__section-title--first mb-3">Briefing session</h2>
-                <p class="mb-2">
-                    <span class="badge ew-proc-portal__badge"
-                          t-attf-class="ew-proc-portal__badge #{rfq.briefing_compulsory and 'ew-proc-portal__badge--closed' or 'ew-proc-portal__badge--open'}">
-                        <t t-if="rfq.briefing_compulsory">Compulsory</t>
-                        <t t-else="">Optional</t>
-                    </span>
-                    <span class="ms-2 text-muted">
-                        <t t-if="rfq.briefing_mode == 'virtual'">Virtual session</t>
-                        <t t-elif="rfq.briefing_mode == 'contact'">On-site session</t>
-                    </span>
-                </p>
-                <t t-set="reg_state" t-value="rfq.portal_briefing_registration_state()"/>
-                <t t-if="rfq.briefing_at and rfq.briefing_end_at">
-                    <p class="mb-3">
-                        <span class="ew-proc-portal__apply-meta-label d-block">Session time</span>
-                        <strong>
-                            <t t-esc="rfq.briefing_at" t-options="{'widget': 'datetime'}"/>
-                            –
-                            <t t-esc="rfq.briefing_end_at" t-options="{'widget': 'datetime'}"/>
-                        </strong>
-                        <span class="d-block text-muted small mt-1">
-                            Attendance register opens at start time and closes when the session ends.
+            <t t-set="reg_state" t-value="rfq.portal_briefing_registration_state()"/>
+            <t t-set="show_join" t-value="rfq.portal_show_briefing_join_details()"/>
+            <section t-attf-class="ew-proc-portal__briefing #{show_join and 'ew-proc-portal__briefing--live' or (reg_state == 'after' and 'ew-proc-portal__briefing--ended' or 'ew-proc-portal__briefing--waiting')}">
+                <header class="ew-proc-portal__briefing-head">
+                    <div>
+                        <p class="ew-proc-portal__briefing-kicker">Briefing session</p>
+                        <h2 class="ew-proc-portal__briefing-title">
+                            <t t-if="rfq.briefing_mode == 'virtual'">Virtual briefing</t>
+                            <t t-elif="rfq.briefing_mode == 'contact'">On-site briefing</t>
+                            <t t-else="">Briefing session</t>
+                        </h2>
+                    </div>
+                    <div class="ew-proc-portal__briefing-chips" role="group" aria-label="Briefing status">
+                        <span t-attf-class="ew-proc-portal__chip #{rfq.briefing_compulsory and 'ew-proc-portal__chip--required' or 'ew-proc-portal__chip--optional'}">
+                            <t t-if="rfq.briefing_compulsory">Compulsory</t>
+                            <t t-else="">Optional</t>
                         </span>
-                    </p>
-                </t>
-                <t t-if="rfq.briefing_mode == 'virtual'">
-                    <t t-if="reg_state == 'open' and rfq.briefing_virtual_link">
-                        <p class="mb-3">
-                            <span class="ew-proc-portal__apply-meta-label d-block">Join online (session live)</span>
-                            <a t-att-href="rfq.briefing_virtual_link"
-                               class="btn btn-primary btn-sm mt-1"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Open virtual briefing
-                            </a>
-                            <span class="d-block text-muted small mt-2" t-esc="rfq.briefing_virtual_link"/>
-                        </p>
-                    </t>
-                    <t t-elif="reg_state == 'before'">
-                        <p class="alert alert-info py-2 small mb-3">
-                            The virtual join link appears on this page when the session starts
-                            (<t t-esc="rfq.briefing_at" t-options="{'widget': 'datetime'}"/>).
-                            Applicants who already submitted also receive it by email.
-                        </p>
-                    </t>
-                </t>
-                <t t-if="not briefing_portal_readonly and reg_state == 'before'">
-                    <div class="alert alert-info py-2 small mb-3">
-                        Attendance registration opens when the briefing session starts.
+                        <span t-if="show_join" class="ew-proc-portal__chip ew-proc-portal__chip--live">
+                            <span class="ew-proc-portal__chip-dot" aria-hidden="true"/>
+                            Live now
+                        </span>
+                        <span t-elif="reg_state == 'after'" class="ew-proc-portal__chip ew-proc-portal__chip--ended">
+                            Ended
+                        </span>
+                        <span t-else="" class="ew-proc-portal__chip ew-proc-portal__chip--upcoming">
+                            <span class="ew-proc-portal__chip-dot" aria-hidden="true"/>
+                            Upcoming
+                        </span>
+                    </div>
+                </header>
+
+                <t t-if="rfq.briefing_at or rfq.briefing_end_at">
+                    <div class="ew-proc-portal__briefing-times">
+                        <div class="ew-proc-portal__briefing-time">
+                            <span class="ew-proc-portal__briefing-time-label">Starts</span>
+                            <strong>
+                                <t t-if="rfq.briefing_at">
+                                    <t t-esc="rfq.briefing_at" t-options="{'widget': 'datetime'}"/>
+                                </t>
+                                <t t-else="">—</t>
+                            </strong>
+                        </div>
+                        <div class="ew-proc-portal__briefing-time">
+                            <span class="ew-proc-portal__briefing-time-label">Ends</span>
+                            <strong>
+                                <t t-if="rfq.briefing_end_at">
+                                    <t t-esc="rfq.briefing_end_at" t-options="{'widget': 'datetime'}"/>
+                                </t>
+                                <t t-else="">—</t>
+                            </strong>
+                        </div>
                     </div>
                 </t>
-                <t t-elif="not briefing_portal_readonly and reg_state == 'after'">
-                    <div class="alert alert-secondary py-2 small mb-3">
-                        The briefing session has ended. Portal registration is closed (contact EWSETA SCM if you need help).
+
+                <t t-if="show_join">
+                    <div class="ew-proc-portal__briefing-live">
+                        <t t-if="rfq.briefing_mode == 'virtual' and rfq.briefing_virtual_link">
+                            <div class="ew-proc-portal__briefing-join">
+                                <span class="ew-proc-portal__briefing-time-label">Join online</span>
+                                <a t-att-href="rfq.briefing_virtual_link"
+                                   class="btn btn-primary ew-proc-portal__briefing-cta"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    Open virtual briefing
+                                </a>
+                                <span class="ew-proc-portal__briefing-url" t-esc="rfq.briefing_virtual_link"/>
+                            </div>
+                        </t>
+                        <t t-if="rfq.briefing_mode == 'contact' and rfq.briefing_location">
+                            <div class="ew-proc-portal__briefing-venue">
+                                <span class="ew-proc-portal__briefing-time-label">Venue address</span>
+                                <p class="ew-proc-portal__briefing-venue-text" t-esc="rfq.briefing_location"/>
+                            </div>
+                        </t>
                     </div>
+                    <t t-if="not briefing_hide_register and not briefing_portal_readonly">
+                        <div id="briefing-register" class="ew-proc-portal__briefing-register">
+                            <span class="ew-proc-portal__briefing-time-label">Attendance register</span>
+                            <t t-if="briefing_already_registered">
+                                <p class="ew-proc-portal__briefing-registered">
+                                    Your attendance is on record.
+                                    <a t-if="briefing_attendance_proof_url" t-att-href="briefing_attendance_proof_url">View proof</a>
+                                </p>
+                                <button type="button"
+                                        class="btn btn-outline-primary ew-proc-portal__briefing-cta ew-proc-briefing-register-open o_no_wait_lazy_js mt-2">
+                                    View attendance register
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <p class="ew-proc-portal__briefing-register-hint">
+                                    Sign in while the session is live. Use the same email as your application if you have already submitted.
+                                </p>
+                                <button type="button"
+                                        class="btn btn-outline-primary ew-proc-portal__briefing-cta ew-proc-briefing-register-open o_no_wait_lazy_js">
+                                    Sign attendance register
+                                </button>
+                            </t>
+                        </div>
+                        <div class="modal fade ew-proc-briefing-register-modal"
+                             id="ewProcBriefingRegisterModal"
+                             tabindex="-1"
+                             aria-labelledby="ewProcBriefingRegisterTitle"
+                             aria-hidden="true"
+                             t-att-data-ew-proc-autoload="'1' if briefing_register_errors else None">
+                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <form t-if="not briefing_already_registered"
+                                          t-attf-action="/application/rfqs/{{ rfq.id }}/briefing/register/submit"
+                                          method="post"
+                                          class="ew-proc-portal__briefing-inline-form o_no_wait_lazy_js">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="return_to" value="apply"/>
+                                        <input type="hidden" name="token" t-att-value="track_token or ''"/>
+                                        <div class="modal-header">
+                                            <h2 class="modal-title h5 mb-0" id="ewProcBriefingRegisterTitle">
+                                                Briefing attendance register
+                                            </h2>
+                                            <button type="button" class="btn-close o_no_wait_lazy_js" data-ew-proc-dismiss="modal" aria-label="Close"/>
+                                        </div>
+                                        <div class="modal-body">
+                                            <t t-set="reg_vals" t-value="briefing_register_values or values or {}"/>
+                                            <p class="ew-proc-portal__briefing-register-hint">
+                                                Sign in while the session is live. Use the same email as your application if you have already submitted.
+                                            </p>
+                                            <t t-if="briefing_register_errors">
+                                                <div class="alert alert-danger py-2 small" role="alert">
+                                                    <ul class="mb-0">
+                                                        <li t-foreach="briefing_register_errors.values()" t-as="err"><t t-esc="err"/></li>
+                                                    </ul>
+                                                </div>
+                                            </t>
+                                            <div class="row g-2">
+                                                <div class="col-md-6">
+                                                    <label class="form-label ew-proc-portal__form-label">Company name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="company_name" required="required"
+                                                           class="form-control ew-proc-portal__input"
+                                                           t-att-value="reg_vals.get('company_name', '')"/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label ew-proc-portal__form-label">Contact name</label>
+                                                    <input type="text" name="contact_name"
+                                                           class="form-control ew-proc-portal__input"
+                                                           t-att-value="reg_vals.get('contact_name', '')"/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label ew-proc-portal__form-label">Contact email <span class="text-danger">*</span></label>
+                                                    <input type="email" name="contact_email" required="required"
+                                                           class="form-control ew-proc-portal__input"
+                                                           t-att-value="reg_vals.get('contact_email', '')"/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label ew-proc-portal__form-label">Contact phone</label>
+                                                    <input type="text" name="contact_phone"
+                                                           class="form-control ew-proc-portal__input"
+                                                           t-att-value="reg_vals.get('contact_phone', '')"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary o_no_wait_lazy_js" data-ew-proc-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" class="btn btn-primary ew-proc-portal__briefing-cta mt-0 o_no_wait_lazy_js">
+                                                Sign attendance register
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <t t-else="">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title h5 mb-0" id="ewProcBriefingRegisterTitle">
+                                                Briefing attendance register
+                                            </h2>
+                                            <button type="button" class="btn-close o_no_wait_lazy_js" data-ew-proc-dismiss="modal" aria-label="Close"/>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="ew-proc-portal__briefing-registered">
+                                                Your attendance is on record.
+                                                <a t-if="briefing_attendance_proof_url" t-att-href="briefing_attendance_proof_url">View proof</a>
+                                            </p>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript" src="/ewseta_procurement/static/src/js/rfq_briefing_register.js?v=183"></script>
+                    </t>
                 </t>
-                <t t-if="rfq.briefing_mode == 'contact' and rfq.briefing_location and reg_state == 'open'">
-                    <p class="mb-3">
-                        <span class="ew-proc-portal__apply-meta-label d-block">Venue address (session live)</span>
-                        <span t-esc="rfq.briefing_location"/>
+                <t t-elif="reg_state == 'after'">
+                    <p class="ew-proc-portal__briefing-note ew-proc-portal__briefing-note--ended">
+                        This briefing session has ended. The join link, venue and attendance register are closed.
                     </p>
                 </t>
-                <t t-elif="rfq.briefing_mode == 'contact' and rfq.briefing_location and reg_state == 'before'">
-                    <p class="alert alert-info py-2 small mb-3">
-                        The on-site venue is shown here when the briefing session starts.
-                    </p>
-                </t>
-                <t t-if="reg_state == 'open' and briefing_register_url and not briefing_hide_register">
-                    <p class="mb-0">
-                        <span class="ew-proc-portal__apply-meta-label d-block">Briefing attendance</span>
-                        <a t-att-href="briefing_register_url" class="btn btn-outline-primary btn-sm mt-1">
-                            Sign briefing attendance register
-                        </a>
-                    </p>
-                </t>
-                <t t-elif="not briefing_portal_readonly and reg_state == 'open' and not briefing_hide_register">
-                    <p class="text-muted small mb-0">
-                        Submit your application first — then return to this page (or use your status link) to sign the briefing attendance register while the session is live.
+                <t t-else="">
+                    <p class="ew-proc-portal__briefing-note">
+                        The
+                        <t t-if="rfq.briefing_mode == 'virtual'">join link</t>
+                        <t t-elif="rfq.briefing_mode == 'contact'">venue address</t>
+                        <t t-else="">session details</t>
+                        and attendance register appear here when the briefing starts.
+                        Applicants who already submitted also receive them by email.
                     </p>
                 </t>
             </section>
@@ -701,20 +947,27 @@
                     <t t-elif="registration_state == 'unavailable' and rfq and rfq.state == 'draft'">
                         This RFQ/RFP is not published yet. Briefing registration will open when SCM publishes it and the session starts.
                     </t>
+                    <t t-elif="registration_state == 'no_application' and rfq and rfq.publication_type == 'transversal'">
+                        Submit your application on the public form first (the link in your invitation email;
+                        no login required). Then return here to sign the briefing attendance register.
+                    </t>
                     <t t-elif="registration_state == 'no_application'">
-                        Submit your transversal application in <strong>EWSETA Procurement</strong>
-                        (Apply / open application) before you can sign the briefing attendance register.
+                        Submit your application on this website first. After you apply, return here
+                        (or use the status link in your confirmation email) to sign the briefing attendance register.
                     </t>
                     <t t-elif="registration_state == 'unavailable' and rfq and rfq.publication_type == 'transversal'">
-                        Briefing registration is only available during the live session window, after your
-                        application is submitted. Use <strong>Sign briefing register</strong> on the RFQ in Odoo
+                        Briefing registration is only available during the live session window.
+                        Use <strong>Briefing session</strong> on the RFQ in Odoo
                         or the link in your briefing email.
                     </t>
                     <t t-else="">
-                        Briefing registration is not open. Use the private link in your briefing email
-                        (sent when the session starts, after you submitted an application).
+                        Briefing registration is not open. Apply on this website first, then use the status link
+                        from your confirmation email when the session starts.
                     </t>
                 </div>
+                <t t-if="rfq and rfq.state == 'published'">
+                    <a t-attf-href="/application/rfqs/{{ rfq.id }}/apply" class="btn btn-primary me-2">Submit application</a>
+                </t>
                 <a class="btn btn-secondary" href="/application/rfqs">Back to RFQs/RFPs</a>
             </div>
         </t>
@@ -940,16 +1193,16 @@
                     </t>
                     <t t-call="ewseta_procurement.rfq_public_document_block"/>
 
-                    <t t-if="rfq.briefing_session">
-                        <t t-set="briefing_portal_readonly" t-value="False"/>
-                        <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
-                    </t>
-
                     <t t-if="rfq.supplier_note">
                         <section class="ew-proc-portal__apply-section mb-4">
                             <h2 class="ew-proc-portal__section-title">Instructions</h2>
                             <p class="mb-0" t-esc="rfq.supplier_note"/>
                         </section>
+                    </t>
+
+                    <t t-if="rfq.briefing_session">
+                        <t t-set="briefing_portal_readonly" t-value="False"/>
+                        <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
                     </t>
 
                     <form class="ew-proc-portal__apply-form"
@@ -1020,7 +1273,7 @@
                         <section class="ew-proc-portal__apply-section">
                             <h2 class="ew-proc-portal__section-title">Privacy policy</h2>
                             <t t-set="blk_privacy" t-value="website.proc_cms_block('rfq_apply_privacy_policy')"/>
-                            <div class="form-check ew-proc-portal__privacy-check border rounded p-3 bg-light">
+                            <div class="form-check ew-proc-portal__privacy-check">
                                 <input class="form-check-input"
                                        type="checkbox"
                                        name="accept_privacy_policy"
@@ -1028,7 +1281,7 @@
                                        value="1"
                                        required="required"
                                        t-att-checked="values.get('accept_privacy_policy') and 'checked' or None"/>
-                                <label class="form-check-label" for="ew_accept_privacy_policy">
+                                <label class="form-check-label ew-proc-portal__privacy-label" for="ew_accept_privacy_policy">
                                     <t t-if="blk_privacy and blk_privacy.body">
                                         <span t-out="blk_privacy.body"/>
                                     </t>
@@ -1118,6 +1371,23 @@
                         Private status page — keep this URL confidential.
                     </p>
                 </div>
+                <t t-if="updated">
+                    <div class="alert alert-success" role="alert">
+                        Your application has been updated.
+                    </div>
+                </t>
+                <t t-if="errors">
+                    <div class="alert alert-danger" role="alert">
+                        <ul class="mb-0">
+                            <li t-foreach="errors.values()" t-as="err"><t t-esc="err"/></li>
+                        </ul>
+                    </div>
+                </t>
+                <t t-if="not can_update">
+                    <div class="alert alert-warning" role="alert">
+                        This RFQ/RFP is closed. You can view your application but you cannot change it.
+                    </div>
+                </t>
                 <div class="ew-proc-portal__card mb-4 ew-proc-portal__ref-summary">
                     <div class="ew-proc-portal__card-head">Supplier details (reference copy)</div>
                     <div class="ew-proc-portal__card-body">
@@ -1145,7 +1415,7 @@
                 </div>
 
                 <t t-if="rfq and rfq.briefing_session">
-                    <t t-set="briefing_portal_readonly" t-value="False"/>
+                    <t t-set="briefing_portal_readonly" t-value="not can_update"/>
                     <t t-call="ewseta_procurement.rfq_briefing_session_public"/>
                 </t>
 
@@ -1241,6 +1511,68 @@
                         </div>
                     </div>
                 </div>
+                <t t-if="can_update">
+                    <form class="ew-proc-portal__apply-form mt-4"
+                          t-attf-action="/application/submissions/track/{{ track_token }}/update"
+                          method="post"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="ew-proc-portal__card mb-4">
+                            <div class="ew-proc-portal__card-head">Update application</div>
+                            <div class="ew-proc-portal__card-body">
+                                <p class="text-muted small mb-3">
+                                    This RFQ/RFP is still open. You may change your contact details and replace documents.
+                                </p>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label ew-proc-portal__form-label">Company name <span class="text-danger">*</span></label>
+                                        <input type="text" name="company_name" required="required"
+                                               class="form-control ew-proc-portal__input"
+                                               t-att-value="values.get('company_name', '')"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label ew-proc-portal__form-label">Contact name</label>
+                                        <input type="text" name="contact_name" class="form-control ew-proc-portal__input"
+                                               t-att-value="values.get('contact_name', '')"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label ew-proc-portal__form-label">Contact email <span class="text-danger">*</span></label>
+                                        <input type="email" name="contact_email" required="required"
+                                               class="form-control ew-proc-portal__input"
+                                               t-att-value="values.get('contact_email', '')"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label ew-proc-portal__form-label">Contact phone <span class="text-danger">*</span></label>
+                                        <input type="text" name="contact_phone" required="required"
+                                               class="form-control ew-proc-portal__input"
+                                               t-att-value="values.get('contact_phone', '')"/>
+                                    </div>
+                                </div>
+                                <h3 class="h6 mt-4">Replace documents</h3>
+                                <p class="text-muted small">Leave a file empty to keep the document already submitted.</p>
+                                <div class="row g-3">
+                                    <t t-foreach="update_docs" t-as="doc">
+                                        <div class="col-md-6">
+                                            <label class="form-label ew-proc-portal__form-label">
+                                                <t t-esc="doc['req'].name"/>
+                                                <t t-if="doc['req'].is_mandatory"><span class="text-danger">*</span></t>
+                                            </label>
+                                            <p class="small mb-1" t-if="doc['line'] and doc['line'].file_filename">
+                                                Current: <span t-esc="doc['line'].file_filename"/>
+                                            </p>
+                                            <input t-attf-name="file_req_{{ doc['req'].id }}"
+                                                   type="file"
+                                                   class="form-control ew-proc-portal__file-control"/>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </t>
                 <p class="text-muted small mt-3 mb-4">
                     EWSETA SCM will process applications after the RFQ/RFP closes. You will be contacted if shortlisted.
                 </p>

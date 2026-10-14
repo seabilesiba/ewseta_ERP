@@ -7,7 +7,7 @@ class ResPartner(models.Model):
 
     ew_service_provider = fields.Boolean(
         string="EWSETA service provider",
-        help="Registered service provider profile used for transversal RFQ matching.",
+        help="Flag on the company (including SITA imports). Matching transversal RFQs/RFPs are emailed to this contact; login is not required to apply.",
     )
     ew_service_category_ids = fields.Many2many(
         "ew.service.category",
@@ -25,6 +25,12 @@ class ResPartner(models.Model):
         string="Provinces of operation",
         domain="[('country_id.code', '=', 'ZA')]",
         help="Used with service categories to determine transversal RFQ/RFP invitations.",
+    )
+    ew_sita_rfb1183_no = fields.Char(
+        string="SITA RFB1183 no.",
+        index=True,
+        copy=False,
+        help="SITA RFB1183 panel number. Used to re-import approved ICT providers without duplicates.",
     )
 
     def _ew_procurement_provider_active(self):
@@ -54,10 +60,32 @@ class ResPartner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if "ew_sita_rfb1183_no" in vals:
+                vals["ew_sita_rfb1183_no"] = (
+                    (vals.get("ew_sita_rfb1183_no") or "").strip() or False
+                )
         partners = super().create(vals_list)
         if any(v.get("ew_service_provider") for v in vals_list):
             partners.filtered("ew_service_provider")._ew_sync_linked_users_procurement_access()
         return partners
+
+    @api.constrains("ew_sita_rfb1183_no", "is_company")
+    def _check_ew_sita_rfb1183_no_unique(self):
+        for partner in self:
+            number = (partner.ew_sita_rfb1183_no or "").strip()
+            if not number or not partner.is_company:
+                continue
+            duplicates = self.search_count([
+                ("id", "!=", partner.id),
+                ("is_company", "=", True),
+                ("ew_sita_rfb1183_no", "=", number),
+            ])
+            if duplicates:
+                raise ValidationError(
+                    _("SITA RFB1183 number %(number)s is already used on another company.")
+                    % {"number": number}
+                )
 
     @api.constrains(
         "ew_service_provider",
@@ -86,6 +114,10 @@ class ResPartner(models.Model):
                 )
 
     def write(self, vals):
+        if "ew_sita_rfb1183_no" in vals:
+            vals["ew_sita_rfb1183_no"] = (
+                (vals.get("ew_sita_rfb1183_no") or "").strip() or False
+            )
         res = super().write(vals)
         if "ew_service_provider" in vals:
             self._ew_sync_linked_users_procurement_access()

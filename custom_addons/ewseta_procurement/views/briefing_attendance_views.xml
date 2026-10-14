@@ -11,6 +11,7 @@
                 <field name="contact_name"/>
                 <field name="rfq_id"/>
                 <filter string="Portal" name="source_portal" domain="[('source', '=', 'portal')]"/>
+                <filter string="Service provider (backend)" name="source_sp_backend" domain="[('source', '=', 'sp_backend')]"/>
                 <filter string="SCM manual" name="source_scm" domain="[('source', '=', 'scm_manual')]"/>
                 <filter string="Virtual" name="mode_virtual" domain="[('mode', '=', 'virtual')]"/>
                 <filter string="On-site" name="mode_contact" domain="[('mode', '=', 'contact')]"/>
@@ -40,7 +41,7 @@
                        decoration-info="mode == 'virtual'"
                        decoration-success="mode == 'contact'"/>
                 <field name="source" widget="badge"
-                       decoration-success="source == 'portal'"
+                       decoration-success="source in ('portal', 'sp_backend')"
                        decoration-warning="source == 'scm_manual'"/>
                 <field name="registered_by" widget="many2one_avatar_user" optional="hide"/>
             </list>
@@ -75,7 +76,7 @@
                                    decoration-info="mode == 'virtual'"
                                    decoration-success="mode == 'contact'"/>
                             <field name="source" widget="badge"
-                                   decoration-success="source == 'portal'"
+                                   decoration-success="source in ('portal', 'sp_backend')"
                                    decoration-warning="source == 'scm_manual'"/>
                         </div>
                     </div>

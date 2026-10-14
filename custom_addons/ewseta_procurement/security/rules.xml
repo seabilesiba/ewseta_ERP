@@ -62,6 +62,13 @@
         <field name="domain_force">[(1, '=', 1)]</field>
     </record>
 
+    <record id="rule_briefing_attendance_provider_own" model="ir.rule">
+        <field name="name">Provider: own briefing attendance</field>
+        <field name="model_id" ref="model_ew_rfq_briefing_attendance"/>
+        <field name="groups" eval="[(4, ref('ewseta_procurement.group_service_provider'))]"/>
+        <field name="domain_force">['|', '|', '|', ('registered_by', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id), ('contact_email', '=ilike', user.email), ('contact_email', '=ilike', user.partner_id.email)]</field>
+    </record>
+
     <!-- Service Provider: eligible transversal RFQs/RFPs only (not public website opportunities) -->
     <record id="rule_rfq_provider_published" model="ir.rule">
         <field name="name">Provider: transversal RFQs</field>

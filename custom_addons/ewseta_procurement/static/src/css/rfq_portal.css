@@ -261,6 +261,12 @@ html.ew-proc-dark .ew-proc-portal__ref-table .ew-proc-portal__ref-value {
     color: #fff;
 }
 
+.ew-proc-portal__badge--soon {
+    background: #fff4e5;
+    color: #9a5b00;
+    border: 1px solid #f5d09a;
+}
+
 .ew-proc-portal__meta-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
@@ -416,6 +422,53 @@ html.ew-proc-dark .ew-proc-portal__ref-table .ew-proc-portal__ref-value {
     color: #fff;
     background: var(--ew-portal-accent);
     cursor: pointer;
+}
+
+.ew-proc-portal__privacy-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0.95rem 1.05rem;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 10px;
+    background: #f7faf8;
+}
+
+.ew-proc-portal__privacy-check .form-check-input {
+    margin-top: 0.3rem;
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-color: #9bb3a6;
+    background-color: #fff;
+}
+
+.ew-proc-portal__privacy-check .form-check-input:checked {
+    background-color: #f29100;
+    border-color: #f29100;
+}
+
+.ew-proc-portal__privacy-label {
+    color: #2d3a34;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.ew-proc-portal__privacy-label a {
+    color: #f29100;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.ew-proc-portal__privacy-label a:hover {
+    color: #d97f00;
+}
+
+.ew-proc-portal__privacy-label p {
+    margin: 0;
+    display: inline;
 }
 
 .ew-proc-portal__apply-actions {
@@ -632,4 +685,283 @@ html.ew-proc-dark .ew-proc-portal__ref-table .ew-proc-portal__ref-value {
     background-color: #f29100 !important;
     border-color: #f29100 !important;
     box-shadow: 0 4px 14px rgba(242, 145, 0, 0.35);
+}
+
+/* Briefing session on the public apply form */
+.ew-proc-portal__briefing {
+    margin: 0 0 1.5rem;
+    padding: 1.2rem 1.35rem 1.3rem;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f7fbf8 0%, #ffffff 48%);
+}
+
+.ew-proc-portal__briefing--live {
+    border-color: rgba(25, 135, 84, 0.35);
+    background: linear-gradient(180deg, #edf8f2 0%, #ffffff 52%);
+    box-shadow: 0 8px 22px rgba(26, 107, 74, 0.08);
+}
+
+.ew-proc-portal__briefing--ended {
+    background: #f7f8f7;
+}
+
+.ew-proc-portal__briefing-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.ew-proc-portal__briefing-kicker {
+    margin: 0 0 0.2rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__briefing-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #15251f;
+}
+
+.ew-proc-portal__briefing-chips {
+    display: inline-flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    max-width: 100%;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 999px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(21, 37, 31, 0.06);
+}
+
+.ew-proc-portal__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.42rem 0.9rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.ew-proc-portal__chip + .ew-proc-portal__chip {
+    border-left: 1px solid var(--ew-portal-border);
+}
+
+.ew-proc-portal__chip--required {
+    background: #fdecea;
+    color: #9b1c1c;
+}
+
+.ew-proc-portal__chip--optional {
+    background: #eef7f2;
+    color: #1a6b4a;
+}
+
+.ew-proc-portal__chip--upcoming {
+    background: #fff6ea;
+    color: #9a5b00;
+}
+
+.ew-proc-portal__chip--live {
+    background: #e8f6ee;
+    color: #146c43;
+}
+
+.ew-proc-portal__chip--ended {
+    background: #f3f5f4;
+    color: #5c6b63;
+}
+
+.ew-proc-portal__chip-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.ew-proc-portal__chip--live .ew-proc-portal__chip-dot {
+    animation: ew-briefing-pulse 1.6s ease-out infinite;
+}
+
+@keyframes ew-briefing-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(20, 108, 67, 0.45); }
+    70% { box-shadow: 0 0 0 7px rgba(20, 108, 67, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(20, 108, 67, 0); }
+}
+
+.ew-proc-portal__briefing-times {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+}
+
+.ew-proc-portal__briefing-time {
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.ew-proc-portal__briefing-time-label {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ew-portal-accent);
+}
+
+.ew-proc-portal__briefing-time strong {
+    display: block;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: #1f2933;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.ew-proc-portal__briefing-note {
+    margin: 0;
+    padding: 0.8rem 0.95rem;
+    border-radius: 10px;
+    border: 1px solid #f5d09a;
+    background: #fff8ee;
+    color: #6b4a16;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.ew-proc-portal__briefing-note--ended {
+    border-color: var(--ew-portal-border);
+    background: #f3f5f4;
+    color: var(--ew-portal-muted);
+}
+
+.ew-proc-portal__briefing-live {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.85rem;
+}
+
+.ew-proc-portal__briefing-join,
+.ew-proc-portal__briefing-venue,
+.ew-proc-portal__briefing-register {
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.ew-proc-portal__briefing-cta {
+    margin-top: 0.45rem;
+    font-weight: 600;
+}
+
+.ew-proc-portal__briefing-url {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    word-break: break-all;
+    color: var(--ew-portal-muted);
+}
+
+.ew-proc-portal__briefing-venue-text {
+    margin: 0.35rem 0 0;
+    white-space: pre-line;
+    color: #1f2933;
+}
+
+.ew-proc-portal__briefing-register-form {
+    margin-top: 0.95rem;
+    padding: 1rem 1.05rem 1.1rem;
+    border: 1px solid var(--ew-portal-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.ew-proc-portal__briefing-register {
+    margin-top: 0.85rem;
+}
+
+.ew-proc-portal__briefing-register-hint {
+    margin: 0.2rem 0 0.85rem;
+    font-size: 0.86rem;
+    color: var(--ew-portal-muted);
+}
+
+.ew-proc-briefing-register-modal.show {
+    z-index: 1060;
+    display: block;
+}
+
+.ew-proc-briefing-register-backdrop {
+    z-index: 1055;
+}
+
+.ew-proc-briefing-register-modal .modal-content {
+    border-radius: 12px;
+    border: 1px solid var(--ew-portal-border);
+    box-shadow: 0 18px 40px rgba(15, 23, 32, 0.18);
+}
+
+.ew-proc-briefing-register-modal .modal-header {
+    padding: 1rem 1.15rem 0.85rem;
+    border-bottom: 1px solid var(--ew-portal-border);
+}
+
+.ew-proc-briefing-register-modal .modal-title {
+    font-weight: 700;
+    color: #1a4d38;
+}
+
+.ew-proc-briefing-register-modal .modal-body {
+    padding: 1.05rem 1.15rem 1.2rem;
+}
+
+.ew-proc-briefing-register-modal .modal-footer {
+    padding: 0.85rem 1.15rem 1.05rem;
+    border-top: 1px solid var(--ew-portal-border);
+    gap: 0.5rem;
+}
+
+.ew-proc-briefing-register-modal .ew-proc-portal__briefing-cta {
+    margin-top: 0;
+}
+
+.ew-proc-portal__briefing-registered {
+    margin: 0;
+    padding: 0.75rem 0.85rem;
+    border-radius: 8px;
+    background: #e8f6ee;
+    color: #146c43;
+    font-weight: 600;
+}
+
+.ew-proc-portal__briefing-registered a {
+    margin-left: 0.4rem;
+    font-weight: 700;
+    color: #1a6b4a;
+}
+
+@media (max-width: 640px) {
+    .ew-proc-portal__briefing-times {
+        grid-template-columns: 1fr;
+    }
 }

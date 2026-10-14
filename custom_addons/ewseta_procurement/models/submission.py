@@ -509,6 +509,61 @@ class EwSubmission(models.Model):
             rec._send_portal_application_received(track_token)
         return True
 
+    def portal_may_update(self, now=None):
+        """Applicants may change contact details and documents while the RFQ/RFP is open."""
+        self.ensure_one()
+        if self.state not in ("draft", "submitted"):
+            return False
+        return bool(self.rfq_id.sudo().portal_applications_open(now=now))
+
+    def portal_update_application(self, values, files=None):
+        """Update a public/transversal application from the tracking page."""
+        self.ensure_one()
+        if not self.portal_may_update():
+            raise UserError(
+                _("This RFQ/RFP is closed. You cannot update your application.")
+            )
+        company_name = (values.get("company_name") or "").strip()
+        contact_email = (values.get("contact_email") or "").strip()
+        contact_phone = (values.get("contact_phone") or "").strip()
+        contact_name = (values.get("contact_name") or "").strip()
+        if not company_name:
+            raise UserError(_("Company name is required."))
+        if not contact_email:
+            raise UserError(_("Email is required."))
+        if not contact_phone:
+            raise UserError(_("Contact phone is required."))
+        self.sudo().write({
+            "company_name": company_name,
+            "contact_name": contact_name,
+            "contact_email": contact_email,
+            "contact_phone": contact_phone,
+        })
+        files = files or {}
+        existing_lines = {line.requirement_id.id: line for line in self.sudo().line_ids}
+        Line = self.env["ew.submission.line"].sudo()
+        for req in self.rfq_id.sudo().requirement_ids:
+            payload = files.get(req.id)
+            if not payload:
+                continue
+            content, filename = payload
+            line = existing_lines.get(req.id)
+            if not line:
+                line = Line.create({
+                    "submission_id": self.id,
+                    "requirement_id": req.id,
+                })
+                existing_lines[req.id] = line
+            line.write({
+                "file": content,
+                "file_filename": filename,
+            })
+        self.sudo().message_post(
+            body=_("Application updated via the website."),
+            subtype_xmlid="mail.mt_note",
+        )
+        return True
+
     def _portal_track_url(self, track_token):
         self.ensure_one()
         base = (self.env['ir.config_parameter'].sudo().get_param('web.base.url') or '').rstrip('/')

@@ -27,6 +27,7 @@
             });
         }
         pane.classList.add('show', 'active');
+        document.dispatchEvent(new CustomEvent('ew-portal-view-changed', { detail: { tab: targetSel } }));
     }
 
     function setView(root, mode) {

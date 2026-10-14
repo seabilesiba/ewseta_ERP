@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ew_briefing_register_wizard_form" model="ir.ui.view">
+        <field name="name">ew.rfq.briefing.register.wizard.form</field>
+        <field name="model">ew.rfq.briefing.register.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Briefing session" class="ew-proc-briefing-register-wiz">
+                <sheet>
+                    <field name="rfq_id" invisible="1"/>
+                    <field name="registration_state" invisible="1"/>
+                    <field name="join_visible" invisible="1"/>
+                    <field name="already_registered" invisible="1"/>
+                    <field name="can_register" invisible="1"/>
+                    <field name="briefing_mode" invisible="1"/>
+
+                    <div class="oe_title">
+                        <h1>Briefing session</h1>
+                        <p class="text-muted mb-0">
+                            <field name="rfq_reference" class="oe_inline"/>
+                            — <field name="rfq_name" class="oe_inline"/>
+                        </p>
+                    </div>
+
+                    <group>
+                        <group string="Session">
+                            <field name="briefing_compulsory" readonly="1"/>
+                            <field name="briefing_at" readonly="1"/>
+                            <field name="briefing_end_at" readonly="1"/>
+                        </group>
+                        <group string="Join" invisible="not join_visible">
+                            <field name="briefing_virtual_link"
+                                   widget="url"
+                                   readonly="1"
+                                   invisible="briefing_mode != 'virtual'"/>
+                            <field name="briefing_location"
+                                   readonly="1"
+                                   invisible="briefing_mode != 'contact'"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-info" role="status" invisible="not status_note">
+                        <field name="status_note" nolabel="1" readonly="1"/>
+                    </div>
+
+                    <group string="Attendance register" invisible="not can_register">
+                        <group>
+                            <field name="company_name"/>
+                            <field name="contact_name"/>
+                        </group>
+                        <group>
+                            <field name="contact_email" widget="email"/>
+                            <field name="contact_phone" widget="phone"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_open_virtual_briefing"
+                            type="object"
+                            string="Open virtual briefing"
+                            class="btn-primary"
+                            invisible="not join_visible or briefing_mode != 'virtual' or not briefing_virtual_link"/>
+                    <button name="action_register"
+                            type="object"
+                            string="Sign attendance register"
+                            class="btn-primary"
+                            invisible="not can_register"/>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

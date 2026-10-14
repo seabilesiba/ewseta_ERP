@@ -159,7 +159,7 @@
                 return;
             }
             this.paginationEl.innerHTML = '';
-            if (totalPages <= 1) {
+            if (totalPages < 1) {
                 return;
             }
             const mkItem = (label, page, disabled, active) => {

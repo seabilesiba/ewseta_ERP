@@ -44,15 +44,13 @@
 
 
 
-    <menuitem id="menu_ew_submission_scm"
+    <menuitem id="menu_ew_config"
 
-              name="Submissions"
+              name="Configuration"
 
               parent="menu_ew_root"
 
-              action="ewseta_procurement.action_ew_submission_unlocked"
-
-              sequence="20"
+              sequence="90"
 
               groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner"/>
 
@@ -62,13 +60,55 @@
 
               name="All Submissions"
 
-              parent="menu_ew_root"
+              parent="menu_ew_config"
 
               action="ewseta_procurement.action_ew_submission_all"
 
               sequence="10"
 
               groups="ewseta_procurement.group_rfq_admin"/>
+
+
+
+    <menuitem id="menu_ew_submission_scm"
+
+              name="Submissions"
+
+              parent="menu_ew_config"
+
+              action="ewseta_procurement.action_ew_submission_unlocked"
+
+              sequence="20"
+
+              groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner"/>
+
+
+
+    <menuitem id="menu_ew_service_category"
+
+              name="Service categories"
+
+              parent="menu_ew_config"
+
+              action="action_ew_service_category"
+
+              sequence="30"
+
+              groups="ewseta_procurement.group_rfq_admin"/>
+
+
+
+    <menuitem id="menu_ew_sita_sp_import"
+
+              name="Import SITA RFB1183"
+
+              parent="menu_ew_config"
+
+              action="action_ew_sita_sp_import"
+
+              sequence="40"
+
+              groups="ewseta_procurement.group_rfq_admin,ewseta_procurement.group_scm_owner"/>
 
 
 

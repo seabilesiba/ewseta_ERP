@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ew_sita_sp_import_form" model="ir.ui.view">
+        <field name="name">ew.sita.sp.import.form</field>
+        <field name="model">ew.sita.sp.import</field>
+        <field name="arch" type="xml">
+            <form string="Import SITA RFB1183 providers">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Import SITA RFB1183 providers</h1>
+                    </div>
+                    <p class="text-muted">
+                        Upload a CSV (not Excel). Accepted layouts:
+                        (1) sita_no, name, provinces (GP;KZN;WC) or Y/N columns GP, MP, L, FS, KZN, EC, WC, NC, NW;
+                        (2) Odoo Contacts export with Internal Notes containing “Province codes: Gauteng, Western Cape”
+                        and “Source row” / “Source contact” (SITA_Odoo19_Contacts_Import.csv).
+                        Optional: contact_name, email, phone, street, city, zip.
+                        Companies are flagged as ICT service providers; no logins are created.
+                    </p>
+                    <group>
+                        <field name="csv_file" filename="csv_filename"/>
+                        <field name="csv_filename" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                    </group>
+                    <button name="action_download_template"
+                            type="object"
+                            string="Download example CSV"
+                            class="btn-link"
+                            icon="fa-download"/>
+                    <group invisible="state == 'draft'">
+                        <group>
+                            <field name="count_create"/>
+                            <field name="count_update"/>
+                        </group>
+                        <group>
+                            <field name="count_skip"/>
+                            <field name="count_error"/>
+                        </group>
+                    </group>
+                    <field name="summary" invisible="not summary" nolabel="1"/>
+                    <field name="line_ids" nolabel="1" invisible="not line_ids" readonly="1">
+                        <list create="false" delete="false"
+                              decoration-success="status == 'create'"
+                              decoration-info="status == 'update'"
+                              decoration-warning="status == 'skip'"
+                              decoration-danger="status == 'error'">
+                            <field name="row_number" optional="hide"/>
+                            <field name="sita_no"/>
+                            <field name="name"/>
+                            <field name="provinces"/>
+                            <field name="contact_name" optional="hide"/>
+                            <field name="email"/>
+                            <field name="phone" optional="hide"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'create'"
+                                   decoration-info="status == 'update'"
+                                   decoration-warning="status == 'skip'"
+                                   decoration-danger="status == 'error'"/>
+                            <field name="note"/>
+                            <field name="partner_id" optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_preview"
+                            type="object"
+                            string="Preview"
+                            class="btn-secondary"
+                            invisible="state == 'done'"/>
+                    <button name="action_import"
+                            type="object"
+                            string="Import"
+                            class="btn-primary"
+                            invisible="state != 'preview'"/>
+                    <button name="action_download_template"
+                            type="object"
+                            string="Download example CSV"
+                            class="btn-link"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ew_sita_sp_import" model="ir.actions.act_window">
+        <field name="name">Import SITA RFB1183 providers</field>
+        <field name="res_model">ew.sita.sp.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_ew_sita_sp_import_form"/>
+    </record>
+</odoo>

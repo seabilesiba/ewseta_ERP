@@ -10,17 +10,17 @@
         <field name="body_html" type="html">
 <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
     <p>Hello <t t-out="ctx.get('recipient_name') or 'Service provider'"/>,</p>
-    <p>EWSETA published a <strong>transversal</strong> RFQ/RFP that matches your registered service categories and provinces.</p>
+    <p>EWSETA published an RFQ/RFP that matches your EWSETA service categories and provinces. You do not need an Odoo login to apply.</p>
     <p><strong><t t-out="object.name"/></strong><br/>
        Reference: <t t-out="object.reference"/><br/>
        Type: <t t-out="(object.type or 'rfq').upper()"/><br/>
        Closes: <t t-out="object.closing_at"/></p>
     <p t-if="ctx.get('transversal_apply_url')">
-        Sign in to Odoo, open this opportunity, and click <strong>Apply / open application</strong> to complete your submission (same fields and documents as the public portal):
+        Open the public application form and submit your documents:
         <br/>
         <a t-att-href="ctx.get('transversal_apply_url')"><t t-out="ctx.get('transversal_apply_url')"/></a>
     </p>
-    <p>This opportunity is not listed on the public procurement website.</p>
+    <p>This opportunity is sent by email to matching service providers. It is not listed as an open opportunity on the public procurement website.</p>
     <p>Kind regards,<br/>EWSETA Supply Chain Management</p>
 </div>
         </field>

@@ -1,0 +1,10 @@
+# SITA RFB1183 cleaned import fixture (not the full 299-row panel).
+# Columns accepted by ew.sita.sp.import:
+#   sita_no,name,provinces,contact_name,email,phone,street,city,zip
+# provinces = semicolon codes: GP;KZN;WC
+# codes: GP, MP, L, FS, KZN, EC, WC, NC, NW  (L = Limpopo)
+sita_no,name,provinces,contact_name,email,phone,street,city,zip
+TEST-SITA-1,SITA Test Acme ICT (Pty) Ltd,GP;KZN,Jane Doe,jane.sita.import@example.test,011 000 0001,1 Main Rd,Johannesburg,2000
+TEST-SITA-2,SITA Test Cape Systems CC,WC,John Smith,john.sita.import@example.test,021 000 0002,2 Loop St,Cape Town,8001
+TEST-SITA-3,SITA Test No Province Ltd,,Pat Skip,skip.sita.import@example.test,012 000 0003,3 Skip St,Pretoria,0001
+TEST-SITA-4,,GP,Nameless Contact,none.sita.import@example.test,013 000 0004,4 Empty St,Durban,4001

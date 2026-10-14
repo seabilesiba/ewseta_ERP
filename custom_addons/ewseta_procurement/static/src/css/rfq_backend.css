@@ -21,6 +21,8 @@
 }
 
 .ew-proc-rfq-kanban .o_kanban_record {
+    position: relative;
+    overflow: hidden;
     border: 1px solid var(--ew-proc-border);
     border-radius: 10px;
     box-shadow: var(--ew-proc-shadow);
@@ -98,6 +100,31 @@
     border-left: 4px solid #c0392b;
 }
 
+.ew-proc-rfq-card--cancelled {
+    border-left: 4px solid #c0392b;
+    padding-top: 0.55rem;
+    padding-right: 2.4rem;
+}
+
+.ew-proc-rfq-card__ribbon {
+    position: absolute;
+    top: 14px;
+    right: -34px;
+    width: 7.6rem;
+    padding: 0.18rem 0;
+    background: #c0392b;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-align: center;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 6px rgba(15, 23, 32, 0.2);
+    pointer-events: none;
+    z-index: 2;
+}
+
 /* —— List —— */
 .ew-proc-rfq-list thead {
     background: var(--ew-proc-accent-soft);
@@ -115,6 +142,8 @@
 
 /* —— Form —— */
 .ew-proc-rfq-form .o_form_sheet {
+    position: relative;
+    overflow: visible;
     border-top: 3px solid var(--ew-proc-accent);
     border-radius: 0 0 10px 10px;
     padding-top: 1.25rem;
@@ -696,4 +725,13 @@
 
 .ew-proc-briefing-att-list tbody tr.o_data_row:hover {
     background-color: #f4fbf7;
+}
+
+.ew-proc-briefing-register-wiz .o_form_sheet {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.ew-proc-briefing-register-wiz .o_field_url {
+    word-break: break-all;
 }
